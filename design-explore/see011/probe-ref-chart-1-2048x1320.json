@@ -1,0 +1,27 @@
+{
+  "tool": "see006-probe.mjs",
+  "html": "D:\\Onesimus\\tools\\archify\\design-explore\\ref-chart-1.html",
+  "sha256": "26b53aa678f1a06c6c768859d07f47fe9bcf6d336d1a2f6ce638cca047fa65ed",
+  "viewport": {
+    "w": 2048,
+    "h": 1320
+  },
+  "image": {
+    "width": 2048,
+    "height": 1320
+  },
+  "svg": {
+    "x": 0,
+    "y": 0,
+    "w": 868,
+    "h": 630
+  },
+  "frames": [],
+  "cards": [],
+  "pills": [],
+  "overlays": [],
+  "scroll": {
+    "w": 2048,
+    "h": 1320
+  }
+}

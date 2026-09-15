@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Ref Chart 1 - Boot Process</title>
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;}
+  svg{display:block;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+  .box-text{fill:#262324;font-size:14px;text-anchor:middle;}
+  .box-text tspan{text-anchor:middle;}
+</style>
+</head>
+<body>
+<svg width="868" height="630" viewBox="0 0 868 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowBlack" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#000000"/>
+    </marker>
+  </defs>
+
+  <!-- vertical connector arrows (gray shaft rgb(141,141,141), black arrowhead) -->
+  <line x1="434" y1="59" x2="434" y2="99" stroke="#8d8d8d" stroke-width="2"/>
+  <line x1="434" y1="99" x2="434" y2="106" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack)"/>
+
+  <line x1="434" y1="159" x2="434" y2="198" stroke="#8d8d8d" stroke-width="2"/>
+  <line x1="434" y1="198" x2="434" y2="205" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack)"/>
+
+  <line x1="434" y1="238" x2="434" y2="278" stroke="#8d8d8d" stroke-width="2"/>
+  <line x1="434" y1="278" x2="434" y2="285" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack)"/>
+
+  <line x1="434" y1="337" x2="434" y2="377" stroke="#8d8d8d" stroke-width="2"/>
+  <line x1="434" y1="377" x2="434" y2="384" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack)"/>
+
+  <line x1="434" y1="517" x2="434" y2="556" stroke="#8d8d8d" stroke-width="2"/>
+  <line x1="434" y1="556" x2="434" y2="563" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack)"/>
+
+  <!-- horizontal arrows from green side boxes into center column, box3 y-center=221 -->
+  <line x1="222" y1="224" x2="260" y2="221" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack)"/>
+  <line x1="644" y1="224" x2="606" y2="221" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack)"/>
+
+  <!-- green side boxes fill rgb(211,232,212) sampled -->
+  <rect x="45" y="165" width="177" height="119" rx="6" fill="#d3e8d4"/>
+  <text class="box-text" x="133" y="220">
+    <tspan x="133" dy="0">Secure Enclave</tspan>
+    <tspan x="133" dy="18">signed</tspan>
+    <tspan x="133" dy="18" font-style="italic">LocalPolicy</tspan>
+  </text>
+
+  <rect x="644" y="165" width="176" height="119" rx="6" fill="#d3e8d4"/>
+  <text class="box-text" x="732" y="211">
+    <tspan x="732" dy="0">Secure Enclave Boot</tspan>
+    <tspan x="732" dy="18">ROM fetches</tspan>
+    <tspan x="732" dy="18" font-style="italic">LocalPolicy</tspan>
+    <tspan x="732" dy="18">nonces from Secure</tspan>
+    <tspan x="732" dy="18">Storage Component</tspan>
+  </text>
+
+  <!-- main vertical chain, fill rgb(182,226,250) sampled at (434,132) -->
+  <rect x="266" y="29" width="336" height="28" rx="6" fill="#b6e2fa"/>
+  <text class="box-text" x="434" y="47">Boot ROM validates LLB signature</text>
+
+  <rect x="266" y="108" width="336" height="49" rx="6" fill="#b6e2fa"/>
+  <text class="box-text" x="434" y="128">
+    <tspan x="434" dy="0">LLB validates system-paired</tspan>
+    <tspan x="434" dy="18">firmware signatures</tspan>
+  </text>
+
+  <rect x="266" y="207" width="336" height="29" rx="6" fill="#b6e2fa"/>
+  <text class="box-text" x="434" y="225">LLB validates <tspan font-style="italic">LocalPolicy</tspan> signature</text>
+
+  <rect x="266" y="287" width="336" height="48" rx="6" fill="#b6e2fa"/>
+  <text class="box-text" x="434" y="307">
+    <tspan x="434" dy="0">LLB evaluates iBoot stage 2 signature</tspan>
+    <tspan x="434" dy="18">according to <tspan font-style="italic">LocalPolicy</tspan></tspan>
+  </text>
+
+  <rect x="266" y="386" width="336" height="129" rx="6" fill="#b6e2fa"/>
+  <text class="box-text" x="434" y="410">
+    <tspan x="434" dy="0">iBoot stage 2 validates macOS-paired</tspan>
+    <tspan x="434" dy="18">firmware, Boot Kernel Collection,</tspan>
+    <tspan x="434" dy="18">Auxiliary Kernel Collection (if applicable),</tspan>
+    <tspan x="434" dy="18">system trust cache, and signed system</tspan>
+    <tspan x="434" dy="18">volume signatures, according</tspan>
+    <tspan x="434" dy="18">to <tspan font-style="italic">LocalPolicy</tspan></tspan>
+  </text>
+
+  <rect x="266" y="565" width="336" height="28" rx="6" fill="#b6e2fa"/>
+  <text class="box-text" x="434" y="583">macOS</text>
+
+</svg>
+</body>
+</html>

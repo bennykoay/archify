@@ -1,0 +1,19 @@
+file:///D:/Onesimus/tools/archify/archify/renderers/shared/diagnostics.mjs:55
+  throw new Error(`${prefix}:\n- ${messages.join('\n- ')}`);
+        ^
+
+Error: Workflow layout validation failed:
+- Edge "tool" -> "external" is too short (25px; minimum 28px) — drop its label or route it through a channel.
+- [clean-flow/endpoint-side-direction] workflow edges[8] id "external-reply" "external" -> "final" first segment 0 [671, 615] -> [671, 119] does not honor fromSide "right" — it must run horizontal rightward; keep automatic routing, or choose fromSide/toSide and via points whose first and final segments cross node borders perpendicularly.
+- [clean-flow/endpoint-side-direction] workflow edges[8] id "external-reply" "external" -> "final" final segment 0 [671, 615] -> [671, 119] does not honor toSide "right" — it must run horizontal leftward from the right; keep automatic routing, or choose fromSide/toSide and via points whose first and final segments cross node borders perpendicularly.
+- [clean-flow/edge-through-node] workflow edges[8] id "external-reply" "external" -> "final" crosses node "retry" (unrelated to this relationship) on segment 0 [671, 615] -> [671, 352] (2px clearance) — adjust fromSide/toSide, set route/via or channel coordinates, or move the node to a clearer lane/column.
+- Label "denied" overlaps node "blocked" — adjust labelDx/labelDy/labelSegment or set labelAt.
+  label rect: [419, 483, 39, 14]
+  node "blocked" rect: [454, 465, 92, 52]
+  Suggested fix: labelAt [439, 531] or labelDy +38 (below); or labelAt [439, 461] or labelDy -32 (above)
+- [composition/label-route-clearance] showcase workflow label "denied" on edges[5] id "approval-denied" "approval" -> "blocked" label "denied" is 0px from edges[4] id "approved-tool" "approval" -> "tool" segment 0 [437, 401] -> [437, 615] (label rect [419, 483, 39, 14]; minimum 4px) — adjust labelAt, labelDx, labelDy, or labelSegment; otherwise adjust the other relationship route/via/channel.
+    at throwDiagnosticProblems (file:///D:/Onesimus/tools/archify/archify/renderers/shared/diagnostics.mjs:55:9)
+    at validateWorkflow (file:///D:/Onesimus/tools/archify/archify/renderers/workflow/render-workflow.mjs:469:5)
+    at file:///D:/Onesimus/tools/archify/archify/renderers/workflow/render-workflow.mjs:763:1
+
+Node.js v25.5.0

@@ -1,0 +1,417 @@
+{
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Sales",
+      "wraps": [
+        "request",
+        "quote",
+        "signoff"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "CS Team",
+      "wraps": [
+        "match",
+        "costing"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "BUM",
+      "wraps": [
+        "bum_price"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "MD",
+      "wraps": [
+        "md_signoff"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Accounting",
+      "wraps": [
+        "precheck",
+        "submit",
+        "dopi",
+        "collect"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Client & Supplier (external)",
+      "wraps": [
+        "po"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "request",
+      "label": "Collect 6 facts",
+      "pos": [
+        726,
+        309
+      ],
+      "sublabel": "qty, UOM, price + terms",
+      "type": "backend"
+    },
+    {
+      "id": "match",
+      "label": "Name+UOM tally?",
+      "pos": [
+        358,
+        636
+      ],
+      "sublabel": "tally w/ supplier cap 2",
+      "type": "backend"
+    },
+    {
+      "id": "bum_price",
+      "label": "Confirm supplier price",
+      "pos": [
+        358,
+        1028
+      ],
+      "sublabel": "from BUM list + budget boundary",
+      "type": "backend"
+    },
+    {
+      "id": "costing",
+      "label": "Costing sheet",
+      "pos": [
+        70,
+        636
+      ],
+      "sublabel": "BUM price + 6 facts, no retype",
+      "type": "backend"
+    },
+    {
+      "id": "md_signoff",
+      "label": "Risk tally pass?",
+      "pos": [
+        1286,
+        87
+      ],
+      "sublabel": "reject to Costing",
+      "type": "backend"
+    },
+    {
+      "id": "quote",
+      "label": "Our Quotation",
+      "pos": [
+        1286,
+        309
+      ],
+      "sublabel": "Rev-numbered, validity-dated",
+      "type": "backend"
+    },
+    {
+      "id": "po",
+      "label": "Customer PO",
+      "pos": [
+        1286,
+        531
+      ],
+      "sublabel": "authenticity signatory/number/chop",
+      "type": "backend"
+    },
+    {
+      "id": "signoff",
+      "label": "PO = latest Rev?",
+      "pos": [
+        1006,
+        309
+      ],
+      "sublabel": "signer: Sales",
+      "type": "backend"
+    },
+    {
+      "id": "precheck",
+      "label": "All 4 tally?",
+      "pos": [
+        946,
+        531
+      ],
+      "sublabel": "4-way tally, last exit",
+      "type": "backend"
+    },
+    {
+      "id": "submit",
+      "label": "Submit e-invoice",
+      "pos": [
+        946,
+        627
+      ],
+      "sublabel": "point of no return",
+      "type": "backend"
+    },
+    {
+      "id": "dopi",
+      "label": "D/O + proforma",
+      "pos": [
+        946,
+        723
+      ],
+      "sublabel": "preparer OPEN",
+      "type": "backend"
+    },
+    {
+      "id": "collect",
+      "label": "Collect per terms",
+      "pos": [
+        946,
+        819
+      ],
+      "sublabel": "owner OPEN",
+      "type": "backend"
+    }
+  ],
+  "connections": [
+    {
+      "from": "request",
+      "fromSide": "left",
+      "id": "c01",
+      "to": "match",
+      "toSide": "left",
+      "variant": "emphasis",
+      "via": [
+        [
+          708,
+          339
+        ],
+        [
+          708,
+          446
+        ],
+        [
+          340,
+          446
+        ],
+        [
+          340,
+          666
+        ]
+      ]
+    },
+    {
+      "from": "match",
+      "fromSide": "bottom",
+      "id": "c02",
+      "to": "bum_price",
+      "toSide": "top",
+      "variant": "emphasis"
+    },
+    {
+      "from": "bum_price",
+      "fromSide": "bottom",
+      "id": "c03",
+      "to": "costing",
+      "toSide": "top",
+      "variant": "emphasis",
+      "via": [
+        [
+          488,
+          1155
+        ],
+        [
+          1246,
+          1155
+        ],
+        [
+          1246,
+          436
+        ],
+        [
+          200,
+          436
+        ]
+      ]
+    },
+    {
+      "from": "costing",
+      "fromSide": "bottom",
+      "id": "c04",
+      "to": "md_signoff",
+      "toSide": "top",
+      "variant": "emphasis",
+      "via": [
+        [
+          200,
+          933
+        ],
+        [
+          12,
+          933
+        ],
+        [
+          12,
+          12
+        ],
+        [
+          1416,
+          12
+        ]
+      ]
+    },
+    {
+      "from": "md_signoff",
+      "fromSide": "bottom",
+      "id": "c05",
+      "to": "quote",
+      "toSide": "top",
+      "variant": "emphasis"
+    },
+    {
+      "from": "quote",
+      "fromSide": "bottom",
+      "id": "c06",
+      "to": "po",
+      "toSide": "top",
+      "variant": "emphasis"
+    },
+    {
+      "from": "po",
+      "fromSide": "bottom",
+      "id": "c07",
+      "to": "signoff",
+      "toSide": "top",
+      "variant": "emphasis",
+      "via": [
+        [
+          1416,
+          933
+        ],
+        [
+          1586,
+          933
+        ],
+        [
+          1586,
+          224
+        ],
+        [
+          1136,
+          224
+        ]
+      ]
+    },
+    {
+      "from": "signoff",
+      "fromSide": "bottom",
+      "id": "c08",
+      "to": "precheck",
+      "toSide": "top",
+      "variant": "emphasis",
+      "via": [
+        [
+          1136,
+          446
+        ],
+        [
+          1076,
+          446
+        ]
+      ]
+    },
+    {
+      "from": "precheck",
+      "fromSide": "bottom",
+      "id": "c09",
+      "to": "submit",
+      "toSide": "top",
+      "variant": "emphasis"
+    },
+    {
+      "from": "submit",
+      "fromSide": "bottom",
+      "id": "c10",
+      "to": "dopi",
+      "toSide": "top",
+      "variant": "default"
+    },
+    {
+      "from": "dopi",
+      "fromSide": "bottom",
+      "id": "c11",
+      "to": "collect",
+      "toSide": "top",
+      "variant": "default"
+    },
+    {
+      "from": "match",
+      "fromSide": "top",
+      "id": "c12",
+      "to": "request",
+      "toSide": "left",
+      "variant": "security",
+      "label": "mismatch retry cap 2",
+      "via": [
+        [
+          488,
+          618
+        ],
+        [
+          628,
+          618
+        ],
+        [
+          628,
+          933
+        ],
+        [
+          668,
+          933
+        ],
+        [
+          668,
+          224
+        ],
+        [
+          708,
+          224
+        ],
+        [
+          708,
+          339
+        ]
+      ]
+    },
+    {
+      "from": "md_signoff",
+      "fromSide": "left",
+      "id": "c13",
+      "to": "costing",
+      "toSide": "left",
+      "variant": "security",
+      "label": "reject",
+      "via": [
+        [
+          1268,
+          117
+        ],
+        [
+          1268,
+          214
+        ],
+        [
+          52,
+          214
+        ],
+        [
+          52,
+          666
+        ]
+      ]
+    }
+  ],
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "sys002 spike — ELK orthogonal layout, zero authored geometry"
+  },
+  "schema_version": 1
+}

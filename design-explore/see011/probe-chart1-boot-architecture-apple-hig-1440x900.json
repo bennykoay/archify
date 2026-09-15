@@ -1,0 +1,113 @@
+{
+  "tool": "see006-probe.mjs",
+  "html": "D:\\Onesimus\\tools\\archify\\design-explore\\chart1-boot-architecture-apple-hig.html",
+  "sha256": "1fabc1e99ad3e37acec85ee4aaac201d389bdbd278ca685d58f40df5f761ac13",
+  "viewport": {
+    "w": 1440,
+    "h": 900
+  },
+  "image": {
+    "width": 1440,
+    "height": 900
+  },
+  "svg": {
+    "x": 47,
+    "y": 81,
+    "w": 1346,
+    "h": 869
+  },
+  "frames": [],
+  "cards": [
+    {
+      "id": "bootrom",
+      "x": 468,
+      "y": 123,
+      "w": 477,
+      "h": 77
+    },
+    {
+      "id": "llbfw",
+      "x": 468,
+      "y": 235,
+      "w": 477,
+      "h": 77
+    },
+    {
+      "id": "llbpolicy",
+      "x": 468,
+      "y": 347,
+      "w": 477,
+      "h": 77
+    },
+    {
+      "id": "llbiboot",
+      "x": 468,
+      "y": 460,
+      "w": 477,
+      "h": 84
+    },
+    {
+      "id": "ibootvalidate",
+      "x": 468,
+      "y": 579,
+      "w": 477,
+      "h": 126
+    },
+    {
+      "id": "macos",
+      "x": 468,
+      "y": 740,
+      "w": 477,
+      "h": 77
+    },
+    {
+      "id": "se_signed",
+      "x": 75,
+      "y": 340,
+      "w": 358,
+      "h": 91
+    },
+    {
+      "id": "se_fetch",
+      "x": 978,
+      "y": 340,
+      "w": 358,
+      "h": 91
+    }
+  ],
+  "pills": [],
+  "overlays": [
+    {
+      "sel": "[role=\"toolbar\"]",
+      "x": 1031,
+      "y": 16,
+      "w": 393,
+      "h": 44
+    },
+    {
+      "sel": "[role=\"toolbar\"]",
+      "x": 1084,
+      "y": 910,
+      "w": 307,
+      "h": 39
+    },
+    {
+      "sel": ".toolbar",
+      "x": 1031,
+      "y": 16,
+      "w": 393,
+      "h": 44
+    },
+    {
+      "sel": "[data-legend]",
+      "x": 96,
+      "y": 882,
+      "w": 268,
+      "h": 57
+    }
+  ],
+  "scroll": {
+    "w": 1440,
+    "h": 1106
+  }
+}

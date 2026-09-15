@@ -1,0 +1,115 @@
+{
+  "palette": {
+    "neg": [
+      "#080808",
+      "#161616"
+    ],
+    "posJ": [
+      "#080808",
+      "#0c0c0c"
+    ],
+    "roles": {
+      "page": "#8c8c8c",
+      "lane": "#dcdcdc",
+      "card": "#3c3c3c"
+    },
+    "driftJ": [
+      "#858585",
+      2.4955581855040347
+    ],
+    "driftC": [
+      "#767676",
+      8.28876926922982
+    ]
+  },
+  "rows": [
+    {
+      "fixture": "C1",
+      "primary": "P1",
+      "predicted": "PASS",
+      "actual": "PASS",
+      "match": 1,
+      "pops": "P1:N=2 P2:N=2 P3:N=3"
+    },
+    {
+      "fixture": "C2",
+      "primary": "P1",
+      "predicted": "FAIL",
+      "actual": "FAIL",
+      "match": 1,
+      "pops": "P1:N=2 P2:N=2 P3:N=3"
+    },
+    {
+      "fixture": "C3",
+      "primary": "P1",
+      "predicted": "FAIL",
+      "actual": "FAIL",
+      "match": 1,
+      "pops": "P1:N=2 P2:N=2 P3:N=3"
+    },
+    {
+      "fixture": "C4",
+      "primary": "P2",
+      "predicted": "PASS",
+      "actual": "PASS",
+      "match": 1,
+      "pops": "P1:N=2 P2:N=2 P3:N=3"
+    },
+    {
+      "fixture": "C5",
+      "primary": "P2",
+      "predicted": "FAIL",
+      "actual": "FAIL",
+      "match": 1,
+      "pops": "P1:N=2 P2:N=2 P3:N=3"
+    },
+    {
+      "fixture": "C6",
+      "primary": "P2",
+      "predicted": "FAIL",
+      "actual": "FAIL",
+      "match": 1,
+      "pops": "P1:N=2 P2:N=2 P3:N=3"
+    },
+    {
+      "fixture": "C7",
+      "primary": "P3",
+      "predicted": "PASS",
+      "actual": "PASS",
+      "match": 1,
+      "pops": "P1:N=2 P2:N=2 P3:N=3"
+    },
+    {
+      "fixture": "C8",
+      "primary": "P3",
+      "predicted": "FAIL",
+      "actual": "FAIL",
+      "match": 1,
+      "pops": "P1:N=2 P2:N=2 P3:N=3"
+    },
+    {
+      "fixture": "C9",
+      "primary": "P3",
+      "predicted": "FAIL",
+      "actual": "FAIL",
+      "match": 1,
+      "pops": "P1:N=2 P2:N=2 P3:N=3"
+    },
+    {
+      "fixture": "C10",
+      "primary": "ALL",
+      "predicted": "NA",
+      "actual": "NA/NA/NA",
+      "match": 1,
+      "pops": "P1:N=0 P2:N=0 P3:N=0"
+    }
+  ],
+  "catchRate": [
+    6,
+    6
+  ],
+  "falseAlarmRate": [
+    0,
+    3
+  ]
+}

@@ -1,0 +1,895 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\see013\\before\\web-app.architecture.html",
+    "sha256": "db683c7de757c001ed8e4c3cca42b1db48a342bd9a9dac9f53f0990322a8c8d9",
+    "sha8": "db683c7d",
+    "bytes": 716824
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "kind": "architecture",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "PASS",
+      "measured": {
+        "population": 11,
+        "transitSamples": 0,
+        "pillTransits": 0,
+        "laneHeaders": 0,
+        "pills": 2,
+        "pillMasks": 2,
+        "paths": 9
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no transit: lane 0, pills 2 (masks 2), paths 9"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": false,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "DATA",
+      "measured": {
+        "population": 10,
+        "nodes": 10,
+        "violations": 10,
+        "worstMinInset": 10.51,
+        "worstSpread": 0.05
+      },
+      "elements": [
+        {
+          "node": "worker",
+          "title": "Worker"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 193.78,
+            "y": 513.26,
+            "w": 42.74,
+            "h": 15
+          },
+          "cardBox": {
+            "x": 110.52,
+            "y": 502.75,
+            "w": 209.06,
+            "h": 48.24
+          },
+          "insets": {
+            "l": 83.26,
+            "r": 83.05,
+            "t": 10.51,
+            "b": 22.73
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe FAIL): worst \"Worker\" inset 10.51px",
+      "wouldBe": "FAIL"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": false,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "DATA",
+      "measured": {
+        "population": 6,
+        "edgeLabels": 6,
+        "collisions": 3
+      },
+      "elements": [
+        {
+          "edgeLabel": "read-through",
+          "edgeKey": "5",
+          "vs": "boundary-stroke:sg-api :443/:8000"
+        },
+        {
+          "edgeLabel": "SQL",
+          "edgeKey": "6",
+          "vs": "boundary-stroke:sg-api :443/:8000"
+        },
+        {
+          "edgeLabel": "enqueue",
+          "edgeKey": "7",
+          "vs": "boundary-stroke:sg-api :443/:8000"
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 1084.71,
+            "y": 238.86,
+            "w": 55.34,
+            "h": 12.22
+          }
+        },
+        {
+          "labelBox": {
+            "x": 1081.83,
+            "y": 306.4,
+            "w": 24.12,
+            "h": 12.22
+          }
+        },
+        {
+          "labelBox": {
+            "x": 1069.98,
+            "y": 346.6,
+            "w": 36.56,
+            "h": 12.22
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe FAIL): \"read-through\" vs boundary-stroke:sg-api :443/:8000",
+      "wouldBe": "FAIL"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 6,
+        "edgeLabels": 6,
+        "orphans": 2,
+        "worstDist": 89.58,
+        "worstInside": 0
+      },
+      "elements": [
+        {
+          "label": "verify JWT",
+          "key": "1"
+        }
+      ],
+      "coords": [
+        {
+          "centroid": {
+            "x": 853.21,
+            "y": 364.77
+          },
+          "tip": {
+            "x": 869.56,
+            "y": 275.2
+          },
+          "labelBox": {
+            "x": 829.62,
+            "y": 358.66,
+            "w": 47.17,
+            "h": 12.22
+          }
+        }
+      ],
+      "reason": "label \"verify JWT\" centroid (853.21,364.77) 89.58px from own polyline (>24)"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": false,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "DATA",
+      "measured": {
+        "population": 9,
+        "tips": 9,
+        "modal": 16,
+        "outliers": 0,
+        "gaps": [
+          17.05,
+          15.68,
+          15.68,
+          15.68,
+          15.68,
+          15.68,
+          15.68,
+          15.68,
+          15.68
+        ],
+        "modalExemplar": {
+          "edge": "users>cdn",
+          "gap": 17.05,
+          "tip": {
+            "x": 343.54,
+            "y": 355.6
+          }
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): modal 16px",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 12,
+        "containers": 2,
+        "nodes": 10,
+        "minOccupancy": 0.2175,
+        "globalInkRatio": 0.1588,
+        "inkArea": 156000
+      },
+      "elements": [
+        {
+          "container": "AWS Region: us-west-2",
+          "kids": [
+            "users",
+            "auth",
+            "cdn",
+            "lb",
+            "api",
+            "cache",
+            "db",
+            "s3",
+            "queue",
+            "worker"
+          ]
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 96.05,
+            "y": 195.59,
+            "w": 1264.79,
+            "h": 366.65
+          }
+        }
+      ],
+      "reason": "container \"AWS Region: us-west-2\" occupancy 0.2175 < 0.50 (10 child node(s): users, auth, cdn, lb, api, cache, db, s3, queue, worker)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "PASS",
+      "measured": {
+        "population": 21,
+        "at1440x900": {
+          "scrollHeight": 900,
+          "innerHeight": 900,
+          "screens": 1
+        },
+        "at1920x1080": {
+          "scrollHeight": 1080,
+          "innerHeight": 1080,
+          "screens": 1
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "fits without vertical scroll at >=1 declared viewport"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": true,
+      "threshold": "distinct spec pos[0] count>1 AND content-bbox/viewBox>=0.50 (viewBox from svg.viewBox.baseVal)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 16,
+        "distinctX": 6,
+        "xs": [
+          198,
+          209,
+          520,
+          842,
+          1164,
+          1486
+        ],
+        "contentBox": {
+          "x": 61,
+          "y": 63,
+          "w": 1573,
+          "h": 456
+        },
+        "viewBox": {
+          "x": 0,
+          "y": 0,
+          "width": 1674,
+          "height": 587
+        },
+        "ratio": 0.73
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentBox": {
+            "x": 61,
+            "y": 63,
+            "w": 1573,
+            "h": 456
+          },
+          "viewBox": {
+            "x": 0,
+            "y": 0,
+            "width": 1674,
+            "height": 587
+          }
+        }
+      ],
+      "reason": "spread ok: distinct-x=6, ratio 0.73"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 11,
+        "frames": 2,
+        "floorFails": 0,
+        "spreadFails": 2,
+        "spreadNAFrames": 0,
+        "worstFloorMin": 13.67,
+        "worstSpread": 35.36,
+        "worstFloorFrame": "sg-api :443/:8000",
+        "worstSpreadFrame": "AWS Region: us-west-2",
+        "allFrames": [
+          {
+            "frame": "AWS Region: us-west-2",
+            "floorMin": null,
+            "spread": 79.58,
+            "spreadQualified": 35.36,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "right",
+              "bottom",
+              "left"
+            ],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": 79.6,
+              "right": 0.78,
+              "bottom": 35.38,
+              "left": 0.02
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": "1:term",
+              "right": "8:mid",
+              "bottom": "8:mid",
+              "left": "8:mid"
+            }
+          },
+          {
+            "frame": "sg-api :443/:8000",
+            "floorMin": 13.67,
+            "spread": 78.8,
+            "spreadQualified": 6.44,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "right",
+              "bottom",
+              "left"
+            ],
+            "p1min": {
+              "top": 161.19,
+              "right": 90.06,
+              "bottom": 13.67,
+              "left": 13.67
+            },
+            "p2min": {
+              "top": 79.6,
+              "right": 0.8,
+              "bottom": 7.24,
+              "left": 0.8
+            },
+            "p1who": {
+              "top": "3",
+              "right": "8",
+              "bottom": "3",
+              "left": "3"
+            },
+            "p2who": {
+              "top": "1:term",
+              "right": "6:mid",
+              "bottom": "7:mid",
+              "left": "2:mid"
+            }
+          }
+        ]
+      },
+      "elements": [
+        {
+          "frame": "AWS Region: us-west-2",
+          "part": "uniformity",
+          "spread": 35.36,
+          "qualifiedSides": [
+            "right",
+            "bottom",
+            "left"
+          ]
+        },
+        {
+          "frame": "sg-api :443/:8000",
+          "part": "uniformity",
+          "spread": 6.44,
+          "qualifiedSides": [
+            "right",
+            "bottom",
+            "left"
+          ]
+        }
+      ],
+      "coords": [
+        {
+          "frameBox": {
+            "x": 96.05,
+            "y": 195.59,
+            "w": 1264.79,
+            "h": 366.65
+          },
+          "p2min": {
+            "top": 79.6,
+            "right": 0.78,
+            "bottom": 35.38,
+            "left": 0.02
+          }
+        },
+        {
+          "frameBox": {
+            "x": 605.02,
+            "y": 195.59,
+            "w": 496.91,
+            "h": 195.39
+          },
+          "p2min": {
+            "top": 79.6,
+            "right": 0.8,
+            "bottom": 7.24,
+            "left": 0.8
+          }
+        }
+      ],
+      "reason": "frame \"AWS Region: us-west-2\" spread 35.36px > 6 (qualified [\"right\",\"bottom\",\"left\"] p2min {\"top\":79.6,\"right\":0.78,\"bottom\":35.38,\"left\":0.02})"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "PASS",
+      "measured": {
+        "population": 9,
+        "tips": 9,
+        "violations": 0,
+        "worstGap": 7.4,
+        "worstInside": false,
+        "gaps": [
+          7.4,
+          7.64,
+          7.64,
+          7.64,
+          7.64,
+          7.64,
+          7.64,
+          7.64,
+          7.64
+        ],
+        "insideFlags": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 9 actual tips outside UNION at >=6px (worst gap 7.4px users>cdn)"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "PASS",
+      "measured": {
+        "population": 10,
+        "rendered": 9,
+        "spec": 9
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "edge conservation ok: rendered 9 == spec 9"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 9,
+        "violations": 0,
+        "worstAngle": 0,
+        "worstEdge": "users>cdn",
+        "angles": [
+          {
+            "edge": "users>cdn",
+            "angle": 0,
+            "pieceLen": 40
+          },
+          {
+            "edge": "auth>api",
+            "angle": 0,
+            "pieceLen": 40
+          },
+          {
+            "edge": "cdn>lb",
+            "angle": 0,
+            "pieceLen": 40
+          },
+          {
+            "edge": "cdn>s3",
+            "angle": 0,
+            "pieceLen": 24
+          },
+          {
+            "edge": "lb>api",
+            "angle": 0,
+            "pieceLen": 24
+          },
+          {
+            "edge": "api>cache",
+            "angle": 0,
+            "pieceLen": 40
+          },
+          {
+            "edge": "api>db",
+            "angle": 0,
+            "pieceLen": 24
+          },
+          {
+            "edge": "api>queue",
+            "angle": 0,
+            "pieceLen": 24
+          },
+          {
+            "edge": "queue>worker",
+            "angle": 0,
+            "pieceLen": 16
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 9 heads face their last piece within 30deg (worst 0deg users>cdn)"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 12,
+        "left": 96.05,
+        "right": 79.16,
+        "top": 195.59,
+        "bottom": 337.76,
+        "diff": 16.89,
+        "tol": 72,
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "contentRendered": {
+          "x": 96.05,
+          "y": 195.59,
+          "w": 1264.79,
+          "h": 366.65
+        }
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 96.05,
+            "y": 195.59,
+            "w": 1264.79,
+            "h": 366.65
+          }
+        }
+      ],
+      "reason": "margins balanced: left 96.05px vs right 79.16px (diff 16.89 <= 72 = 5% of 1440)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 2,
+        "frames": 2,
+        "judged": 2,
+        "violations": 0,
+        "worstFrame": "AWS Region: us-west-2",
+        "worstDiff": 8.84,
+        "worstTol": 126.48,
+        "worstShare": 0.7,
+        "rows": [
+          {
+            "frame": "AWS Region: us-west-2",
+            "kids": [
+              "users",
+              "auth",
+              "cdn",
+              "lb",
+              "api",
+              "cache",
+              "db",
+              "s3",
+              "queue",
+              "worker"
+            ],
+            "left": 5.63,
+            "right": 14.47,
+            "top": 55.48,
+            "bottom": 11.26,
+            "leftWho": "users",
+            "rightWho": "cache",
+            "topWho": "auth",
+            "bottomWho": "worker",
+            "diff": 8.84,
+            "tol": 126.48
+          },
+          {
+            "frame": "sg-api :443/:8000",
+            "kids": [
+              "auth",
+              "lb",
+              "api"
+            ],
+            "left": 14.47,
+            "right": 14.47,
+            "top": 55.48,
+            "bottom": 11.26,
+            "leftWho": "auth",
+            "rightWho": "api",
+            "topWho": "auth",
+            "bottomWho": "lb",
+            "diff": 0,
+            "tol": 49.69
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 2 held frames balanced within 10% (worst \"AWS Region: us-west-2\" diff 8.84)"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 6,
+        "labels": 6,
+        "violations": 5,
+        "worstGap": 0,
+        "worstLabel": "read-through",
+        "worstVs": "card:api",
+        "rows": [
+          {
+            "label": "HTTPS",
+            "key": "0",
+            "cardGap": 9.95,
+            "cardWho": "cdn",
+            "subGap": 79.41,
+            "subWho": "users:Browser / Mobile",
+            "minGap": 9.95,
+            "minWho": "cdn",
+            "minKind": "card"
+          },
+          {
+            "label": "verify JWT",
+            "key": "1",
+            "cardGap": 1.07,
+            "cardWho": "lb",
+            "subGap": 79.46,
+            "subWho": "lb:HTTPS :443",
+            "minGap": 1.07,
+            "minWho": "lb",
+            "minKind": "card"
+          },
+          {
+            "label": "static",
+            "key": "3",
+            "cardGap": 7.08,
+            "cardWho": "cdn",
+            "subGap": 83.21,
+            "subWho": "cdn:CDN",
+            "minGap": 7.08,
+            "minWho": "cdn",
+            "minKind": "card"
+          },
+          {
+            "label": "read-through",
+            "key": "5",
+            "cardGap": 0,
+            "cardWho": "api",
+            "subGap": 76.61,
+            "subWho": "api:FastAPI :8000",
+            "minGap": 0,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "SQL",
+            "key": "6",
+            "cardGap": 7.08,
+            "cardWho": "api",
+            "subGap": 71.34,
+            "subWho": "api:FastAPI :8000",
+            "minGap": 7.08,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "enqueue",
+            "key": "7",
+            "cardGap": 30.77,
+            "cardWho": "db",
+            "subGap": 81.57,
+            "subWho": "api:FastAPI :8000",
+            "minGap": 30.77,
+            "minWho": "db",
+            "minKind": "card"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "label": "HTTPS",
+          "key": "0",
+          "vs": "card:cdn",
+          "gap": 9.95
+        },
+        {
+          "label": "verify JWT",
+          "key": "1",
+          "vs": "card:lb",
+          "gap": 1.07
+        },
+        {
+          "label": "static",
+          "key": "3",
+          "vs": "card:cdn",
+          "gap": 7.08
+        },
+        {
+          "label": "read-through",
+          "key": "5",
+          "vs": "card:api",
+          "gap": 0
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 321,
+            "y": 358.66,
+            "w": 29.63,
+            "h": 12.22
+          },
+          "gap": 9.95,
+          "vs": "card:cdn"
+        },
+        {
+          "labelBox": {
+            "x": 829.62,
+            "y": 358.66,
+            "w": 47.17,
+            "h": 12.22
+          },
+          "gap": 1.07,
+          "vs": "card:lb"
+        },
+        {
+          "labelBox": {
+            "x": 556.45,
+            "y": 386.8,
+            "w": 31.2,
+            "h": 12.22
+          },
+          "gap": 7.08,
+          "vs": "card:cdn"
+        },
+        {
+          "labelBox": {
+            "x": 1084.71,
+            "y": 238.86,
+            "w": 55.34,
+            "h": 12.22
+          },
+          "gap": 0,
+          "vs": "card:api"
+        }
+      ],
+      "reason": "edge label \"HTTPS\" (0) crowds card \"cdn\" at 9.95px (<24; card leg 9.95px vs cdn, sub leg 79.41px vs users:Browser / Mobile)"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 28,
+        "texts": 28,
+        "pxViolations": 26,
+        "contrastViolations": 0,
+        "scale": 0.8,
+        "minByDetail": {
+          "primary": {
+            "px": 12.06,
+            "text": "Users"
+          },
+          "context": {
+            "px": 8.84,
+            "text": "Browser / Mobile"
+          },
+          "boundary": {
+            "px": 18.82,
+            "text": "AWS Region: us-west-2"
+          },
+          "edge": {
+            "px": 8.84,
+            "text": "HTTPS"
+          }
+        },
+        "worstProjectedPx": 12.06,
+        "worstContrast": 21
+      },
+      "elements": [
+        {
+          "detail": "primary",
+          "text": "Users"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 189.18,
+            "y": 341.99,
+            "w": 34.42,
+            "h": 15
+          },
+          "sourceFontPx": 15
+        }
+      ],
+      "reason": "\"Users\" (primary) 12.06px < 15px floor"
+    }
+  ],
+  "complete": true
+}

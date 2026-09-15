@@ -1,0 +1,485 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\see013\\before\\sys003-org-structure.architecture.html",
+    "sha256": "17f4415a754f010ec92af189537d2b14512214569280218431670637ba593dea",
+    "sha8": "17f4415a",
+    "bytes": 706762
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "kind": "architecture",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "PASS",
+      "measured": {
+        "population": 7,
+        "transitSamples": 0,
+        "pillTransits": 0,
+        "laneHeaders": 0,
+        "pills": 0,
+        "pillMasks": 0,
+        "paths": 7
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no lane headers nor pills: vacuously clean"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": false,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "DATA",
+      "measured": {
+        "population": 8,
+        "nodes": 8,
+        "violations": 8,
+        "worstMinInset": 15.24,
+        "worstSpread": 0.31
+      },
+      "elements": [
+        {
+          "node": "vp_sales",
+          "title": "VP Sales"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 699.8,
+            "y": 564.81,
+            "w": 77.03,
+            "h": 27
+          },
+          "cardBox": {
+            "x": 565.72,
+            "y": 549.57,
+            "w": 345.81,
+            "h": 79.8
+          },
+          "insets": {
+            "l": 134.08,
+            "r": 134.69,
+            "t": 15.24,
+            "b": 37.56
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe FAIL): worst \"VP Sales\" inset 15.24px",
+      "wouldBe": "FAIL"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": false,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "edgeLabels": 0,
+        "collisions": 0
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no edge labels to examine",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "edgeLabels": 0,
+        "orphans": 0,
+        "worstDist": null,
+        "worstInside": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no edge labels measured"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": false,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "DATA",
+      "measured": {
+        "population": 7,
+        "tips": 7,
+        "modal": 28,
+        "outliers": 0,
+        "gaps": [
+          28.2,
+          28.19,
+          28.2,
+          28.19,
+          28.2,
+          28.19,
+          28.2
+        ],
+        "modalExemplar": {
+          "edge": "ceo>vp_eng",
+          "gap": 28.2,
+          "tip": {
+            "x": 537.52,
+            "y": 323.46
+          }
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): modal 28px",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 8,
+        "containers": 0,
+        "nodes": 8,
+        "minOccupancy": null,
+        "globalInkRatio": 0.1832,
+        "inkArea": 124800
+      },
+      "elements": [
+        {
+          "container": "viewBox(global ink/area)"
+        }
+      ],
+      "coords": [],
+      "reason": "global ink/viewBox 0.1832 < 0.50 (ink/area; per-container min \"?\": ?)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 15,
+        "at1440x900": {
+          "scrollHeight": 1050,
+          "innerHeight": 900,
+          "screens": 1.17
+        },
+        "at1920x1080": {
+          "scrollHeight": 1123,
+          "innerHeight": 1080,
+          "screens": 1.04
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "overflowY at both viewports (1440x900 scrollHeight 1050 vs 900 = 1.17 screens)"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": true,
+      "threshold": "distinct spec pos[0] count>1 AND content-bbox/viewBox>=0.50 (viewBox from svg.viewBox.baseVal)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 12,
+        "distinctX": 4,
+        "xs": [
+          198,
+          209,
+          520,
+          842
+        ],
+        "contentBox": {
+          "x": 68,
+          "y": 132,
+          "w": 904,
+          "h": 473
+        },
+        "viewBox": {
+          "x": 0,
+          "y": 0,
+          "width": 1012,
+          "height": 673
+        },
+        "ratio": 0.63
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentBox": {
+            "x": 68,
+            "y": 132,
+            "w": 904,
+            "h": 473
+          },
+          "viewBox": {
+            "x": 0,
+            "y": 0,
+            "width": 1012,
+            "height": 673
+          }
+        }
+      ],
+      "reason": "spread ok: distinct-x=4, ratio 0.63"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 7,
+        "frames": 0,
+        "floorFails": 0,
+        "spreadFails": 0,
+        "spreadNAFrames": 0,
+        "worstFloorMin": null,
+        "worstSpread": null,
+        "worstFloorFrame": null,
+        "worstSpreadFrame": null,
+        "allFrames": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no frames measured"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "PASS",
+      "measured": {
+        "population": 7,
+        "tips": 7,
+        "violations": 0,
+        "worstGap": 12.24,
+        "worstInside": false,
+        "gaps": [
+          12.24,
+          12.24,
+          12.24,
+          12.24,
+          12.24,
+          12.24,
+          12.24
+        ],
+        "insideFlags": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 7 actual tips outside UNION at >=6px (worst gap 12.24px ceo>vp_eng)"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "PASS",
+      "measured": {
+        "population": 8,
+        "rendered": 7,
+        "spec": 7
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "edge conservation ok: rendered 7 == spec 7"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 7,
+        "violations": 0,
+        "worstAngle": 0,
+        "worstEdge": "ceo>vp_eng",
+        "angles": [
+          {
+            "edge": "ceo>vp_eng",
+            "angle": 0,
+            "pieceLen": 40
+          },
+          {
+            "edge": "ceo>vp_sales",
+            "angle": 0,
+            "pieceLen": 24
+          },
+          {
+            "edge": "vp_eng>mgr_be",
+            "angle": 0,
+            "pieceLen": 40
+          },
+          {
+            "edge": "vp_eng>mgr_fe",
+            "angle": 0,
+            "pieceLen": 24
+          },
+          {
+            "edge": "vp_sales>mgr_ent",
+            "angle": 0,
+            "pieceLen": 40
+          },
+          {
+            "edge": "vp_sales>mgr_smb",
+            "angle": 0,
+            "pieceLen": 24
+          },
+          {
+            "edge": "mgr_be>ic_be",
+            "angle": 0,
+            "pieceLen": 16
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 7 heads face their last piece within 30deg (worst 0deg ceo>vp_eng)"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 8,
+        "left": 137.45,
+        "right": 100.2,
+        "top": 283.56,
+        "bottom": -12.66,
+        "diff": 37.25,
+        "tol": 72,
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "contentRendered": {
+          "x": 137.45,
+          "y": 283.56,
+          "w": 1202.35,
+          "h": 629.1
+        }
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 137.45,
+            "y": 283.56,
+            "w": 1202.35,
+            "h": 629.1
+          }
+        }
+      ],
+      "reason": "margins balanced: left 137.45px vs right 100.2px (diff 37.25 <= 72 = 5% of 1440)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "frames": 0,
+        "judged": 0,
+        "violations": 0,
+        "worstFrame": null,
+        "worstDiff": null,
+        "worstTol": null,
+        "worstShare": null,
+        "rows": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no frame holds a card"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "labels": 0,
+        "violations": 0,
+        "worstGap": null,
+        "worstLabel": null,
+        "worstVs": null,
+        "rows": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no edge labels to examine"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 16,
+        "texts": 16,
+        "pxViolations": 0,
+        "contrastViolations": 0,
+        "scale": 1,
+        "minByDetail": {
+          "primary": {
+            "px": 15,
+            "text": "CEO"
+          },
+          "context": {
+            "px": 11,
+            "text": "chief executive"
+          }
+        },
+        "worstProjectedPx": 15,
+        "worstContrast": 21
+      },
+      "elements": [
+        {
+          "detail": "primary",
+          "text": "CEO"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 291.45,
+            "y": 298.8,
+            "w": 37.8,
+            "h": 27
+          },
+          "sourceFontPx": 15
+        }
+      ],
+      "reason": "all details above px+contrast floors (worst \"CEO\" 15px)"
+    }
+  ],
+  "complete": true
+}

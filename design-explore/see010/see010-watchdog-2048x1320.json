@@ -1,0 +1,1331 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\watchdog-local-cloud-flow.html",
+    "sha256": "13e8fd24788c1fa9257c8b0e8404175bb937600cc3f16d36567fdf8255fa0959",
+    "sha8": "13e8fd24",
+    "bytes": 719732
+  },
+  "viewport": {
+    "width": 2048,
+    "height": 1320
+  },
+  "kind": "workflow",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 20,
+        "transitSamples": 1,
+        "pillTransits": 0,
+        "laneHeaders": 7,
+        "pills": 0,
+        "pillMasks": 0,
+        "paths": 13
+      },
+      "elements": [
+        {
+          "header": "03 / Local Engine",
+          "edgeKey": "9"
+        }
+      ],
+      "coords": [
+        {
+          "pt": {
+            "x": 498.89,
+            "y": 777.34
+          },
+          "headerBox": {
+            "x": 433.25,
+            "y": 779.57,
+            "w": 160.98,
+            "h": 24
+          }
+        }
+      ],
+      "reason": "route transits lane-header text: 9 at (498.89,777.34) inside \"03 / Local Engine\" bbox+4px"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": true,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 12,
+        "nodes": 12,
+        "violations": 1,
+        "worstMinInset": 13.21,
+        "worstSpread": 0.35
+      },
+      "elements": [
+        {
+          "node": "reboot_523",
+          "title": "5:23AM reboot"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 423.99,
+            "y": 616.41,
+            "w": 150.49,
+            "h": 25
+          },
+          "cardBox": {
+            "x": 410.09,
+            "y": 595.87,
+            "w": 177.61,
+            "h": 100.39
+          },
+          "insets": {
+            "l": 13.91,
+            "r": 13.21,
+            "t": 20.54,
+            "b": 54.85
+          }
+        }
+      ],
+      "reason": "title \"5:23AM reboot\" (reboot_523) min inset 13.21px < 16"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": true,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 6,
+        "edgeLabels": 6,
+        "collisions": 3
+      },
+      "elements": [
+        {
+          "edgeLabel": "failover if local down",
+          "edgeKey": "3",
+          "vs": "boundary-stroke:lane-2"
+        },
+        {
+          "edgeLabel": "5:23 precedent",
+          "edgeKey": "9",
+          "vs": "lane-header:03 / Local Engine"
+        },
+        {
+          "edgeLabel": "proof in 15 min or page",
+          "edgeKey": "11",
+          "vs": "boundary-stroke:lane-5"
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 642.14,
+            "y": 937.57,
+            "w": 223.17,
+            "h": 27.03
+          }
+        },
+        {
+          "labelBox": {
+            "x": 424.37,
+            "y": 771.54,
+            "w": 149.04,
+            "h": 27.03
+          }
+        },
+        {
+          "labelBox": {
+            "x": 1419.38,
+            "y": 1655.73,
+            "w": 232.44,
+            "h": 27.03
+          }
+        }
+      ],
+      "reason": "edge label \"failover if local down\" collides boundary-stroke:lane-2"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 6,
+        "edgeLabels": 6,
+        "orphans": 6,
+        "worstDist": 1.93,
+        "worstInside": 8
+      },
+      "elements": [
+        {
+          "label": "claimed + logged",
+          "key": "10"
+        }
+      ],
+      "coords": [
+        {
+          "centroid": {
+            "x": 1535.59,
+            "y": 1454.96
+          },
+          "tip": {
+            "x": 1535.59,
+            "y": 1553.41
+          },
+          "labelBox": {
+            "x": 1451.81,
+            "y": 1441.44,
+            "w": 167.57,
+            "h": 27.03
+          }
+        }
+      ],
+      "reason": "label \"claimed + logged\" sits on its own wire (8 own-polyline samples inside label bbox — mask severs the wire)"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": true,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 13,
+        "tips": 13,
+        "modal": 15,
+        "outliers": 7,
+        "gaps": [
+          15.32,
+          15.32,
+          19.69,
+          15.32,
+          19.69,
+          15.32,
+          19.69,
+          19.11,
+          15.23,
+          15.32,
+          19.69,
+          19.69,
+          19.69
+        ],
+        "modalExemplar": {
+          "edge": "sense_watch>sense_ntfy",
+          "gap": 15.32,
+          "tip": {
+            "x": 641.88,
+            "y": 406.67
+          }
+        }
+      },
+      "elements": [
+        {
+          "edge": "decide_hyst>local_engine",
+          "key": "2"
+        },
+        {
+          "edge": "local_engine>cond_close",
+          "key": "4"
+        },
+        {
+          "edge": "cond_close>gate_log",
+          "key": "6"
+        },
+        {
+          "edge": "gate_log>act_remedy",
+          "key": "7"
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 753.72,
+            "y": 815.56
+          },
+          "pathEnd": {
+            "x": 753.72,
+            "y": 835.25
+          },
+          "targetEdge": {
+            "x": 664.92,
+            "y": 835.25,
+            "w": 177.61,
+            "h": 100.39
+          },
+          "gap": 19.69
+        },
+        {
+          "tip": {
+            "x": 1050.64,
+            "y": 885.45
+          },
+          "pathEnd": {
+            "x": 1070.33,
+            "y": 885.45
+          },
+          "targetEdge": {
+            "x": 1070.33,
+            "y": 835.25,
+            "w": 177.61,
+            "h": 100.39
+          },
+          "gap": 19.69
+        },
+        {
+          "tip": {
+            "x": 1294.28,
+            "y": 1294.34
+          },
+          "pathEnd": {
+            "x": 1294.28,
+            "y": 1314.03
+          },
+          "targetEdge": {
+            "x": 1205.47,
+            "y": 1314.03,
+            "w": 177.61,
+            "h": 100.39
+          },
+          "gap": 19.69
+        },
+        {
+          "tip": {
+            "x": 1427.68,
+            "y": 1364.22
+          },
+          "pathEnd": {
+            "x": 1446.79,
+            "y": 1364.22
+          },
+          "targetEdge": {
+            "x": 1446.79,
+            "y": 1314.03,
+            "w": 177.61,
+            "h": 100.39
+          },
+          "gap": 19.11
+        }
+      ],
+      "reason": "7 tips deviate from modal 15px (>2px): decide_hyst>local_engine 19.69px, local_engine>cond_close 19.69px, cond_close>gate_log 19.69px, gate_log>act_remedy 19.11px"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 19,
+        "containers": 7,
+        "nodes": 12,
+        "minOccupancy": 0.0719,
+        "globalInkRatio": 0.079,
+        "inkArea": 58240
+      },
+      "elements": [
+        {
+          "container": "lane-5",
+          "kids": [
+            "verify_proof"
+          ]
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 406.23,
+            "y": 1474.26,
+            "w": 1235.55,
+            "h": 200.78
+          }
+        }
+      ],
+      "reason": "container \"lane-5\" occupancy 0.0719 < 0.50 (1 child node(s): verify_proof)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 39,
+        "at1440x900": {
+          "scrollHeight": 2106,
+          "innerHeight": 900,
+          "screens": 2.34
+        },
+        "at1920x1080": {
+          "scrollHeight": 2227,
+          "innerHeight": 1080,
+          "screens": 2.06
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "overflowY at both viewports (1440x900 scrollHeight 2106 vs 900 = 2.34 screens)"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": false,
+      "threshold": "architecture-only: distinct spec pos[0] > 1 AND content-bbox/viewBox >= 0.50",
+      "verdict": "NA",
+      "measured": {
+        "population": 19,
+        "kind": "workflow"
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "workflow layout (lane frames present): spread does not apply (NA per SEE-004 contract)"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 20,
+        "frames": 7,
+        "floorFails": 1,
+        "spreadFails": 0,
+        "spreadNAFrames": 2,
+        "worstFloorMin": 0,
+        "worstSpread": 0.35,
+        "worstFloorFrame": "lane-3",
+        "worstSpreadFrame": "lane-5",
+        "allFrames": [
+          {
+            "frame": "lane-0",
+            "floorMin": 218.15,
+            "spread": 533.5,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [
+              "bottom"
+            ],
+            "p1min": {
+              "top": 418.93,
+              "right": 535.43,
+              "bottom": 218.15,
+              "left": 237.02
+            },
+            "p2min": {
+              "top": 129.35,
+              "right": 535.43,
+              "bottom": 1.93,
+              "left": 181.47
+            },
+            "p1who": {
+              "top": "2",
+              "right": "6",
+              "bottom": "2",
+              "left": "9"
+            },
+            "p2who": {
+              "top": "0:term",
+              "right": "6",
+              "bottom": "1:mid",
+              "left": "0:term"
+            }
+          },
+          {
+            "frame": "lane-1",
+            "floorMin": 110.04,
+            "spread": 384.03,
+            "spreadQualified": 0,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "bottom"
+            ],
+            "p1min": {
+              "top": 110.04,
+              "right": 385.96,
+              "bottom": 167.96,
+              "left": 212.23
+            },
+            "p2min": {
+              "top": 1.93,
+              "right": 385.96,
+              "bottom": 1.93,
+              "left": 92.67
+            },
+            "p1who": {
+              "top": "0",
+              "right": "6",
+              "bottom": "4",
+              "left": "0"
+            },
+            "p2who": {
+              "top": "1:mid",
+              "right": "6",
+              "bottom": "2:mid",
+              "left": "9:term"
+            }
+          },
+          {
+            "frame": "lane-2",
+            "floorMin": 160.23,
+            "spread": 345.57,
+            "spreadQualified": 0,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "bottom"
+            ],
+            "p1min": {
+              "top": 160.23,
+              "right": 451.61,
+              "bottom": 167.96,
+              "left": 382.66
+            },
+            "p2min": {
+              "top": 1.93,
+              "right": 347.5,
+              "bottom": 1.93,
+              "left": 92.67
+            },
+            "p1who": {
+              "top": "1",
+              "right": "7",
+              "bottom": "5",
+              "left": "1"
+            },
+            "p2who": {
+              "top": "2:mid",
+              "right": "6:mid",
+              "bottom": "3:mid",
+              "left": "9:mid"
+            }
+          },
+          {
+            "frame": "lane-3",
+            "floorMin": 0,
+            "spread": 242.62,
+            "spreadQualified": 0,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "bottom"
+            ],
+            "p1min": {
+              "top": 0,
+              "right": 242.62,
+              "bottom": 0,
+              "left": 143.86
+            },
+            "p2min": {
+              "top": 0,
+              "right": 242.62,
+              "bottom": 0,
+              "left": 143.86
+            },
+            "p1who": {
+              "top": "6",
+              "right": "10",
+              "bottom": "6",
+              "left": "9"
+            },
+            "p2who": {
+              "top": "6",
+              "right": "10",
+              "bottom": "6",
+              "left": "9"
+            }
+          },
+          {
+            "frame": "lane-4",
+            "floorMin": 110.04,
+            "spread": 359.71,
+            "spreadQualified": 0.13,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "bottom"
+            ],
+            "p1min": {
+              "top": 110.04,
+              "right": 242.62,
+              "bottom": 218.15,
+              "left": 361.51
+            },
+            "p2min": {
+              "top": 1.93,
+              "right": 106.18,
+              "bottom": 1.8,
+              "left": 361.51
+            },
+            "p1who": {
+              "top": "5",
+              "right": "11",
+              "bottom": "11",
+              "left": "9"
+            },
+            "p2who": {
+              "top": "6:mid",
+              "right": "10:term",
+              "bottom": "8:mid",
+              "left": "9"
+            }
+          },
+          {
+            "frame": "lane-5",
+            "floorMin": 110.04,
+            "spread": 527.99,
+            "spreadQualified": 0.35,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "bottom"
+            ],
+            "p1min": {
+              "top": 110.04,
+              "right": 223.89,
+              "bottom": 310.82,
+              "left": 529.58
+            },
+            "p2min": {
+              "top": 1.58,
+              "right": 106.18,
+              "bottom": 1.93,
+              "left": 529.58
+            },
+            "p1who": {
+              "top": "7",
+              "right": "7",
+              "bottom": "7",
+              "left": "3"
+            },
+            "p2who": {
+              "top": "8:mid",
+              "right": "10:mid",
+              "bottom": "11:mid",
+              "left": "3"
+            }
+          },
+          {
+            "frame": "lane-6",
+            "floorMin": 110.04,
+            "spread": 725.45,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [
+              "top"
+            ],
+            "p1min": {
+              "top": 110.04,
+              "right": 192.22,
+              "bottom": 310.82,
+              "left": 727.38
+            },
+            "p2min": {
+              "top": 1.93,
+              "right": 106.18,
+              "bottom": 121.62,
+              "left": 727.38
+            },
+            "p1who": {
+              "top": "8",
+              "right": "10",
+              "bottom": "8",
+              "left": "3"
+            },
+            "p2who": {
+              "top": "11:mid",
+              "right": "11:mid",
+              "bottom": "11:term",
+              "left": "3"
+            }
+          }
+        ]
+      },
+      "elements": [
+        {
+          "frame": "lane-3",
+          "part": "floor",
+          "floorMin": 0
+        }
+      ],
+      "coords": [
+        {
+          "frameBox": {
+            "x": 406.23,
+            "y": 995.49,
+            "w": 1235.55,
+            "h": 200.78
+          },
+          "p1min": {
+            "top": 0,
+            "right": 242.62,
+            "bottom": 0,
+            "left": 143.86
+          }
+        }
+      ],
+      "reason": "frame \"lane-3\" floor 0px < 12"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 13,
+        "tips": 13,
+        "violations": 13,
+        "worstGap": 0,
+        "worstInside": true,
+        "gaps": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "insideFlags": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "elements": [
+        {
+          "edge": "sense_watch>sense_ntfy",
+          "key": "0",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "sense_ntfy>decide_hyst",
+          "key": "1",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "decide_hyst>local_engine",
+          "key": "2",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "local_engine>cloud_engine",
+          "key": "3",
+          "inside": true,
+          "gap": 0
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 659.9,
+            "y": 406.67
+          },
+          "pathEnd": {
+            "x": 657.2,
+            "y": 406.67
+          },
+          "targetBox": {
+            "x": 657.2,
+            "y": 356.48,
+            "w": 193.05,
+            "h": 100.39
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 753.72,
+            "y": 598.57
+          },
+          "pathEnd": {
+            "x": 753.72,
+            "y": 595.87
+          },
+          "targetBox": {
+            "x": 657.2,
+            "y": 595.87,
+            "w": 193.05,
+            "h": 100.39
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 753.72,
+            "y": 838.73
+          },
+          "pathEnd": {
+            "x": 753.72,
+            "y": 835.25
+          },
+          "targetBox": {
+            "x": 664.92,
+            "y": 835.25,
+            "w": 177.61,
+            "h": 100.39
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 753.72,
+            "y": 1077.34
+          },
+          "pathEnd": {
+            "x": 753.72,
+            "y": 1074.64
+          },
+          "targetBox": {
+            "x": 664.92,
+            "y": 1074.64,
+            "w": 177.61,
+            "h": 100.39
+          },
+          "gap": 0,
+          "inside": true
+        }
+      ],
+      "reason": "tip sense_watch>sense_ntfy INSIDE target box (gap 0px — inside always FAIL)"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "PASS",
+      "measured": {
+        "population": 14,
+        "rendered": 13,
+        "spec": 13
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "edge conservation ok: rendered 13 == spec 13"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 13,
+        "violations": 0,
+        "worstAngle": 0,
+        "worstEdge": "sense_watch>sense_ntfy",
+        "angles": [
+          {
+            "edge": "sense_watch>sense_ntfy",
+            "angle": 0,
+            "pieceLen": 36
+          },
+          {
+            "edge": "sense_ntfy>decide_hyst",
+            "angle": 0,
+            "pieceLen": 51
+          },
+          {
+            "edge": "decide_hyst>local_engine",
+            "angle": 0,
+            "pieceLen": 51
+          },
+          {
+            "edge": "local_engine>cloud_engine",
+            "angle": 0,
+            "pieceLen": 51
+          },
+          {
+            "edge": "local_engine>cond_close",
+            "angle": 0,
+            "pieceLen": 118
+          },
+          {
+            "edge": "cloud_engine>cost_gate",
+            "angle": 0,
+            "pieceLen": 118
+          },
+          {
+            "edge": "cond_close>gate_log",
+            "angle": 0,
+            "pieceLen": 222
+          },
+          {
+            "edge": "gate_log>act_remedy",
+            "angle": 0,
+            "pieceLen": 33
+          },
+          {
+            "edge": "gate_log>verify_proof",
+            "angle": 0,
+            "pieceLen": 79
+          },
+          {
+            "edge": "reboot_523>local_engine",
+            "angle": 0,
+            "pieceLen": 86
+          },
+          {
+            "edge": "act_remedy>verify_proof",
+            "angle": 0,
+            "pieceLen": 51
+          },
+          {
+            "edge": "verify_proof>report_ntfy",
+            "angle": 0,
+            "pieceLen": 51
+          },
+          {
+            "edge": "cost_gate>gate_log",
+            "angle": 0,
+            "pieceLen": 24
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 13 heads face their last piece within 30deg (worst 0deg sense_watch>sense_ntfy)"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 26,
+        "left": 406.23,
+        "right": 406.22,
+        "top": 277.33,
+        "bottom": -594.43,
+        "diff": 0.01,
+        "tol": 102.4,
+        "viewportWidth": 2048,
+        "viewportHeight": 1320,
+        "contentRendered": {
+          "x": 406.23,
+          "y": 277.33,
+          "w": 1235.55,
+          "h": 1637.1
+        }
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 406.23,
+            "y": 277.33,
+            "w": 1235.55,
+            "h": 1637.1
+          }
+        }
+      ],
+      "reason": "margins balanced: left 406.23px vs right 406.22px (diff 0.01 <= 102.4 = 5% of 2048)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 7,
+        "frames": 7,
+        "judged": 7,
+        "violations": 7,
+        "worstFrame": "lane-5",
+        "worstDiff": 1023.19,
+        "worstTol": 123.55,
+        "worstShare": 82.81,
+        "rows": [
+          {
+            "frame": "lane-0",
+            "kids": [
+              "sense_watch",
+              "sense_ntfy"
+            ],
+            "left": 3.86,
+            "right": 791.52,
+            "top": 79.15,
+            "bottom": 21.24,
+            "leftWho": "sense_watch",
+            "rightWho": "sense_ntfy",
+            "topWho": "sense_watch",
+            "bottomWho": "sense_watch",
+            "diff": 787.66,
+            "tol": 123.55
+          },
+          {
+            "frame": "lane-1",
+            "kids": [
+              "reboot_523",
+              "decide_hyst"
+            ],
+            "left": 3.86,
+            "right": 791.52,
+            "top": 79.15,
+            "bottom": 21.24,
+            "leftWho": "reboot_523",
+            "rightWho": "decide_hyst",
+            "topWho": "reboot_523",
+            "bottomWho": "reboot_523",
+            "diff": 787.66,
+            "tol": 123.55
+          },
+          {
+            "frame": "lane-2",
+            "kids": [
+              "local_engine",
+              "cond_close"
+            ],
+            "left": 258.69,
+            "right": 393.83,
+            "top": 79.15,
+            "bottom": 21.24,
+            "leftWho": "local_engine",
+            "rightWho": "cond_close",
+            "topWho": "local_engine",
+            "bottomWho": "local_engine",
+            "diff": 135.14,
+            "tol": 123.55
+          },
+          {
+            "frame": "lane-3",
+            "kids": [
+              "cloud_engine",
+              "cost_gate"
+            ],
+            "left": 258.69,
+            "right": 393.83,
+            "top": 79.15,
+            "bottom": 21.24,
+            "leftWho": "cloud_engine",
+            "rightWho": "cost_gate",
+            "topWho": "cloud_engine",
+            "bottomWho": "cloud_engine",
+            "diff": 135.14,
+            "tol": 123.55
+          },
+          {
+            "frame": "lane-4",
+            "kids": [
+              "gate_log",
+              "act_remedy"
+            ],
+            "left": 799.24,
+            "right": 17.37,
+            "top": 79.15,
+            "bottom": 21.24,
+            "leftWho": "gate_log",
+            "rightWho": "act_remedy",
+            "topWho": "gate_log",
+            "bottomWho": "gate_log",
+            "diff": 781.87,
+            "tol": 123.55
+          },
+          {
+            "frame": "lane-5",
+            "kids": [
+              "verify_proof"
+            ],
+            "left": 1040.56,
+            "right": 17.37,
+            "top": 79.15,
+            "bottom": 21.24,
+            "leftWho": "verify_proof",
+            "rightWho": "verify_proof",
+            "topWho": "verify_proof",
+            "bottomWho": "verify_proof",
+            "diff": 1023.19,
+            "tol": 123.55
+          },
+          {
+            "frame": "lane-6",
+            "kids": [
+              "report_ntfy"
+            ],
+            "left": 1040.56,
+            "right": 17.37,
+            "top": 79.15,
+            "bottom": 21.24,
+            "leftWho": "report_ntfy",
+            "rightWho": "report_ntfy",
+            "topWho": "report_ntfy",
+            "bottomWho": "report_ntfy",
+            "diff": 1023.19,
+            "tol": 123.55
+          }
+        ]
+      },
+      "elements": [
+        {
+          "frame": "lane-5",
+          "left": 1040.56,
+          "right": 17.37,
+          "diff": 1023.19,
+          "tol": 123.55,
+          "leftWho": "verify_proof",
+          "rightWho": "verify_proof"
+        },
+        {
+          "frame": "lane-6",
+          "left": 1040.56,
+          "right": 17.37,
+          "diff": 1023.19,
+          "tol": 123.55,
+          "leftWho": "report_ntfy",
+          "rightWho": "report_ntfy"
+        },
+        {
+          "frame": "lane-0",
+          "left": 3.86,
+          "right": 791.52,
+          "diff": 787.66,
+          "tol": 123.55,
+          "leftWho": "sense_watch",
+          "rightWho": "sense_ntfy"
+        },
+        {
+          "frame": "lane-1",
+          "left": 3.86,
+          "right": 791.52,
+          "diff": 787.66,
+          "tol": 123.55,
+          "leftWho": "reboot_523",
+          "rightWho": "decide_hyst"
+        }
+      ],
+      "coords": [
+        {
+          "frame": "lane-5",
+          "left": 1040.56,
+          "right": 17.37,
+          "top": 79.15,
+          "bottom": 21.24
+        },
+        {
+          "frame": "lane-6",
+          "left": 1040.56,
+          "right": 17.37,
+          "top": 79.15,
+          "bottom": 21.24
+        },
+        {
+          "frame": "lane-0",
+          "left": 3.86,
+          "right": 791.52,
+          "top": 79.15,
+          "bottom": 21.24
+        },
+        {
+          "frame": "lane-1",
+          "left": 3.86,
+          "right": 791.52,
+          "top": 79.15,
+          "bottom": 21.24
+        }
+      ],
+      "reason": "frame \"lane-5\" lopsided: left 1040.56px (verify_proof) vs right 17.37px (verify_proof) (diff 1023.19 > 123.55 = 10% of 1235.55)"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 6,
+        "labels": 6,
+        "violations": 2,
+        "worstGap": 1.93,
+        "worstLabel": "failover if local down",
+        "worstVs": "card:local_engine",
+        "rows": [
+          {
+            "label": "failover if local down",
+            "key": "3",
+            "cardGap": 1.93,
+            "cardWho": "local_engine",
+            "subGap": 25.96,
+            "subWho": "local_engine:8093, BootResume cover",
+            "minGap": 1.93,
+            "minWho": "local_engine",
+            "minKind": "card"
+          },
+          {
+            "label": "cond-close",
+            "key": "8",
+            "cardGap": 75.29,
+            "cardWho": "gate_log",
+            "subGap": 98.32,
+            "subWho": "gate_log:claim + budget",
+            "minGap": 75.29,
+            "minWho": "gate_log",
+            "minKind": "card"
+          },
+          {
+            "label": "5:23 precedent",
+            "key": "9",
+            "cardGap": 75.29,
+            "cardWho": "reboot_523",
+            "subGap": 99.32,
+            "subWho": "reboot_523:precedent path, re-arm",
+            "minGap": 75.29,
+            "minWho": "reboot_523",
+            "minKind": "card"
+          },
+          {
+            "label": "claimed + logged",
+            "key": "10",
+            "cardGap": 27.03,
+            "cardWho": "act_remedy",
+            "subGap": 50.06,
+            "subWho": "act_remedy:claimed + logged",
+            "minGap": 27.03,
+            "minWho": "act_remedy",
+            "minKind": "card"
+          },
+          {
+            "label": "proof in 15 min or page",
+            "key": "11",
+            "cardGap": 1.93,
+            "cardWho": "verify_proof",
+            "subGap": 24.96,
+            "subWho": "verify_proof:flow proof, 15 min",
+            "minGap": 1.93,
+            "minWho": "verify_proof",
+            "minKind": "card"
+          },
+          {
+            "label": "within $1",
+            "key": "12",
+            "cardGap": 75.29,
+            "cardWho": "cost_gate",
+            "subGap": 99.32,
+            "subWho": "cost_gate:usage_ledger, failover",
+            "minGap": 75.29,
+            "minWho": "cost_gate",
+            "minKind": "card"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "label": "failover if local down",
+          "key": "3",
+          "vs": "card:local_engine",
+          "gap": 1.93
+        },
+        {
+          "label": "proof in 15 min or page",
+          "key": "11",
+          "vs": "card:verify_proof",
+          "gap": 1.93
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 642.14,
+            "y": 937.57,
+            "w": 223.17,
+            "h": 27.03
+          },
+          "gap": 1.93,
+          "vs": "card:local_engine"
+        },
+        {
+          "labelBox": {
+            "x": 1419.38,
+            "y": 1655.73,
+            "w": 232.44,
+            "h": 27.03
+          },
+          "gap": 1.93,
+          "vs": "card:verify_proof"
+        }
+      ],
+      "reason": "edge label \"failover if local down\" (3) crowds card \"local_engine\" at 1.93px (<24; card leg 1.93px vs local_engine, sub leg 25.96px vs local_engine:8093, BootResume cover)"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 37,
+        "texts": 37,
+        "pxViolations": 37,
+        "contrastViolations": 13,
+        "scale": 1,
+        "minByDetail": {
+          "primary": {
+            "px": 10.7,
+            "text": "5:23AM reboot"
+          },
+          "context": {
+            "px": 6.3,
+            "text": "precedent path, re-arm"
+          },
+          "boundary": {
+            "px": 10,
+            "text": "01 / Sense"
+          },
+          "edge": {
+            "px": 8,
+            "text": "failover if local down"
+          }
+        },
+        "worstProjectedPx": 6.3,
+        "worstContrast": 10.94
+      },
+      "elements": [
+        {
+          "detail": "context",
+          "text": "precedent path, re-arm"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 431.96,
+            "y": 657.23,
+            "w": 133.86,
+            "h": 15
+          },
+          "sourceFontPx": 6.3
+        }
+      ],
+      "reason": "\"precedent path, re-arm\" (context) 6.3px < 11px floor"
+    }
+  ],
+  "complete": true
+}

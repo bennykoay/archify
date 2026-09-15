@@ -1,0 +1,471 @@
+{
+  "tool": "colour-assert.mjs",
+  "png": "D:\\Onesimus\\tools\\archify\\design-explore\\see011\\png-einvoice-order-flow-2048x1320-light.png",
+  "image": {
+    "width": 2048,
+    "height": 1320
+  },
+  "floors": {
+    "P1": "de00 >= 1",
+    "P2": "de00 >= 1 (border-excluded bands)",
+    "P3": "de00 <= 2 vs declared token"
+  },
+  "pageMarginCheck": {
+    "insideSvgGap": {
+      "rgb": [
+        255,
+        255,
+        255
+      ],
+      "hex": "#ffffff",
+      "n": 636
+    },
+    "outsideSvg": {
+      "rgb": [
+        242,
+        242,
+        247
+      ],
+      "hex": "#f2f2f7",
+      "n": 844
+    }
+  },
+  "assertions": [
+    {
+      "id": "P1",
+      "name": "SURFACE_SEPARATION",
+      "asserted": true,
+      "threshold": "touching-pair CIEDE2000 >= 1 (near bands 2..8px)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 10,
+        "fails": 0,
+        "rows": [
+          {
+            "pair": "frame/card:request",
+            "nA": 2400,
+            "nB": 742,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:match",
+            "nA": 2400,
+            "nB": 742,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:bum_price",
+            "nA": 3900,
+            "nB": 384,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:costing",
+            "nA": 3528,
+            "nB": 896,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:md_signoff",
+            "nA": 3144,
+            "nB": 784,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:quote",
+            "nA": 3264,
+            "nB": 819,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:po",
+            "nA": 3672,
+            "nB": 938,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:signoff",
+            "nA": 3408,
+            "nB": 861,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:precheck",
+            "nA": 1963,
+            "nB": 848,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:collect",
+            "nA": 1487,
+            "nB": 834,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2",
+      "name": "STRUCTURE_WITHOUT_BORDER",
+      "asserted": true,
+      "threshold": "same pairs CIEDE2000 >= 1 (far bands >=10px, hairline ignored)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 16,
+        "fails": 0,
+        "rows": [
+          {
+            "pair": "page/frame:lane-0",
+            "nA": 636,
+            "nB": 1180,
+            "a": "#ffffff",
+            "b": "#f7f7fa",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-1",
+            "nA": 636,
+            "nB": 1520,
+            "a": "#ffffff",
+            "b": "#f7f7fa",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-2",
+            "nA": 636,
+            "nB": 1370,
+            "a": "#ffffff",
+            "b": "#f7f7fa",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-3",
+            "nA": 636,
+            "nB": 1500,
+            "a": "#ffffff",
+            "b": "#f7f7fa",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-4",
+            "nA": 636,
+            "nB": 1560,
+            "a": "#ffffff",
+            "b": "#f7f7fa",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-5",
+            "nA": 636,
+            "nB": 969,
+            "a": "#ffffff",
+            "b": "#f7f7fa",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:request",
+            "nA": 1180,
+            "nB": 2450,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:match",
+            "nA": 1370,
+            "nB": 2450,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:bum_price",
+            "nA": 1500,
+            "nB": 1728,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:costing",
+            "nA": 1370,
+            "nB": 3220,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:md_signoff",
+            "nA": 1560,
+            "nB": 2660,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:quote",
+            "nA": 1180,
+            "nB": 2835,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:po",
+            "nA": 1520,
+            "nB": 3430,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:signoff",
+            "nA": 1180,
+            "nB": 3045,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:precheck",
+            "nA": 969,
+            "nB": 2080,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:collect",
+            "nA": 969,
+            "nB": 2106,
+            "a": "#f7f7fa",
+            "b": "#ffffff",
+            "de00": 2.22,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P3",
+      "name": "DECLARED_VS_DELIVERED",
+      "asserted": true,
+      "threshold": "sampled vs declared-token CIEDE2000 <= 2",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 17,
+        "fails": 1,
+        "rows": [
+          {
+            "surface": "page",
+            "n": 636,
+            "sampled": "#ffffff",
+            "declared": "#f2f2f7",
+            "de00": 3.64,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "frame:lane-0",
+            "n": 1180,
+            "sampled": "#f7f7fa",
+            "declared": "#f5f5f7",
+            "de00": 0.67,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-1",
+            "n": 1520,
+            "sampled": "#f7f7fa",
+            "declared": "#f5f5f7",
+            "de00": 0.67,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-2",
+            "n": 1370,
+            "sampled": "#f7f7fa",
+            "declared": "#f5f5f7",
+            "de00": 0.67,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-3",
+            "n": 1500,
+            "sampled": "#f7f7fa",
+            "declared": "#f5f5f7",
+            "de00": 0.67,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-4",
+            "n": 1560,
+            "sampled": "#f7f7fa",
+            "declared": "#f5f5f7",
+            "de00": 0.67,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-5",
+            "n": 969,
+            "sampled": "#f7f7fa",
+            "declared": "#f5f5f7",
+            "de00": 0.67,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:request",
+            "n": 2450,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:match",
+            "n": 2450,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:bum_price",
+            "n": 1728,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:costing",
+            "n": 3220,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:md_signoff",
+            "n": 2660,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:quote",
+            "n": 2835,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:po",
+            "n": 3430,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:signoff",
+            "n": 3045,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:precheck",
+            "n": 2080,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:collect",
+            "n": 2106,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    }
+  ],
+  "excludedForThinSample": 8
+}

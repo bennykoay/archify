@@ -1,0 +1,221 @@
+{
+  "tool": "colour-assert.mjs",
+  "png": "D:\\Onesimus\\tools\\archify\\design-explore\\see011\\png-cnc-bus-architecture-2048x1320-light.png",
+  "image": {
+    "width": 2048,
+    "height": 1320
+  },
+  "floors": {
+    "P1": "de00 >= 1",
+    "P2": "de00 >= 1 (border-excluded bands)",
+    "P3": "de00 <= 2 vs declared token"
+  },
+  "pageMarginCheck": {
+    "insideSvgGap": {
+      "rgb": [
+        255,
+        255,
+        255
+      ],
+      "hex": "#ffffff",
+      "n": 1424
+    },
+    "outsideSvg": {
+      "rgb": [
+        245,
+        245,
+        247
+      ],
+      "hex": "#f5f5f7",
+      "n": 850
+    }
+  },
+  "assertions": [
+    {
+      "id": "P1",
+      "name": "SURFACE_SEPARATION",
+      "asserted": true,
+      "threshold": "touching-pair CIEDE2000 >= 1 (near bands 2..8px)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 4,
+        "fails": 4,
+        "rows": [
+          {
+            "pair": "frame/card:cnc",
+            "nA": 5026,
+            "nB": 339,
+            "a": "#ffffff",
+            "b": "#ffffff",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:io",
+            "nA": 5388,
+            "nB": 339,
+            "a": "#ffffff",
+            "b": "#ffffff",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:servoZ",
+            "nA": 5388,
+            "nB": 339,
+            "a": "#ffffff",
+            "b": "#ffffff",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:servoX",
+            "nA": 5388,
+            "nB": 339,
+            "a": "#ffffff",
+            "b": "#ffffff",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2",
+      "name": "STRUCTURE_WITHOUT_BORDER",
+      "asserted": true,
+      "threshold": "same pairs CIEDE2000 >= 1 (far bands >=10px, hairline ignored)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 5,
+        "fails": 5,
+        "rows": [
+          {
+            "pair": "page/frame:GSK-Link 总线菊花链",
+            "nA": 1424,
+            "nB": 1011,
+            "a": "#ffffff",
+            "b": "#ffffff",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:cnc",
+            "nA": 1011,
+            "nB": 2201,
+            "a": "#ffffff",
+            "b": "#ffffff",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:io",
+            "nA": 1011,
+            "nB": 2201,
+            "a": "#ffffff",
+            "b": "#ffffff",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:servoZ",
+            "nA": 1011,
+            "nB": 2201,
+            "a": "#ffffff",
+            "b": "#ffffff",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:servoX",
+            "nA": 1011,
+            "nB": 2201,
+            "a": "#ffffff",
+            "b": "#ffffff",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P3",
+      "name": "DECLARED_VS_DELIVERED",
+      "asserted": true,
+      "threshold": "sampled vs declared-token CIEDE2000 <= 2",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 7,
+        "fails": 2,
+        "rows": [
+          {
+            "surface": "page",
+            "n": 1424,
+            "sampled": "#ffffff",
+            "declared": "#f2f2f7",
+            "de00": 3.64,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "frame:GSK-Link 总线菊花链",
+            "n": 1011,
+            "sampled": "#ffffff",
+            "declared": "#f5f5f7",
+            "de00": 2.25,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:cnc",
+            "n": 2201,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:io",
+            "n": 2201,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:servoZ",
+            "n": 2201,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:servoX",
+            "n": 2201,
+            "sampled": "#ffffff",
+            "declared": "#ffffff",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "labelbox:0",
+            "n": 1494,
+            "sampled": "#f5f5f7",
+            "declared": "#f5f5f7",
+            "de00": 0,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    }
+  ],
+  "excludedForThinSample": 1
+}

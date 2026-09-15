@@ -1,0 +1,1067 @@
+{
+ "tool": "SEE-010 A14 INTERNAL_BALANCE + A15 LABEL_CLEARANCE corpus run @1440x900 (new code; only watchdog-local-cloud-flow.html edited, edge-10 label moved +13 SVG y)",
+ "charts": [
+  {
+   "chart": "aben-kkse-agent-flow",
+   "kind": "workflow",
+   "a14": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 4,
+     "judged": 4,
+     "violations": 2,
+     "worstFrame": "lane-3",
+     "worstDiff": 832.07,
+     "worstTol": 97.89,
+     "worstShare": 85
+    },
+    "hits": [
+     {
+      "frame": "lane-3",
+      "left": 3.06,
+      "right": 835.12,
+      "diff": 832.07,
+      "tol": 97.89,
+      "leftWho": "benji",
+      "rightWho": "benji"
+     },
+     {
+      "frame": "lane-2",
+      "left": 204.96,
+      "right": 312.02,
+      "diff": 107.07,
+      "tol": 97.89,
+      "leftWho": "benny",
+      "rightWho": "cloud"
+     }
+    ],
+    "reason": "frame \"lane-3\" lopsided: left 3.06px (benji) vs right 835.12px (benji) (diff 832.07 > 97.89 = 10% of 978.9)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 1,
+     "violations": 1,
+     "worstGap": 6.12,
+     "worstLabel": "ntfy Yalo: execute",
+     "worstVs": "card:james"
+    },
+    "hits": [
+     {
+      "label": "ntfy Yalo: execute",
+      "key": "7",
+      "vs": "card:james",
+      "gap": 6.12
+     }
+    ],
+    "reason": "edge label \"ntfy Yalo: execute\" (7) crowds card \"james\" at 6.12px (<24; card leg 6.12px vs james, sub leg 24.53px vs james:runs rungs)"
+   },
+   "a3verdict": "FAIL"
+  },
+  {
+   "chart": "chart1-boot-architecture-apple-hig",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "judged": 0,
+     "violations": 0,
+     "worstFrame": null,
+     "worstDiff": null,
+     "worstTol": null,
+     "worstShare": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no frame holds a card"
+   },
+   "a15": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "violations": 0,
+     "worstGap": null,
+     "worstLabel": null,
+     "worstVs": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no edge labels to examine"
+   },
+   "a3verdict": "NA"
+  },
+  {
+   "chart": "chart1-boot-architecture",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "judged": 0,
+     "violations": 0,
+     "worstFrame": null,
+     "worstDiff": null,
+     "worstTol": null,
+     "worstShare": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no frame holds a card"
+   },
+   "a15": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "violations": 0,
+     "worstGap": null,
+     "worstLabel": null,
+     "worstVs": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no edge labels to examine"
+   },
+   "a3verdict": "NA"
+  },
+  {
+   "chart": "chart1-boot-workflow",
+   "kind": "workflow",
+   "a14": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "judged": 2,
+     "violations": 1,
+     "worstFrame": "lane-0",
+     "worstDiff": 343.07,
+     "worstTol": 66.13,
+     "worstShare": 51.88
+    },
+    "hits": [
+     {
+      "frame": "lane-0",
+      "left": 2.07,
+      "right": 345.13,
+      "diff": 343.07,
+      "tol": 66.13,
+      "leftWho": "se_signed",
+      "rightWho": "se_fetch"
+     }
+    ],
+    "reason": "frame \"lane-0\" lopsided: left 2.07px (se_signed) vs right 345.13px (se_fetch) (diff 343.07 > 66.13 = 10% of 661.33)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 1,
+     "worstGap": 1.03,
+     "worstLabel": "feeds",
+     "worstVs": "card:se_fetch"
+    },
+    "hits": [
+     {
+      "label": "feeds",
+      "key": "4",
+      "vs": "card:se_fetch",
+      "gap": 1.03
+     }
+    ],
+    "reason": "edge label \"feeds\" (4) crowds card \"se_fetch\" at 1.03px (<24; card leg 1.03px vs se_fetch, sub leg nullpx vs null)"
+   },
+   "a3verdict": "FAIL"
+  },
+  {
+   "chart": "chart2-orom-architecture-apple-hig",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Virtual memory space 1",
+     "worstDiff": 0,
+     "worstTol": 28.56,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Virtual memory space 1\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 3,
+     "violations": 1,
+     "worstGap": 6.57,
+     "worstLabel": "network driver: blocked",
+     "worstVs": "card:orom2"
+    },
+    "hits": [
+     {
+      "label": "network driver: blocked",
+      "key": "1",
+      "vs": "card:orom2",
+      "gap": 6.57
+     }
+    ],
+    "reason": "edge label \"network driver: blocked\" (1) crowds card \"orom2\" at 6.57px (<24; card leg 6.57px vs orom2, sub leg 28.83px vs orom2:network driver (card 1))"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "chart2-orom-architecture",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Virtual memory space 1",
+     "worstDiff": 0,
+     "worstTol": 28.56,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Virtual memory space 1\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 3,
+     "violations": 1,
+     "worstGap": 6.57,
+     "worstLabel": "network driver: blocked",
+     "worstVs": "card:orom2"
+    },
+    "hits": [
+     {
+      "label": "network driver: blocked",
+      "key": "1",
+      "vs": "card:orom2",
+      "gap": 6.57
+     }
+    ],
+    "reason": "edge label \"network driver: blocked\" (1) crowds card \"orom2\" at 6.57px (<24; card leg 6.57px vs orom2, sub leg 28.83px vs orom2:network driver (card 1))"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "cnc-bus-architecture",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 1,
+     "judged": 1,
+     "violations": 0,
+     "worstFrame": "GSK-Link \u603b\u7ebf\u83ca\u82b1\u94fe",
+     "worstDiff": 0,
+     "worstTol": 127.51,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 1 held frames balanced within 10% (worst \"GSK-Link \u603b\u7ebf\u83ca\u82b1\u94fe\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 3,
+     "violations": 2,
+     "worstGap": 5.67,
+     "worstLabel": "C1 \u65b0\u8d2d 1.5\u7c73 GE-RJ45",
+     "worstVs": "card:io"
+    },
+    "hits": [
+     {
+      "label": "C1 \u65b0\u8d2d 1.5\u7c73 GE-RJ45",
+      "key": "1",
+      "vs": "card:io",
+      "gap": 5.67
+     },
+     {
+      "label": "C2 \u65b0\u8d2d 1.5\u7c73 RJ45-E\u53e3",
+      "key": "2",
+      "vs": "card:servoZ",
+      "gap": 5.67
+     }
+    ],
+    "reason": "edge label \"C1 \u65b0\u8d2d 1.5\u7c73 GE-RJ45\" (1) crowds card \"io\" at 5.67px (<24; card leg 5.67px vs io, sub leg 46.89px vs servoZ:\u65b0Z\u8f74 CN4 RJ45)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "einvoice-order-flow-v3",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 60.19,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 0,
+     "worstLabel": "mismatch retry cap 2",
+     "worstVs": "card:request"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:request",
+      "gap": 0
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:costing",
+      "gap": 18.19
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"request\" at 0px (<24; card leg 0px vs request, sub leg 11.17px vs request:qty, UOM, price + terms)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "einvoice-order-flow",
+   "kind": "workflow",
+   "a14": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 6,
+     "worstFrame": "lane-5",
+     "worstDiff": 620.99,
+     "worstTol": 97.89,
+     "worstShare": 63.44
+    },
+    "hits": [
+     {
+      "frame": "lane-5",
+      "left": 620.99,
+      "right": 0,
+      "diff": 620.99,
+      "tol": 97.89,
+      "leftWho": "precheck",
+      "rightWho": "dopi"
+     },
+     {
+      "frame": "lane-2",
+      "left": 0,
+      "right": 608.76,
+      "diff": 608.76,
+      "tol": 97.89,
+      "leftWho": "match",
+      "rightWho": "costing"
+     },
+     {
+      "frame": "lane-3",
+      "left": 165.19,
+      "right": 593.46,
+      "diff": 428.27,
+      "tol": 97.89,
+      "leftWho": "bum_price",
+      "rightWho": "bum_price"
+     },
+     {
+      "frame": "lane-0",
+      "left": 0,
+      "right": 292.14,
+      "diff": 292.14,
+      "tol": 97.89,
+      "leftWho": "request",
+      "rightWho": "signoff"
+     }
+    ],
+    "reason": "frame \"lane-5\" lopsided: left 620.99px (precheck) vs right 0px (dopi) (diff 620.99 > 97.89 = 10% of 978.91)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 0,
+     "worstLabel": "mismatch retry cap 2",
+     "worstVs": "card:request"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:request",
+      "gap": 0
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:costing",
+      "gap": 1.53
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"request\" at 0px (<24; card leg 0px vs request, sub leg 48.12px vs request:qty, UOM, price + terms)"
+   },
+   "a3verdict": "FAIL"
+  },
+  {
+   "chart": "ref-chart-1",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "judged": 0,
+     "violations": 0,
+     "worstFrame": null,
+     "worstDiff": null,
+     "worstTol": null,
+     "worstShare": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no frame holds a card"
+   },
+   "a15": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "violations": 0,
+     "worstGap": null,
+     "worstLabel": null,
+     "worstVs": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no edge labels to examine"
+   },
+   "a3verdict": "NA"
+  },
+  {
+   "chart": "ref-chart-2",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "judged": 0,
+     "violations": 0,
+     "worstFrame": null,
+     "worstDiff": null,
+     "worstTol": null,
+     "worstShare": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no frame holds a card"
+   },
+   "a15": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "violations": 0,
+     "worstGap": null,
+     "worstLabel": null,
+     "worstVs": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no edge labels to examine"
+   },
+   "a3verdict": "NA"
+  },
+  {
+   "chart": "see007-see007-einvoice",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 64.66,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 2.32,
+     "worstLabel": "mismatch retry cap 2",
+     "worstVs": "card:request"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:request",
+      "gap": 2.32
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:costing",
+      "gap": 7.98
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"request\" at 2.32px (<24; card leg 2.32px vs request, sub leg 35.22px vs request:qty, UOM, price + terms)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "see008-see008-einvoice",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 64.66,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 2.32,
+     "worstLabel": "mismatch retry cap 2",
+     "worstVs": "card:match"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:match",
+      "gap": 2.32
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:md_signoff",
+      "gap": 2.32
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"match\" at 2.32px (<24; card leg 2.32px vs match, sub leg 11.32px vs match:tally w/ supplier cap 2)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "sys002-spike-r01",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 73.3,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 0,
+     "worstLabel": "reject",
+     "worstVs": "card:md_signoff"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:match",
+      "gap": 19.99
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:md_signoff",
+      "gap": 0
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"match\" at 19.99px (<24; card leg 19.99px vs match, sub leg 47.64px vs match:tally w/ supplier cap 2)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "sys002-spike-r02",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 73.3,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 0,
+     "worstLabel": "reject",
+     "worstVs": "card:md_signoff"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:match",
+      "gap": 19.99
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:md_signoff",
+      "gap": 0
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"match\" at 19.99px (<24; card leg 19.99px vs match, sub leg 47.64px vs match:tally w/ supplier cap 2)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "sys003-einvoice-r01",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 122.29,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 2,
+     "violations": 0,
+     "worstGap": 31.59,
+     "worstLabel": "mismatch retry cap 2",
+     "worstVs": "card:match"
+    },
+    "hits": [],
+    "reason": "all 2 edge labels clear >= 24px of cards and sublabels (tightest \"mismatch retry cap 2\" 31.59px vs card:match)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "sys003-einvoice-r02",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 65.24,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 5.89,
+     "worstLabel": "reject",
+     "worstVs": "card:quote"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:request",
+      "gap": 19.19
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:quote",
+      "gap": 5.89
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"request\" at 19.19px (<24; card leg 19.19px vs request, sub leg 52.26px vs request:qty, UOM, price + terms)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "sys003-einvoice-r03",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 126.14,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 22.18,
+     "worstLabel": "mismatch retry cap 2",
+     "worstVs": "card:match"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:match",
+      "gap": 22.18
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:costing",
+      "gap": 22.18
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"match\" at 22.18px (<24; card leg 22.18px vs match, sub leg 40px vs match:tally w/ supplier cap 2)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "sys003-einvoice-r04",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 65.24,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 5.89,
+     "worstLabel": "reject",
+     "worstVs": "card:quote"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:request",
+      "gap": 19.19
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:quote",
+      "gap": 5.89
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"request\" at 19.19px (<24; card leg 19.19px vs request, sub leg 52.26px vs request:qty, UOM, price + terms)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "sys004-einvoice",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "PASS",
+    "measured": {
+     "population": 6,
+     "judged": 6,
+     "violations": 0,
+     "worstFrame": "Sales",
+     "worstDiff": 0,
+     "worstTol": 64.66,
+     "worstShare": 0
+    },
+    "hits": [],
+    "reason": "all 6 held frames balanced within 10% (worst \"Sales\" diff 0)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 2,
+     "violations": 2,
+     "worstGap": 2.32,
+     "worstLabel": "mismatch retry cap 2",
+     "worstVs": "card:request"
+    },
+    "hits": [
+     {
+      "label": "mismatch retry cap 2",
+      "key": "11",
+      "vs": "card:request",
+      "gap": 2.32
+     },
+     {
+      "label": "reject",
+      "key": "12",
+      "vs": "card:costing",
+      "gap": 7.98
+     }
+    ],
+    "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"request\" at 2.32px (<24; card leg 2.32px vs request, sub leg 35.22px vs request:qty, UOM, price + terms)"
+   },
+   "a3verdict": "DATA"
+  },
+  {
+   "chart": "sys004-org",
+   "kind": "architecture",
+   "a14": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "judged": 0,
+     "violations": 0,
+     "worstFrame": null,
+     "worstDiff": null,
+     "worstTol": null,
+     "worstShare": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no frame holds a card"
+   },
+   "a15": {
+    "verdict": "NA",
+    "measured": {
+     "population": 0,
+     "violations": 0,
+     "worstGap": null,
+     "worstLabel": null,
+     "worstVs": null
+    },
+    "hits": [],
+    "reason": "no measurable population (N=0): no edge labels to examine"
+   },
+   "a3verdict": "NA"
+  },
+  {
+   "chart": "watchdog-local-cloud-flow-v2",
+   "kind": "workflow",
+   "a14": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 8,
+     "judged": 8,
+     "violations": 8,
+     "worstFrame": "lane-5",
+     "worstDiff": 990.8,
+     "worstTol": 119.64,
+     "worstShare": 82.81
+    },
+    "hits": [
+     {
+      "frame": "lane-5",
+      "left": 1007.62,
+      "right": 16.82,
+      "diff": 990.8,
+      "tol": 119.64,
+      "leftWho": "verify_proof",
+      "rightWho": "verify_proof"
+     },
+     {
+      "frame": "lane-7",
+      "left": 1007.62,
+      "right": 16.82,
+      "diff": 990.8,
+      "tol": 119.64,
+      "leftWho": "report_ntfy",
+      "rightWho": "report_ntfy"
+     },
+     {
+      "frame": "lane-0",
+      "left": 3.74,
+      "right": 766.47,
+      "diff": 762.73,
+      "tol": 119.64,
+      "leftWho": "sense_watch",
+      "rightWho": "sense_ntfy"
+     },
+     {
+      "frame": "lane-4",
+      "left": 773.95,
+      "right": 16.82,
+      "diff": 757.12,
+      "tol": 119.64,
+      "leftWho": "gate_log",
+      "rightWho": "act_remedy"
+     }
+    ],
+    "reason": "frame \"lane-5\" lopsided: left 1007.62px (verify_proof) vs right 16.82px (verify_proof) (diff 990.8 > 119.64 = 10% of 1196.44)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 8,
+     "violations": 4,
+     "worstGap": 1.87,
+     "worstLabel": "failover if local down",
+     "worstVs": "card:local_engine"
+    },
+    "hits": [
+     {
+      "label": "failover if local down",
+      "key": "5",
+      "vs": "card:local_engine",
+      "gap": 1.87
+     },
+     {
+      "label": "lock retry backoff",
+      "key": "9",
+      "vs": "card:cloud_watch",
+      "gap": 7.48
+     },
+     {
+      "label": "claimed + logged",
+      "key": "15",
+      "vs": "card:act_remedy",
+      "gap": 1.87
+     },
+     {
+      "label": "proof in 15 min or page",
+      "key": "16",
+      "vs": "card:seq_p1p4",
+      "gap": 8.97
+     }
+    ],
+    "reason": "edge label \"failover if local down\" (5) crowds card \"local_engine\" at 1.87px (<24; card leg 1.87px vs local_engine, sub leg 25.04px vs local_engine:8192, 8093, BootResume)"
+   },
+   "a3verdict": "FAIL"
+  },
+  {
+   "chart": "watchdog-local-cloud-flow",
+   "kind": "workflow",
+   "a14": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 7,
+     "judged": 7,
+     "violations": 7,
+     "worstFrame": "lane-5",
+     "worstDiff": 990.8,
+     "worstTol": 119.64,
+     "worstShare": 82.81
+    },
+    "hits": [
+     {
+      "frame": "lane-5",
+      "left": 1007.62,
+      "right": 16.82,
+      "diff": 990.8,
+      "tol": 119.64,
+      "leftWho": "verify_proof",
+      "rightWho": "verify_proof"
+     },
+     {
+      "frame": "lane-6",
+      "left": 1007.62,
+      "right": 16.82,
+      "diff": 990.8,
+      "tol": 119.64,
+      "leftWho": "report_ntfy",
+      "rightWho": "report_ntfy"
+     },
+     {
+      "frame": "lane-0",
+      "left": 3.74,
+      "right": 766.47,
+      "diff": 762.73,
+      "tol": 119.64,
+      "leftWho": "sense_watch",
+      "rightWho": "sense_ntfy"
+     },
+     {
+      "frame": "lane-1",
+      "left": 3.74,
+      "right": 766.47,
+      "diff": 762.73,
+      "tol": 119.64,
+      "leftWho": "reboot_523",
+      "rightWho": "decide_hyst"
+     }
+    ],
+    "reason": "frame \"lane-5\" lopsided: left 1007.62px (verify_proof) vs right 16.82px (verify_proof) (diff 990.8 > 119.64 = 10% of 1196.44)"
+   },
+   "a15": {
+    "verdict": "FAIL",
+    "measured": {
+     "population": 6,
+     "violations": 2,
+     "worstGap": 1.87,
+     "worstLabel": "failover if local down",
+     "worstVs": "card:local_engine"
+    },
+    "hits": [
+     {
+      "label": "failover if local down",
+      "key": "3",
+      "vs": "card:local_engine",
+      "gap": 1.87
+     },
+     {
+      "label": "proof in 15 min or page",
+      "key": "11",
+      "vs": "card:verify_proof",
+      "gap": 1.87
+     }
+    ],
+    "reason": "edge label \"failover if local down\" (3) crowds card \"local_engine\" at 1.87px (<24; card leg 1.87px vs local_engine, sub leg 25.04px vs local_engine:8093, BootResume cover)"
+   },
+   "a3verdict": "FAIL"
+  }
+ ]
+}

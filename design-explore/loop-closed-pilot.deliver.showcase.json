@@ -1,0 +1,259 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "deliver",
+  "stage": "gate",
+  "type": "workflow",
+  "input": "D:\\Onesimus\\tools\\archify\\design-explore\\loop-closed-pilot.workflow.json",
+  "output": "D:\\Onesimus\\tools\\archify\\design-explore\\loop-closed-pilot.html",
+  "error": "Geometry gate failed: A1, A2, A3, A4, A6, A7, A9, A10, A14, A15, O1a",
+  "diagnostics": [
+    {
+      "code": "delivery/geometry-gate",
+      "severity": "error",
+      "message": "Geometry gate FAIL: asserted ruler verdicts failing: A1, A2, A3, A4, A6, A7, A9, A10, A14, A15, O1a",
+      "subject": {
+        "candidate": "D:\\Onesimus\\tools\\archify\\design-explore\\.archify-delivery-OIFpM3\\loop-closed-pilot.html",
+        "failingAssertions": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A6",
+          "A7",
+          "A9",
+          "A10",
+          "A14",
+          "A15",
+          "O1a"
+        ]
+      },
+      "evidence": {
+        "ruler": "geometry-assert.mjs",
+        "viewport": "1440x900",
+        "verdicts": [
+          {
+            "id": "A1",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 14
+          },
+          {
+            "id": "A2",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 9
+          },
+          {
+            "id": "A3",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 5
+          },
+          {
+            "id": "A4",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 5
+          },
+          {
+            "id": "A5",
+            "verdict": "PASS",
+            "asserted": true,
+            "population": 10
+          },
+          {
+            "id": "A6",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 15
+          },
+          {
+            "id": "A7",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 30
+          },
+          {
+            "id": "A8",
+            "verdict": "NA",
+            "asserted": false,
+            "population": 14
+          },
+          {
+            "id": "A9",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 16
+          },
+          {
+            "id": "A10",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 10
+          },
+          {
+            "id": "A11",
+            "verdict": "PASS",
+            "asserted": true,
+            "population": 11
+          },
+          {
+            "id": "A12",
+            "verdict": "PASS",
+            "asserted": true,
+            "population": 10
+          },
+          {
+            "id": "A13",
+            "verdict": "PASS",
+            "asserted": true,
+            "population": 20
+          },
+          {
+            "id": "A14",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 6
+          },
+          {
+            "id": "A15",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 5
+          },
+          {
+            "id": "O1a",
+            "verdict": "FAIL",
+            "asserted": true,
+            "population": 18
+          }
+        ]
+      },
+      "supportedFixes": [
+        "fix the diagnosed geometry in the spec and re-deliver, or re-run with --no-gate to record an explicit ungated delivery"
+      ]
+    }
+  ],
+  "checker": {
+    "gated": false,
+    "gate": {
+      "ok": false,
+      "transport": false,
+      "error": null,
+      "failures": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A6",
+        "A7",
+        "A9",
+        "A10",
+        "A14",
+        "A15",
+        "O1a"
+      ],
+      "sha8": "d0b80742",
+      "kind": "workflow",
+      "verdicts": [
+        {
+          "id": "A1",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 14
+        },
+        {
+          "id": "A2",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 9
+        },
+        {
+          "id": "A3",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 5
+        },
+        {
+          "id": "A4",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 5
+        },
+        {
+          "id": "A5",
+          "verdict": "PASS",
+          "asserted": true,
+          "population": 10
+        },
+        {
+          "id": "A6",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 15
+        },
+        {
+          "id": "A7",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 30
+        },
+        {
+          "id": "A8",
+          "verdict": "NA",
+          "asserted": false,
+          "population": 14
+        },
+        {
+          "id": "A9",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 16
+        },
+        {
+          "id": "A10",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 10
+        },
+        {
+          "id": "A11",
+          "verdict": "PASS",
+          "asserted": true,
+          "population": 11
+        },
+        {
+          "id": "A12",
+          "verdict": "PASS",
+          "asserted": true,
+          "population": 10
+        },
+        {
+          "id": "A13",
+          "verdict": "PASS",
+          "asserted": true,
+          "population": 20
+        },
+        {
+          "id": "A14",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 6
+        },
+        {
+          "id": "A15",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 5
+        },
+        {
+          "id": "O1a",
+          "verdict": "FAIL",
+          "asserted": true,
+          "population": 18
+        }
+      ]
+    }
+  }
+}

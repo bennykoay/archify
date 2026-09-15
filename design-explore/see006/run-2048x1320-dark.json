@@ -1,0 +1,577 @@
+{
+  "tool": "colour-assert.mjs",
+  "png": "D:\\Onesimus\\tools\\archify\\design-explore\\sys004-einvoice.visual-check.2048x1320.dark.png",
+  "image": {
+    "width": 2048,
+    "height": 1320
+  },
+  "floors": {
+    "P1": "de00 >= 1",
+    "P2": "de00 >= 1 (border-excluded bands)",
+    "P3": "de00 <= 2 vs declared token"
+  },
+  "pageMarginCheck": {
+    "insideSvgGap": {
+      "rgb": [
+        28,
+        28,
+        30
+      ],
+      "hex": "#1c1c1e",
+      "n": 387
+    },
+    "outsideSvg": {
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "hex": "#000000",
+      "n": 1132
+    }
+  },
+  "assertions": [
+    {
+      "id": "P1",
+      "name": "SURFACE_SEPARATION",
+      "asserted": true,
+      "threshold": "touching-pair CIEDE2000 >= 1 (near bands 2..8px)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 17,
+        "fails": 5,
+        "rows": [
+          {
+            "pair": "page/lane:CS Team",
+            "nA": 12816,
+            "nB": 103,
+            "a": "#1c1c1e",
+            "b": "#1b1b1d",
+            "de00": 0.31,
+            "contrast": 1.01,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/lane:BUM",
+            "nA": 6492,
+            "nB": 213,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/lane:MD",
+            "nA": 7668,
+            "nB": 187,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/lane:Accounting",
+            "nA": 11928,
+            "nB": 28,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/lane:Client & Supplier (external)",
+            "nA": 9888,
+            "nB": 44,
+            "a": "#1c1c1e",
+            "b": "#1b1b1d",
+            "de00": 0.31,
+            "contrast": 1.01,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "lane/card:request",
+            "nA": 2838,
+            "nB": 511,
+            "a": "#18181a",
+            "b": "#242426",
+            "de00": 3.77,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:match",
+            "nA": 4626,
+            "nB": 511,
+            "a": "#1a1a1b",
+            "b": "#242426",
+            "de00": 3.24,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:bum_price",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#1a1a1b",
+            "b": "#242426",
+            "de00": 3.24,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:costing",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#1a1a1c",
+            "b": "#242426",
+            "de00": 3.14,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:md_signoff",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#1a1a1c",
+            "b": "#242426",
+            "de00": 3.14,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:quote",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#1a1a1c",
+            "b": "#242426",
+            "de00": 3.14,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:po",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#1a1a1b",
+            "b": "#242426",
+            "de00": 3.24,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:signoff",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#1a1a1b",
+            "b": "#242426",
+            "de00": 3.24,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:precheck",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#1a1a1b",
+            "b": "#242426",
+            "de00": 3.24,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:submit",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#1a1a1b",
+            "b": "#242426",
+            "de00": 3.24,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:dopi",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#19191b",
+            "b": "#242426",
+            "de00": 3.46,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:collect",
+            "nA": 4848,
+            "nB": 511,
+            "a": "#19191b",
+            "b": "#242426",
+            "de00": 3.46,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2",
+      "name": "STRUCTURE_WITHOUT_BORDER",
+      "asserted": true,
+      "threshold": "same pairs CIEDE2000 >= 1 (far bands >=10px, hairline ignored)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 18,
+        "fails": 6,
+        "rows": [
+          {
+            "pair": "page/lane:Sales",
+            "nA": 387,
+            "nB": 920,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/lane:CS Team",
+            "nA": 387,
+            "nB": 828,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/lane:BUM",
+            "nA": 387,
+            "nB": 858,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/lane:MD",
+            "nA": 387,
+            "nB": 727,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/lane:Accounting",
+            "nA": 387,
+            "nB": 1173,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/lane:Client & Supplier (external)",
+            "nA": 387,
+            "nB": 594,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "lane/card:request",
+            "nA": 594,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:match",
+            "nA": 727,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:bum_price",
+            "nA": 858,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:costing",
+            "nA": 594,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:md_signoff",
+            "nA": 727,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:quote",
+            "nA": 920,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:po",
+            "nA": 594,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:signoff",
+            "nA": 920,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:precheck",
+            "nA": 920,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:submit",
+            "nA": 1173,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:dopi",
+            "nA": 1173,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "lane/card:collect",
+            "nA": 1173,
+            "nB": 2121,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P3",
+      "name": "DECLARED_VS_DELIVERED",
+      "asserted": true,
+      "threshold": "sampled vs declared-token CIEDE2000 <= 2",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 19,
+        "fails": 12,
+        "rows": [
+          {
+            "surface": "page",
+            "n": 387,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "lane:Sales",
+            "n": 920,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "lane:CS Team",
+            "n": 828,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "lane:BUM",
+            "n": 858,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "lane:MD",
+            "n": 727,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "lane:Accounting",
+            "n": 1173,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "lane:Client & Supplier (external)",
+            "n": 594,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:request",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:match",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:bum_price",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:costing",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:md_signoff",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:quote",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:po",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:signoff",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:precheck",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:submit",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:dopi",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:collect",
+            "n": 2121,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          }
+        ]
+      }
+    }
+  ],
+  "excludedForThinSample": 1
+}

@@ -1,0 +1,955 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\chart2-orom-architecture.html",
+    "sha256": "de5d1065bce937f2a6a791ed06b522d056f1059f3cd5eb9f5663c992f2ba0447",
+    "sha8": "de5d1065",
+    "bytes": 698744
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "kind": "architecture",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "PASS",
+      "measured": {
+        "population": 9,
+        "transitSamples": 0,
+        "pillTransits": 0,
+        "laneHeaders": 0,
+        "pills": 6,
+        "pillMasks": 6,
+        "paths": 3
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no transit: lane 0, pills 6 (masks 6), paths 3"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": false,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "DATA",
+      "measured": {
+        "population": 10,
+        "nodes": 10,
+        "violations": 0,
+        "worstMinInset": 24.86,
+        "worstSpread": 0.22
+      },
+      "elements": [
+        {
+          "node": "sandbox",
+          "title": "OROM Sandbox Driver"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 614.31,
+            "y": 628.12,
+            "w": 195.79,
+            "h": 21
+          },
+          "cardBox": {
+            "x": 145.49,
+            "y": 603.26,
+            "w": 1132.6,
+            "h": 90.28
+          },
+          "insets": {
+            "l": 468.81,
+            "r": 467.99,
+            "t": 24.86,
+            "b": 44.42
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): worst \"OROM Sandbox Driver\" inset 24.86px",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": false,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "DATA",
+      "measured": {
+        "population": 3,
+        "edgeLabels": 3,
+        "collisions": 0
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): no overlap",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 3,
+        "edgeLabels": 3,
+        "orphans": 1,
+        "worstDist": 1.64,
+        "worstInside": 6
+      },
+      "elements": [
+        {
+          "label": "network driver: blocked",
+          "key": "1"
+        }
+      ],
+      "coords": [
+        {
+          "centroid": {
+            "x": 711.79,
+            "y": 358.69
+          },
+          "tip": {
+            "x": 711.79,
+            "y": 603.26
+          },
+          "labelBox": {
+            "x": 612.98,
+            "y": 347.2,
+            "w": 197.63,
+            "h": 22.98
+          }
+        }
+      ],
+      "reason": "label \"network driver: blocked\" sits on its own wire (6 own-polyline samples inside label bbox — mask severs the wire)"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": false,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "DATA",
+      "measured": {
+        "population": 3,
+        "tips": 3,
+        "modal": 14,
+        "outliers": 1,
+        "gaps": [
+          16.74,
+          13.95,
+          13.95
+        ],
+        "modalExemplar": {
+          "edge": "orom2>sandbox",
+          "gap": 13.95,
+          "tip": {
+            "x": 711.79,
+            "y": 589.31
+          }
+        }
+      },
+      "elements": [
+        {
+          "edge": "orom1>sandbox",
+          "key": "0"
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 688.81,
+            "y": 586.52
+          },
+          "pathEnd": {
+            "x": 688.81,
+            "y": 603.26
+          },
+          "targetEdge": {
+            "x": 145.49,
+            "y": 603.26,
+            "w": 1132.6,
+            "h": 90.28
+          },
+          "gap": 16.74
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe FAIL): modal 14px",
+      "wouldBe": "FAIL"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 16,
+        "containers": 6,
+        "nodes": 10,
+        "minOccupancy": 0.2951,
+        "globalInkRatio": 0.3363,
+        "inkArea": 215100
+      },
+      "elements": [
+        {
+          "container": "Ring 3 (less privileged)",
+          "kids": [
+            "orom1",
+            "orom2",
+            "orom3"
+          ]
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 96.25,
+            "y": 173.2,
+            "w": 1231.08,
+            "h": 200.26
+          }
+        }
+      ],
+      "reason": "container \"Ring 3 (less privileged)\" occupancy 0.2951 < 0.50 (3 child node(s): orom1, orom2, orom3)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 19,
+        "at1440x900": {
+          "scrollHeight": 1519,
+          "innerHeight": 900,
+          "screens": 1.69
+        },
+        "at1920x1080": {
+          "scrollHeight": 1610,
+          "innerHeight": 1080,
+          "screens": 1.49
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "overflowY at both viewports (1440x900 scrollHeight 1519 vs 900 = 1.69 screens)"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": true,
+      "threshold": "distinct spec pos[0] count>1 AND content-bbox/viewBox>=0.50 (viewBox from svg.viewBox.baseVal)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 16,
+        "distinctX": 6,
+        "xs": [
+          135,
+          170,
+          405,
+          410,
+          640,
+          675
+        ],
+        "contentBox": {
+          "x": 30,
+          "y": 58,
+          "w": 750,
+          "h": 692
+        },
+        "viewBox": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 780
+        },
+        "ratio": 0.81
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentBox": {
+            "x": 30,
+            "y": 58,
+            "w": 750,
+            "h": 692
+          },
+          "viewBox": {
+            "x": 0,
+            "y": 0,
+            "width": 820,
+            "height": 780
+          }
+        }
+      ],
+      "reason": "spread ok: distinct-x=6, ratio 0.81"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 9,
+        "frames": 6,
+        "floorFails": 0,
+        "spreadFails": 0,
+        "spreadNAFrames": 6,
+        "worstFloorMin": 98.49,
+        "worstSpread": null,
+        "worstFloorFrame": "Virtual memory space 2",
+        "worstSpreadFrame": null,
+        "allFrames": [
+          {
+            "frame": "Virtual memory space 1",
+            "floorMin": 300.38,
+            "spread": 142.8,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [
+              "bottom"
+            ],
+            "p1min": {
+              "top": 330.52,
+              "right": 300.38,
+              "bottom": 300.38,
+              "left": 586
+            },
+            "p2min": {
+              "top": 137.88,
+              "right": 98.49,
+              "bottom": 0,
+              "left": 142.81
+            },
+            "p1who": {
+              "top": "1",
+              "right": "1",
+              "bottom": "1",
+              "left": "1"
+            },
+            "p2who": {
+              "top": "0:term",
+              "right": "0:mid",
+              "bottom": "0:mid",
+              "left": "0:term"
+            }
+          },
+          {
+            "frame": "Virtual memory space 2",
+            "floorMin": 98.49,
+            "spread": 137.88,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [
+              "bottom"
+            ],
+            "p1min": {
+              "top": 269.2,
+              "right": 98.49,
+              "bottom": 98.49,
+              "left": 98.49
+            },
+            "p2min": {
+              "top": 137.88,
+              "right": 98.49,
+              "bottom": 0,
+              "left": 98.49
+            },
+            "p1who": {
+              "top": "0",
+              "right": "2",
+              "bottom": "0",
+              "left": "0"
+            },
+            "p2who": {
+              "top": "1:term",
+              "right": "2",
+              "bottom": "1:mid",
+              "left": "0"
+            }
+          },
+          {
+            "frame": "Virtual memory space 3",
+            "floorMin": 300.38,
+            "spread": 142.8,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [
+              "bottom"
+            ],
+            "p1min": {
+              "top": 330.52,
+              "right": 586,
+              "bottom": 300.38,
+              "left": 300.38
+            },
+            "p2min": {
+              "top": 137.88,
+              "right": 142.81,
+              "bottom": 0,
+              "left": 98.49
+            },
+            "p1who": {
+              "top": "1",
+              "right": "1",
+              "bottom": "1",
+              "left": "1"
+            },
+            "p2who": {
+              "top": "2:term",
+              "right": "2:term",
+              "bottom": "2:mid",
+              "left": "2:mid"
+            }
+          },
+          {
+            "frame": "Ring 3 (less privileged)",
+            "floorMin": null,
+            "spread": 172.35,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [
+              "bottom"
+            ],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": 167.43,
+              "right": 172.35,
+              "bottom": 0,
+              "left": 172.35
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": "0:term",
+              "right": "2:term",
+              "bottom": "1:mid",
+              "left": "0:term"
+            }
+          },
+          {
+            "frame": "Ring 0 (more privileged)",
+            "floorMin": null,
+            "spread": 369.33,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [
+              "top"
+            ],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": 0,
+              "right": 191,
+              "bottom": 369.33,
+              "left": 191
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": "1:mid",
+              "right": "2:mid",
+              "bottom": "0:term",
+              "left": "0:mid"
+            }
+          },
+          {
+            "frame": "Hardware (more privileged)",
+            "floorMin": 420.21,
+            "spread": 285.61,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [],
+            "p1min": {
+              "top": 420.21,
+              "right": 577.89,
+              "bottom": 705.82,
+              "left": 577.89
+            },
+            "p2min": {
+              "top": 420.21,
+              "right": 577.89,
+              "bottom": 705.82,
+              "left": 577.89
+            },
+            "p1who": {
+              "top": "0",
+              "right": "2",
+              "bottom": "0",
+              "left": "0"
+            },
+            "p2who": {
+              "top": "0",
+              "right": "2",
+              "bottom": "0",
+              "left": "0"
+            }
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 6 frames clear >=12 and uniform <=6 over qualified sides (worst floor 98.49 \"Virtual memory space 2\", worst qualified spread NA \"Virtual memory space 1 NA\", 6 frame(s) spread-NA)"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 3,
+        "tips": 3,
+        "violations": 3,
+        "worstGap": 0,
+        "worstInside": true,
+        "gaps": [
+          0,
+          0,
+          0
+        ],
+        "insideFlags": [
+          true,
+          true,
+          true
+        ]
+      },
+      "elements": [
+        {
+          "edge": "orom1>sandbox",
+          "key": "0",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "orom2>sandbox",
+          "key": "1",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "orom3>sandbox",
+          "key": "2",
+          "inside": true,
+          "gap": 0
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 688.81,
+            "y": 606.22
+          },
+          "pathEnd": {
+            "x": 688.81,
+            "y": 603.26
+          },
+          "targetBox": {
+            "x": 145.49,
+            "y": 603.26,
+            "w": 1132.6,
+            "h": 90.28
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 711.79,
+            "y": 605.72
+          },
+          "pathEnd": {
+            "x": 711.79,
+            "y": 603.26
+          },
+          "targetBox": {
+            "x": 145.49,
+            "y": 603.26,
+            "w": 1132.6,
+            "h": 90.28
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 734.77,
+            "y": 605.72
+          },
+          "pathEnd": {
+            "x": 734.77,
+            "y": 603.26
+          },
+          "targetBox": {
+            "x": 145.49,
+            "y": 603.26,
+            "w": 1132.6,
+            "h": 90.28
+          },
+          "gap": 0,
+          "inside": true
+        }
+      ],
+      "reason": "tip orom1>sandbox INSIDE target box (gap 0px — inside always FAIL)"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 3,
+        "rendered": 3,
+        "spec": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): svg lacks data-spec-edge-count"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 3,
+        "violations": 0,
+        "worstAngle": 0,
+        "worstEdge": "orom1>sandbox",
+        "angles": [
+          {
+            "edge": "orom1>sandbox",
+            "angle": 0,
+            "pieceLen": 80
+          },
+          {
+            "edge": "orom2>sandbox",
+            "angle": 0,
+            "pieceLen": 160
+          },
+          {
+            "edge": "orom3>sandbox",
+            "angle": 0,
+            "pieceLen": 80
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 3 heads face their last piece within 30deg (worst 0deg orom1>sandbox)"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 16,
+        "left": 96.25,
+        "right": 112.67,
+        "top": 173.2,
+        "bottom": -409.08,
+        "diff": 16.42,
+        "tol": 72,
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "contentRendered": {
+          "x": 96.25,
+          "y": 173.2,
+          "w": 1231.08,
+          "h": 1135.88
+        }
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 96.25,
+            "y": 173.2,
+            "w": 1231.08,
+            "h": 1135.88
+          }
+        }
+      ],
+      "reason": "margins balanced: left 96.25px vs right 112.67px (diff 16.42 <= 72 = 5% of 1440)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 6,
+        "frames": 6,
+        "judged": 6,
+        "violations": 0,
+        "worstFrame": "Virtual memory space 1",
+        "worstDiff": 0,
+        "worstTol": 28.56,
+        "worstShare": 0,
+        "rows": [
+          {
+            "frame": "Virtual memory space 1",
+            "kids": [
+              "orom1"
+            ],
+            "left": 19.7,
+            "right": 19.7,
+            "top": 39.39,
+            "bottom": 32.83,
+            "leftWho": "orom1",
+            "rightWho": "orom1",
+            "topWho": "orom1",
+            "bottomWho": "orom1",
+            "diff": 0,
+            "tol": 28.56
+          },
+          {
+            "frame": "Virtual memory space 2",
+            "kids": [
+              "orom2"
+            ],
+            "left": 19.7,
+            "right": 19.7,
+            "top": 39.39,
+            "bottom": 32.83,
+            "leftWho": "orom2",
+            "rightWho": "orom2",
+            "topWho": "orom2",
+            "bottomWho": "orom2",
+            "diff": 0,
+            "tol": 28.56
+          },
+          {
+            "frame": "Virtual memory space 3",
+            "kids": [
+              "orom3"
+            ],
+            "left": 19.7,
+            "right": 19.7,
+            "top": 39.39,
+            "bottom": 32.83,
+            "leftWho": "orom3",
+            "rightWho": "orom3",
+            "topWho": "orom3",
+            "bottomWho": "orom3",
+            "diff": 0,
+            "tol": 28.56
+          },
+          {
+            "frame": "Ring 3 (less privileged)",
+            "kids": [
+              "orom1",
+              "orom2",
+              "orom3"
+            ],
+            "left": 49.24,
+            "right": 49.24,
+            "top": 68.94,
+            "bottom": 32.83,
+            "leftWho": "orom1",
+            "rightWho": "orom3",
+            "topWho": "orom1",
+            "bottomWho": "orom1",
+            "diff": 0,
+            "tol": 123.11
+          },
+          {
+            "frame": "Ring 0 (more privileged)",
+            "kids": [
+              "sandbox",
+              "uefi_nonsandboxed",
+              "uefi_core"
+            ],
+            "left": 39.39,
+            "right": 39.39,
+            "top": 39.39,
+            "bottom": 32.83,
+            "leftWho": "sandbox",
+            "rightWho": "sandbox",
+            "topWho": "sandbox",
+            "bottomWho": "uefi_core",
+            "diff": 0,
+            "tol": 121.14
+          },
+          {
+            "frame": "Hardware (more privileged)",
+            "kids": [
+              "cpu",
+              "pcie1",
+              "pcie2",
+              "pcie3"
+            ],
+            "left": 39.39,
+            "right": 39.39,
+            "top": 39.39,
+            "bottom": 32.83,
+            "leftWho": "cpu",
+            "rightWho": "cpu",
+            "topWho": "cpu",
+            "bottomWho": "pcie1",
+            "diff": 0,
+            "tol": 121.14
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 6 held frames balanced within 10% (worst \"Virtual memory space 1\" diff 0)"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 3,
+        "labels": 3,
+        "violations": 1,
+        "worstGap": 6.57,
+        "worstLabel": "network driver: blocked",
+        "worstVs": "card:orom2",
+        "rows": [
+          {
+            "label": "storage driver: allowed",
+            "key": "0",
+            "cardGap": 98.49,
+            "cardWho": "orom1",
+            "subGap": 125.57,
+            "subWho": "orom1:storage driver (card 1)",
+            "minGap": 98.49,
+            "minWho": "orom1",
+            "minKind": "card"
+          },
+          {
+            "label": "network driver: blocked",
+            "key": "1",
+            "cardGap": 6.57,
+            "cardWho": "orom2",
+            "subGap": 28.83,
+            "subWho": "orom2:network driver (card 1)",
+            "minGap": 6.57,
+            "minWho": "orom2",
+            "minKind": "card"
+          },
+          {
+            "label": "secure boot driver: blocked",
+            "key": "2",
+            "cardGap": 98.49,
+            "cardWho": "orom2",
+            "subGap": 124.77,
+            "subWho": "orom2:network driver (card 1)",
+            "minGap": 98.49,
+            "minWho": "orom2",
+            "minKind": "card"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "label": "network driver: blocked",
+          "key": "1",
+          "vs": "card:orom2",
+          "gap": 6.57
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 612.98,
+            "y": 347.2,
+            "w": 197.63,
+            "h": 22.98
+          },
+          "gap": 6.57,
+          "vs": "card:orom2"
+        }
+      ],
+      "reason": "edge label \"network driver: blocked\" (1) crowds card \"orom2\" at 6.57px (<24; card leg 6.57px vs orom2, sub leg 28.83px vs orom2:network driver (card 1))"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 23,
+        "texts": 23,
+        "pxViolations": 23,
+        "contrastViolations": 0,
+        "scale": 1,
+        "minByDetail": {
+          "primary": {
+            "px": 11,
+            "text": "OROM 1"
+          },
+          "context": {
+            "px": 9,
+            "text": "storage driver (card 1)"
+          },
+          "boundary": {
+            "px": 9,
+            "text": "Virtual memory space 1"
+          },
+          "edge": {
+            "px": 9,
+            "text": "storage driver: allowed"
+          }
+        },
+        "worstProjectedPx": 11,
+        "worstContrast": 21
+      },
+      "elements": [
+        {
+          "detail": "primary",
+          "text": "OROM 1"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 234.42,
+            "y": 271.11,
+            "w": 68.36,
+            "h": 21
+          },
+          "sourceFontPx": 11
+        }
+      ],
+      "reason": "\"OROM 1\" (primary) 11px < 15px floor"
+    }
+  ],
+  "complete": true
+}

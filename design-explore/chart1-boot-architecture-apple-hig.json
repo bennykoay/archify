@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Apple Silicon Mac Boot Validation Chain",
+    "quality_profile": "showcase",
+    "visual_preset": "apple-hig",
+    "viewBox": [960, 620]
+  },
+  "components": [
+    { "id": "bootrom", "type": "frontend", "label": "Boot ROM validates LLB signature", "pos": [300, 30], "size": [340, 55] },
+    { "id": "llbfw", "type": "frontend", "label": "LLB validates system-paired firmware signatures", "pos": [300, 110], "size": [340, 55] },
+    { "id": "llbpolicy", "type": "frontend", "label": "LLB validates LocalPolicy signature", "pos": [300, 190], "size": [340, 55] },
+    { "id": "llbiboot", "type": "frontend", "label": "LLB evaluates iBoot stage 2 signature", "sublabel": "according to LocalPolicy", "pos": [300, 270], "size": [340, 60] },
+    { "id": "ibootvalidate", "type": "frontend", "label": "iBoot stage 2 validates macOS-paired firmware", "sublabel": "Boot Kernel Collection, Auxiliary Kernel Collection, trust cache, signed volume sigs", "pos": [300, 355], "size": [340, 90] },
+    { "id": "macos", "type": "frontend", "label": "macOS", "pos": [300, 470], "size": [340, 55] },
+    { "id": "se_signed", "type": "backend", "label": "Secure Enclave signed LocalPolicy", "pos": [20, 185], "size": [255, 65] },
+    { "id": "se_fetch", "type": "backend", "label": "SE Boot ROM fetches LocalPolicy nonces", "sublabel": "from Secure Storage Component", "pos": [664, 185], "size": [255, 65] }
+  ],
+  "connections": [
+    { "id": "e1", "from": "bootrom", "to": "llbfw", "variant": "emphasis" },
+    { "id": "e2", "from": "llbfw", "to": "llbpolicy", "variant": "emphasis" },
+    { "id": "e3", "from": "llbpolicy", "to": "llbiboot", "variant": "emphasis" },
+    { "id": "e4", "from": "llbiboot", "to": "ibootvalidate", "variant": "emphasis" },
+    { "id": "e5", "from": "ibootvalidate", "to": "macos", "variant": "emphasis" },
+    { "id": "e6", "from": "se_signed", "to": "llbpolicy", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "e7", "from": "se_fetch", "to": "llbpolicy", "variant": "dashed", "fromSide": "left", "toSide": "right" }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Label note (readability constraint, not content loss)",
+      "items": [
+        "se_fetch label reads 'SE Boot ROM fetches LocalPolicy nonces' — SE abbreviates Secure Enclave, shortened to keep sublabel text at or above the 6px desktop-readability floor at 1440px width",
+        "Full unabbreviated source text: 'Secure Enclave Boot ROM fetches LocalPolicy nonces from Secure Storage Component'"
+      ]
+    }
+  ]
+}

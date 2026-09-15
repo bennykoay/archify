@@ -1,0 +1,1063 @@
+{
+  "tool": "SEE-009 A3-feed + A13 corpus re-run @1440x900 (new code, charts unedited)",
+  "charts": [
+    {
+      "chart": "aben-kkse-agent-flow",
+      "kind": "workflow",
+      "a3old": {
+        "verdict": "FAIL",
+        "collisions": 1,
+        "hits": [
+          {
+            "edgeLabel": "ntfy Yalo: execute",
+            "edgeKey": "7",
+            "vs": "boundary-stroke:lane-1"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "FAIL",
+        "collisions": 1,
+        "hits": [
+          {
+            "edgeLabel": "ntfy Yalo: execute",
+            "edgeKey": "7",
+            "vs": "boundary-stroke:lane-1"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "FAIL",
+        "reason": "picture shoved: left 108.19px vs right 352.91px (diff 244.72 > 72 = 5% of 1440)",
+        "measured": {
+          "population": 17,
+          "left": 108.19,
+          "right": 352.91,
+          "top": 187.54,
+          "bottom": -15.6,
+          "diff": 244.72,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "chart1-boot-architecture-apple-hig",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 75.05px vs right 104.49px (diff 29.44 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 8,
+          "left": 75.05,
+          "right": 104.49,
+          "top": 123.06,
+          "bottom": 82.92,
+          "diff": 29.44,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "chart1-boot-architecture",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 75.05px vs right 104.49px (diff 29.44 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 8,
+          "left": 75.05,
+          "right": 104.49,
+          "top": 120.06,
+          "bottom": 85.92,
+          "diff": 29.44,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "chart1-boot-workflow",
+      "kind": "workflow",
+      "a3old": {
+        "verdict": "FAIL",
+        "collisions": 2,
+        "hits": [
+          {
+            "edgeLabel": "feeds",
+            "edgeKey": "3",
+            "vs": "boundary-stroke:lane-0"
+          },
+          {
+            "edgeLabel": "feeds",
+            "edgeKey": "4",
+            "vs": "boundary-stroke:lane-0"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "FAIL",
+        "collisions": 2,
+        "hits": [
+          {
+            "edgeLabel": "feeds",
+            "edgeKey": "3",
+            "vs": "boundary-stroke:lane-0"
+          },
+          {
+            "edgeLabel": "feeds",
+            "edgeKey": "4",
+            "vs": "boundary-stroke:lane-0"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "FAIL",
+        "reason": "picture shoved: left 296.33px vs right 482.34px (diff 186.01 > 72 = 5% of 1440)",
+        "measured": {
+          "population": 10,
+          "left": 296.33,
+          "right": 482.34,
+          "top": 371.73,
+          "bottom": 292.67,
+          "diff": 186.01,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "chart2-orom-architecture-apple-hig",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 96.25px vs right 112.67px (diff 16.42 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 16,
+          "left": 96.25,
+          "right": 112.67,
+          "top": 176.2,
+          "bottom": -412.08,
+          "diff": 16.42,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "chart2-orom-architecture",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 96.25px vs right 112.67px (diff 16.42 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 16,
+          "left": 96.25,
+          "right": 112.67,
+          "top": 173.2,
+          "bottom": -409.08,
+          "diff": 16.42,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "cnc-bus-architecture",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 61.18px vs right 103.69px (diff 42.51 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 5,
+          "left": 61.18,
+          "right": 103.69,
+          "top": 434.2,
+          "bottom": 295.78,
+          "diff": 42.51,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "einvoice-order-flow-v3",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 1,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:BUM"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 2,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:BUM"
+          },
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "node-card:request"
+          }
+        ]
+      },
+      "a3added": [
+        {
+          "edgeLabel": "mismatch retry cap 2",
+          "edgeKey": "11",
+          "vs": "node-card:request"
+        }
+      ],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 286.21px vs right 260.04px (diff 26.17 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 286.21,
+          "right": 260.04,
+          "top": 200.27,
+          "bottom": 294.12,
+          "diff": 26.17,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "einvoice-order-flow",
+      "kind": "workflow",
+      "a3old": {
+        "verdict": "FAIL",
+        "collisions": 2,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:lane-0"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:lane-2"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "FAIL",
+        "collisions": 2,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:lane-0"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:lane-2"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "FAIL",
+        "reason": "picture shoved: left 108.18px vs right 352.91px (diff 244.73 > 72 = 5% of 1440)",
+        "measured": {
+          "population": 24,
+          "left": 108.18,
+          "right": 352.91,
+          "top": 187.54,
+          "bottom": -394.93,
+          "diff": 244.73,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "ref-chart-1",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "NA",
+        "reason": "no measurable population (N=0): no nodes or frames to examine",
+        "measured": {
+          "population": 0,
+          "left": null,
+          "right": null,
+          "top": null,
+          "bottom": null,
+          "diff": null,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "ref-chart-2",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "NA",
+        "reason": "no measurable population (N=0): no nodes or frames to examine",
+        "measured": {
+          "population": 0,
+          "left": null,
+          "right": null,
+          "top": null,
+          "bottom": null,
+          "diff": null,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "see007_see007-einvoice",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 4,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 4,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 283.38px vs right 282.53px (diff 0.85 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 283.38,
+          "right": 282.53,
+          "top": 167.25,
+          "bottom": 366.12,
+          "diff": 0.85,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "see008_see008-einvoice",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 2,
+        "hits": [
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:CS Team"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 2,
+        "hits": [
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:CS Team"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 283.38px vs right 282.53px (diff 0.85 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 283.38,
+          "right": 282.53,
+          "top": 167.25,
+          "bottom": 366.12,
+          "diff": 0.85,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "sys002-spike_sys002-spike_b9268876_r01",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 1,
+        "hits": [
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 2,
+        "hits": [
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "node-card:md_signoff"
+          }
+        ]
+      },
+      "a3added": [
+        {
+          "edgeLabel": "reject",
+          "edgeKey": "12",
+          "vs": "node-card:md_signoff"
+        }
+      ],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 80.32px vs right 80.32px (diff 0 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 80.32,
+          "right": 80.32,
+          "top": 107.15,
+          "bottom": -95.87,
+          "diff": 0,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "sys002-spike_sys002-spike_b9268876_r02",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 1,
+        "hits": [
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 2,
+        "hits": [
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "node-card:md_signoff"
+          }
+        ]
+      },
+      "a3added": [
+        {
+          "edgeLabel": "reject",
+          "edgeKey": "12",
+          "vs": "node-card:md_signoff"
+        }
+      ],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 80.32px vs right 80.32px (diff 0 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 80.32,
+          "right": 80.32,
+          "top": 107.15,
+          "bottom": -95.87,
+          "diff": 0,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "sys003-einvoice-r01",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 90.68px vs right 126.41px (diff 35.73 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 90.68,
+          "right": 126.41,
+          "top": 252.92,
+          "bottom": -1919.84,
+          "diff": 35.73,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "sys003-einvoice-r02",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 5,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:BUM"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Sales"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:CS Team"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 5,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:BUM"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Sales"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:CS Team"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 282.42px vs right 282.87px (diff 0.45 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 282.42,
+          "right": 282.87,
+          "top": 186.41,
+          "bottom": 392.86,
+          "diff": 0.45,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "sys003-einvoice-r03",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 77.01px vs right 101.55px (diff 24.54 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 77.01,
+          "right": 101.55,
+          "top": 189.82,
+          "bottom": -293.51,
+          "diff": 24.54,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "sys003-einvoice-r04",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 5,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:BUM"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Sales"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:CS Team"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 5,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:BUM"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Sales"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:CS Team"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 282.42px vs right 282.87px (diff 0.45 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 282.42,
+          "right": 282.87,
+          "top": 186.41,
+          "bottom": 392.86,
+          "diff": 0.45,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "sys004-einvoice",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "DATA",
+        "collisions": 4,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "DATA",
+        "collisions": 4,
+        "hits": [
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "mismatch retry cap 2",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:MD"
+          },
+          {
+            "edgeLabel": "reject",
+            "edgeKey": "12",
+            "vs": "boundary-stroke:Client & Supplier (external)"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 283.38px vs right 282.53px (diff 0.85 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 18,
+          "left": 283.38,
+          "right": 282.53,
+          "top": 167.25,
+          "bottom": 366.12,
+          "diff": 0.85,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "sys004-org",
+      "kind": "architecture",
+      "a3old": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3new": {
+        "verdict": "NA",
+        "collisions": 0,
+        "hits": []
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 137.45px vs right 100.2px (diff 37.25 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 8,
+          "left": 137.45,
+          "right": 100.2,
+          "top": 283.56,
+          "bottom": -12.66,
+          "diff": 37.25,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "watchdog-local-cloud-flow-v2",
+      "kind": "workflow",
+      "a3old": {
+        "verdict": "FAIL",
+        "collisions": 5,
+        "hits": [
+          {
+            "edgeLabel": "failover if local down",
+            "edgeKey": "5",
+            "vs": "boundary-stroke:lane-2"
+          },
+          {
+            "edgeLabel": "lock retry backoff",
+            "edgeKey": "9",
+            "vs": "boundary-stroke:lane-3"
+          },
+          {
+            "edgeLabel": "5:23 precedent",
+            "edgeKey": "14",
+            "vs": "lane-header:03 / Local Engine"
+          },
+          {
+            "edgeLabel": "claimed + logged",
+            "edgeKey": "15",
+            "vs": "boundary-stroke:lane-4"
+          },
+          {
+            "edgeLabel": "proof in 15 min or page",
+            "edgeKey": "16",
+            "vs": "boundary-stroke:lane-6"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "FAIL",
+        "collisions": 5,
+        "hits": [
+          {
+            "edgeLabel": "failover if local down",
+            "edgeKey": "5",
+            "vs": "boundary-stroke:lane-2"
+          },
+          {
+            "edgeLabel": "lock retry backoff",
+            "edgeKey": "9",
+            "vs": "boundary-stroke:lane-3"
+          },
+          {
+            "edgeLabel": "5:23 precedent",
+            "edgeKey": "14",
+            "vs": "lane-header:03 / Local Engine"
+          },
+          {
+            "edgeLabel": "claimed + logged",
+            "edgeKey": "15",
+            "vs": "boundary-stroke:lane-4"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 121.78px vs right 121.78px (diff 0 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 31,
+          "left": 121.78,
+          "right": 121.78,
+          "top": 242.15,
+          "bottom": -1159.24,
+          "diff": 0,
+          "tol": 72
+        }
+      }
+    },
+    {
+      "chart": "watchdog-local-cloud-flow",
+      "kind": "workflow",
+      "a3old": {
+        "verdict": "FAIL",
+        "collisions": 4,
+        "hits": [
+          {
+            "edgeLabel": "failover if local down",
+            "edgeKey": "3",
+            "vs": "boundary-stroke:lane-2"
+          },
+          {
+            "edgeLabel": "5:23 precedent",
+            "edgeKey": "9",
+            "vs": "lane-header:03 / Local Engine"
+          },
+          {
+            "edgeLabel": "claimed + logged",
+            "edgeKey": "10",
+            "vs": "boundary-stroke:lane-4"
+          },
+          {
+            "edgeLabel": "proof in 15 min or page",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:lane-5"
+          }
+        ]
+      },
+      "a3new": {
+        "verdict": "FAIL",
+        "collisions": 4,
+        "hits": [
+          {
+            "edgeLabel": "failover if local down",
+            "edgeKey": "3",
+            "vs": "boundary-stroke:lane-2"
+          },
+          {
+            "edgeLabel": "5:23 precedent",
+            "edgeKey": "9",
+            "vs": "lane-header:03 / Local Engine"
+          },
+          {
+            "edgeLabel": "claimed + logged",
+            "edgeKey": "10",
+            "vs": "boundary-stroke:lane-4"
+          },
+          {
+            "edgeLabel": "proof in 15 min or page",
+            "edgeKey": "11",
+            "vs": "boundary-stroke:lane-5"
+          }
+        ]
+      },
+      "a3added": [],
+      "a13": {
+        "verdict": "PASS",
+        "reason": "margins balanced: left 121.78px vs right 121.78px (diff 0 <= 72 = 5% of 1440)",
+        "measured": {
+          "population": 26,
+          "left": 121.78,
+          "right": 121.78,
+          "top": 242.15,
+          "bottom": -927.43,
+          "diff": 0,
+          "tol": 72
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,411 @@
+{
+  "tool": "colour-assert.mjs",
+  "png": "D:\\Onesimus\\tools\\archify\\design-explore\\see011\\png-chart2-orom-architecture-1440x900-dark.png",
+  "image": {
+    "width": 1440,
+    "height": 900
+  },
+  "floors": {
+    "P1": "de00 >= 1",
+    "P2": "de00 >= 1 (border-excluded bands)",
+    "P3": "de00 <= 2 vs declared token"
+  },
+  "pageMarginCheck": {
+    "insideSvgGap": {
+      "rgb": [
+        44,
+        44,
+        46
+      ],
+      "hex": "#2c2c2e",
+      "n": 558
+    },
+    "outsideSvg": {
+      "rgb": [
+        1,
+        1,
+        2
+      ],
+      "hex": "#010102",
+      "n": 328
+    }
+  },
+  "assertions": [
+    {
+      "id": "P1",
+      "name": "SURFACE_SEPARATION",
+      "asserted": true,
+      "threshold": "touching-pair CIEDE2000 >= 1 (near bands 2..8px)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 9,
+        "fails": 3,
+        "rows": [
+          {
+            "pair": "page/frame:Virtual memory space 1",
+            "nA": 5676,
+            "nB": 274,
+            "a": "#2c2c2e",
+            "b": "#2c2c2e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:Virtual memory space 2",
+            "nA": 5676,
+            "nB": 282,
+            "a": "#2c2c2e",
+            "b": "#2c2c2e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:Virtual memory space 3",
+            "nA": 5676,
+            "nB": 282,
+            "a": "#2c2c2e",
+            "b": "#2c2c2e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:orom1",
+            "nA": 3696,
+            "nB": 459,
+            "a": "#262628",
+            "b": "#343436",
+            "de00": 4.46,
+            "contrast": 1.22,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:orom2",
+            "nA": 3696,
+            "nB": 459,
+            "a": "#272729",
+            "b": "#3c2d2f",
+            "de00": 8.96,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:orom3",
+            "nA": 3696,
+            "nB": 459,
+            "a": "#262628",
+            "b": "#3c2d2f",
+            "de00": 9.07,
+            "contrast": 1.16,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:sandbox",
+            "nA": 14247,
+            "nB": 342,
+            "a": "#262628",
+            "b": "#343436",
+            "de00": 4.46,
+            "contrast": 1.22,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:uefi_nonsandboxed",
+            "nA": 14868,
+            "nB": 342,
+            "a": "#272728",
+            "b": "#343436",
+            "de00": 4.22,
+            "contrast": 1.2,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:uefi_core",
+            "nA": 7506,
+            "nB": 173,
+            "a": "#29292b",
+            "b": "#343436",
+            "de00": 3.51,
+            "contrast": 1.17,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2",
+      "name": "STRUCTURE_WITHOUT_BORDER",
+      "asserted": true,
+      "threshold": "same pairs CIEDE2000 >= 1 (far bands >=10px, hairline ignored)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 11,
+        "fails": 5,
+        "rows": [
+          {
+            "pair": "page/frame:Virtual memory space 1",
+            "nA": 558,
+            "nB": 468,
+            "a": "#2c2c2e",
+            "b": "#2b2b2d",
+            "de00": 0.32,
+            "contrast": 1.01,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:Virtual memory space 2",
+            "nA": 558,
+            "nB": 468,
+            "a": "#2c2c2e",
+            "b": "#2c2c2e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:Virtual memory space 3",
+            "nA": 558,
+            "nB": 468,
+            "a": "#2c2c2e",
+            "b": "#2b2b2d",
+            "de00": 0.32,
+            "contrast": 1.01,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:Ring 3 (less privileged)",
+            "nA": 558,
+            "nB": 981,
+            "a": "#2c2c2e",
+            "b": "#2c2c2e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:Ring 0 (more privileged)",
+            "nA": 558,
+            "nB": 438,
+            "a": "#2c2c2e",
+            "b": "#2a2a2c",
+            "de00": 0.63,
+            "contrast": 1.03,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:orom1",
+            "nA": 468,
+            "nB": 2262,
+            "a": "#2b2b2d",
+            "b": "#343436",
+            "de00": 2.88,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:orom2",
+            "nA": 468,
+            "nB": 2262,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:orom3",
+            "nA": 468,
+            "nB": 2262,
+            "a": "#2b2b2d",
+            "b": "#3c2d2f",
+            "de00": 8.61,
+            "contrast": 1.08,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:sandbox",
+            "nA": 438,
+            "nB": 1760,
+            "a": "#2a2a2c",
+            "b": "#343436",
+            "de00": 3.19,
+            "contrast": 1.15,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:uefi_nonsandboxed",
+            "nA": 438,
+            "nB": 1760,
+            "a": "#2a2a2c",
+            "b": "#343436",
+            "de00": 3.19,
+            "contrast": 1.15,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:uefi_core",
+            "nA": 438,
+            "nB": 1120,
+            "a": "#2a2a2c",
+            "b": "#343436",
+            "de00": 3.19,
+            "contrast": 1.15,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P3",
+      "name": "DECLARED_VS_DELIVERED",
+      "asserted": true,
+      "threshold": "sampled vs declared-token CIEDE2000 <= 2",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 17,
+        "fails": 12,
+        "rows": [
+          {
+            "surface": "page",
+            "n": 558,
+            "sampled": "#2c2c2e",
+            "declared": "#1c1c1e",
+            "de00": 5.04,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "frame:Virtual memory space 1",
+            "n": 468,
+            "sampled": "#2b2b2d",
+            "declared": "#2c2c2e",
+            "de00": 0.32,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:Virtual memory space 2",
+            "n": 468,
+            "sampled": "#2c2c2e",
+            "declared": "#2c2c2e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:Virtual memory space 3",
+            "n": 468,
+            "sampled": "#2b2b2d",
+            "declared": "#2c2c2e",
+            "de00": 0.32,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:Ring 3 (less privileged)",
+            "n": 981,
+            "sampled": "#2c2c2e",
+            "declared": "#2c2c2e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:Ring 0 (more privileged)",
+            "n": 438,
+            "sampled": "#2a2a2c",
+            "declared": "#2c2c2e",
+            "de00": 0.63,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:orom1",
+            "n": 2262,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:orom2",
+            "n": 2262,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:orom3",
+            "n": 2262,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:sandbox",
+            "n": 1760,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:uefi_nonsandboxed",
+            "n": 1760,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:uefi_core",
+            "n": 1120,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "labelbox:0",
+            "n": 1398,
+            "sampled": "#010102",
+            "declared": "#2c2c2e",
+            "de00": 11.1,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "labelbox:1",
+            "n": 1398,
+            "sampled": "#010102",
+            "declared": "#2c2c2e",
+            "de00": 11.1,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "labelbox:2",
+            "n": 1398,
+            "sampled": "#010102",
+            "declared": "#2c2c2e",
+            "de00": 11.1,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "labelbox:3",
+            "n": 1506,
+            "sampled": "#010102",
+            "declared": "#2c2c2e",
+            "de00": 11.1,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "labelbox:4",
+            "n": 1506,
+            "sampled": "#010102",
+            "declared": "#2c2c2e",
+            "de00": 11.1,
+            "verdict": "FAIL"
+          }
+        ]
+      }
+    }
+  ],
+  "excludedForThinSample": 18
+}

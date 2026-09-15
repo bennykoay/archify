@@ -1,0 +1,13 @@
+file:///D:/Onesimus/tools/archify/archify/renderers/shared/diagnostics.mjs:55
+  throw new Error(`${prefix}:\n- ${messages.join('\n- ')}`);
+        ^
+
+Error: Lifecycle layout validation failed:
+- [composition/proper-crossing] showcase lifecycle transitions[1] id "review-blocked" "reviewing" -> "blocked" crosses transitions[2] id "execution-failed" "executing" -> "failed" at [556, 272] (segments 0 and 1) — adjust route/via or channelX/channelY so the transitions use separate lifecycle corridors.
+- [composition/proper-crossing] showcase lifecycle transitions[1] id "review-blocked" "reviewing" -> "blocked" crosses transitions[3] id "failed-retry" "failed" -> "executing" at [556, 272] (segments 0 and 1) — adjust route/via or channelX/channelY so the transitions use separate lifecycle corridors.
+- [composition/short-interior-segment] showcase lifecycle transitions[0] id "approval-needed" "executing" -> "approval" has a 14px interior segment 1 [388, 233] -> [402, 233] that is below the 16px interior-segment floor — move route/via or channel coordinates so each lifecycle turn has a readable run-up.
+    at throwDiagnosticProblems (file:///D:/Onesimus/tools/archify/archify/renderers/shared/diagnostics.mjs:55:9)
+    at validateLifecycle (file:///D:/Onesimus/tools/archify/archify/renderers/lifecycle/render-lifecycle.mjs:331:5)
+    at file:///D:/Onesimus/tools/archify/archify/renderers/lifecycle/render-lifecycle.mjs:556:1
+
+Node.js v25.5.0

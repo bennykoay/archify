@@ -1,0 +1,755 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\see013\\after\\cache-miss-request.sequence.html",
+    "sha256": "28edc604ca8adbb5307812db0c8f0d7d01d5724eee807a09b43dd0e4573fc48f",
+    "sha8": "28edc604",
+    "bytes": 718223
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "kind": "architecture",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "transitSamples": 0,
+        "pillTransits": 0,
+        "laneHeaders": 0,
+        "pills": 0,
+        "pillMasks": 0,
+        "paths": 0
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no paths, lane headers, or pills to examine"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": false,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "DATA",
+      "measured": {
+        "population": 7,
+        "nodes": 7,
+        "violations": 0,
+        "worstMinInset": 19.11,
+        "worstSpread": 0.31
+      },
+      "elements": [
+        {
+          "node": "user",
+          "title": "User"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 128.25,
+            "y": 282.23,
+            "w": 41.87,
+            "h": 21
+          },
+          "cardBox": {
+            "x": 78.19,
+            "y": 263.12,
+            "w": 141.16,
+            "h": 88.64
+          },
+          "insets": {
+            "l": 50.06,
+            "r": 49.24,
+            "t": 19.11,
+            "b": 48.53
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): worst \"User\" inset 19.11px",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": false,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "DATA",
+      "measured": {
+        "population": 12,
+        "edgeLabels": 12,
+        "collisions": 2
+      },
+      "elements": [
+        {
+          "edgeLabel": "claims ok",
+          "edgeKey": "3",
+          "vs": "boundary-stroke:0"
+        },
+        {
+          "edgeLabel": "set cache",
+          "edgeKey": "8",
+          "vs": "boundary-stroke:2"
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 514.82,
+            "y": 612.75,
+            "w": 154.3,
+            "h": 32.83
+          }
+        },
+        {
+          "labelBox": {
+            "x": 514.82,
+            "y": 991.92,
+            "w": 331.57,
+            "h": 32.83
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe FAIL): \"claims ok\" vs boundary-stroke:0",
+      "wouldBe": "FAIL"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 12,
+        "edgeLabels": 12,
+        "orphans": 12,
+        "worstDist": null,
+        "worstInside": 0
+      },
+      "elements": [
+        {
+          "label": "open page",
+          "key": "0"
+        }
+      ],
+      "coords": [
+        {
+          "centroid": {
+            "x": 237.41,
+            "y": 432.19
+          },
+          "tip": null,
+          "labelBox": {
+            "x": 160.27,
+            "y": 415.78,
+            "w": 154.3,
+            "h": 32.83
+          }
+        }
+      ],
+      "reason": "label \"open page\" centroid (237.41,432.19) nullpx from own polyline (>24)"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": false,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "tips": 0,
+        "modal": null,
+        "outliers": 0,
+        "gaps": [],
+        "modalExemplar": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no marker-end tips measured",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 10,
+        "containers": 3,
+        "nodes": 7,
+        "minOccupancy": 0,
+        "globalInkRatio": 0.0522,
+        "inkArea": 32508
+      },
+      "elements": [
+        {
+          "container": "0",
+          "kids": []
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 125.8,
+            "y": 391.15,
+            "w": 1188.41,
+            "h": 238.01
+          }
+        }
+      ],
+      "reason": "container \"0\" occupancy 0 < 0.50 (0 child node(s): none)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 10,
+        "at1440x900": {
+          "scrollHeight": 1565,
+          "innerHeight": 900,
+          "screens": 1.74
+        },
+        "at1920x1080": {
+          "scrollHeight": 1655,
+          "innerHeight": 1080,
+          "screens": 1.53
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "overflowY at both viewports (1440x900 scrollHeight 1565 vs 900 = 1.74 screens)"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": true,
+      "threshold": "distinct spec pos[0] count>1 AND content-bbox/viewBox>=0.50 (viewBox from svg.viewBox.baseVal)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 14,
+        "distinctX": 7,
+        "xs": [
+          62,
+          170,
+          278,
+          386,
+          494,
+          602,
+          710
+        ],
+        "contentBox": {
+          "x": 19,
+          "y": 72,
+          "w": 753,
+          "h": 593
+        },
+        "viewBox": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 760
+        },
+        "ratio": 0.72
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentBox": {
+            "x": 19,
+            "y": 72,
+            "w": 753,
+            "h": 593
+          },
+          "viewBox": {
+            "x": 0,
+            "y": 0,
+            "width": 820,
+            "height": 760
+          }
+        }
+      ],
+      "reason": "spread ok: distinct-x=7, ratio 0.72"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 3,
+        "frames": 3,
+        "floorFails": 0,
+        "spreadFails": 0,
+        "spreadNAFrames": 3,
+        "worstFloorMin": null,
+        "worstSpread": null,
+        "worstFloorFrame": "0",
+        "worstSpreadFrame": null,
+        "allFrames": [
+          {
+            "frame": "0",
+            "floorMin": null,
+            "spread": null,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            }
+          },
+          {
+            "frame": "1",
+            "floorMin": null,
+            "spread": null,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            }
+          },
+          {
+            "frame": "2",
+            "floorMin": null,
+            "spread": null,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            }
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 3 frames clear >=12 and uniform <=6 over qualified sides (worst floor null \"0\", worst qualified spread NA \"0 NA\", 3 frame(s) spread-NA)"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "tips": 0,
+        "violations": 0,
+        "worstGap": null,
+        "worstInside": null,
+        "gaps": [],
+        "insideFlags": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no marker-end tips measured"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "rendered": 0,
+        "spec": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): svg lacks data-spec-edge-count"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "violations": 0,
+        "worstAngle": null,
+        "worstEdge": null,
+        "angles": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no marker-end heads with composition legs"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 10,
+        "left": 78.19,
+        "right": 125.8,
+        "top": 263.12,
+        "bottom": -336.5,
+        "diff": 47.61,
+        "tol": 72,
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "contentRendered": {
+          "x": 78.19,
+          "y": 263.12,
+          "w": 1236.01,
+          "h": 973.38
+        }
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 78.19,
+            "y": 263.12,
+            "w": 1236.01,
+            "h": 973.38
+          }
+        }
+      ],
+      "reason": "margins balanced: left 78.19px vs right 125.8px (diff 47.61 <= 72 = 5% of 1440)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "frames": 3,
+        "judged": 0,
+        "violations": 0,
+        "worstFrame": null,
+        "worstDiff": null,
+        "worstTol": null,
+        "worstShare": null,
+        "rows": [
+          {
+            "frame": "0",
+            "kids": [],
+            "left": null,
+            "right": null,
+            "top": null,
+            "bottom": null,
+            "leftWho": null,
+            "rightWho": null,
+            "topWho": null,
+            "bottomWho": null,
+            "diff": null,
+            "tol": 118.84
+          },
+          {
+            "frame": "1",
+            "kids": [],
+            "left": null,
+            "right": null,
+            "top": null,
+            "bottom": null,
+            "leftWho": null,
+            "rightWho": null,
+            "topWho": null,
+            "bottomWho": null,
+            "diff": null,
+            "tol": 118.84
+          },
+          {
+            "frame": "2",
+            "kids": [],
+            "left": null,
+            "right": null,
+            "top": null,
+            "bottom": null,
+            "leftWho": null,
+            "rightWho": null,
+            "topWho": null,
+            "bottomWho": null,
+            "diff": null,
+            "tol": 118.84
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no frame holds a card"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 12,
+        "labels": 12,
+        "violations": 0,
+        "worstGap": 64.02,
+        "worstLabel": "open page",
+        "worstVs": "card:user",
+        "rows": [
+          {
+            "label": "open page",
+            "key": "0",
+            "cardGap": 64.02,
+            "cardWho": "user",
+            "subGap": 85.64,
+            "subWho": "user:browser session",
+            "minGap": 64.02,
+            "minWho": "user",
+            "minKind": "card"
+          },
+          {
+            "label": "GET /dashboard",
+            "key": "1",
+            "cardGap": 134.6,
+            "cardWho": "web",
+            "subGap": 156.22,
+            "subWho": "web:React UI",
+            "minGap": 134.6,
+            "minWho": "web",
+            "minKind": "card"
+          },
+          {
+            "label": "verify JWT",
+            "key": "2",
+            "cardGap": 203.54,
+            "cardWho": "api",
+            "subGap": 225.16,
+            "subWho": "api:request handler",
+            "minGap": 203.54,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "claims ok",
+            "key": "3",
+            "cardGap": 260.99,
+            "cardWho": "api",
+            "subGap": 282.61,
+            "subWho": "api:request handler",
+            "minGap": 260.99,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "read cache",
+            "key": "4",
+            "cardGap": 341.42,
+            "cardWho": "api",
+            "subGap": 363.04,
+            "subWho": "api:request handler",
+            "minGap": 341.42,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "miss",
+            "key": "5",
+            "cardGap": 402.15,
+            "cardWho": "api",
+            "subGap": 423.78,
+            "subWho": "api:request handler",
+            "minGap": 402.15,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "query profile + metrics",
+            "key": "6",
+            "cardGap": 487.51,
+            "cardWho": "api",
+            "subGap": 509.13,
+            "subWho": "api:request handler",
+            "minGap": 487.51,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "rows",
+            "key": "7",
+            "cardGap": 563.02,
+            "cardWho": "api",
+            "subGap": 584.64,
+            "subWho": "api:request handler",
+            "minGap": 563.02,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "set cache",
+            "key": "8",
+            "cardGap": 640.16,
+            "cardWho": "api",
+            "subGap": 661.79,
+            "subWho": "api:request handler",
+            "minGap": 640.16,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "emit trace",
+            "key": "9",
+            "cardGap": 712.39,
+            "cardWho": "api",
+            "subGap": 734.01,
+            "subWho": "api:request handler",
+            "minGap": 712.39,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "200 JSON",
+            "key": "10",
+            "cardGap": 786.25,
+            "cardWho": "web",
+            "subGap": 807.88,
+            "subWho": "web:React UI",
+            "minGap": 786.25,
+            "minWho": "web",
+            "minKind": "card"
+          },
+          {
+            "label": "render",
+            "key": "11",
+            "cardGap": 846.99,
+            "cardWho": "user",
+            "subGap": 868.61,
+            "subWho": "user:browser session",
+            "minGap": 846.99,
+            "minWho": "user",
+            "minKind": "card"
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 12 edge labels clear >= 24px of cards and sublabels (tightest \"open page\" 64.02px vs card:user)"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 26,
+        "texts": 26,
+        "pxViolations": 26,
+        "contrastViolations": 7,
+        "scale": 1,
+        "minByDetail": {
+          "primary": {
+            "px": 11,
+            "text": "User"
+          },
+          "context": {
+            "px": 7,
+            "text": "browser session"
+          },
+          "edge": {
+            "px": 9,
+            "text": "open page"
+          }
+        },
+        "worstProjectedPx": 11,
+        "worstContrast": 21
+      },
+      "elements": [
+        {
+          "detail": "primary",
+          "text": "User"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 128.25,
+            "y": 282.23,
+            "w": 41.87,
+            "h": 21
+          },
+          "sourceFontPx": 11
+        }
+      ],
+      "reason": "\"User\" (primary) 11px < 15px floor"
+    }
+  ],
+  "complete": true
+}

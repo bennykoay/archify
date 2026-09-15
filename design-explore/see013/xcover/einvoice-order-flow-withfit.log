@@ -1,0 +1,151 @@
+file:///D:/Onesimus/tools/archify/archify/renderers/shared/diagnostics.mjs:38
+  const error = new Error(message);
+                ^
+
+Error: Authored geometry is banned (SYS-003):
+  Authored geometry is banned (SYS-003): workflow edges[3] uses "via" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[4] uses "route" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[7] uses "via" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[8] uses "via" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[9] uses "via" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[10] uses "via" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[11] uses "channelX" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[11] uses "labelAt" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[11] uses "route" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[12] uses "via" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[12] uses "channelX" — remove it; the layout engine owns all geometry.
+  Authored geometry is banned (SYS-003): workflow edges[12] uses "route" — remove it; the layout engine owns all geometry.
+    at throwDiagnosticError (file:///D:/Onesimus/tools/archify/archify/renderers/shared/diagnostics.mjs:38:17)
+    at assertNoAuthoredGeometry (file:///D:/Onesimus/tools/archify/archify/renderers/shared/validator.mjs:74:5)
+    at validateSchema (file:///D:/Onesimus/tools/archify/archify/renderers/shared/validator.mjs:83:3)
+    at loadDiagram (file:///D:/Onesimus/tools/archify/archify/renderers/shared/cli.mjs:22:3)
+    at loadDiagramWithBrandMarks (file:///D:/Onesimus/tools/archify/archify/renderers/shared/cli.mjs:46:18)
+    at file:///D:/Onesimus/tools/archify/archify/renderers/workflow/render-workflow.mjs:41:56
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:655:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  archifyDiagnostics: [
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[3] uses "via" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/3' },
+      evidence: { bannedKey: 'via' },
+      supportedFixes: [
+        'remove "via" from edges[3] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[4] uses "route" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/4' },
+      evidence: { bannedKey: 'route' },
+      supportedFixes: [
+        'remove "route" from edges[4] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[7] uses "via" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/7' },
+      evidence: { bannedKey: 'via' },
+      supportedFixes: [
+        'remove "via" from edges[7] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[8] uses "via" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/8' },
+      evidence: { bannedKey: 'via' },
+      supportedFixes: [
+        'remove "via" from edges[8] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[9] uses "via" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/9' },
+      evidence: { bannedKey: 'via' },
+      supportedFixes: [
+        'remove "via" from edges[9] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[10] uses "via" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/10' },
+      evidence: { bannedKey: 'via' },
+      supportedFixes: [
+        'remove "via" from edges[10] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[11] uses "channelX" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/11' },
+      evidence: { bannedKey: 'channelX' },
+      supportedFixes: [
+        'remove "channelX" from edges[11] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[11] uses "labelAt" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/11' },
+      evidence: { bannedKey: 'labelAt' },
+      supportedFixes: [
+        'remove "labelAt" from edges[11] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[11] uses "route" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/11' },
+      evidence: { bannedKey: 'route' },
+      supportedFixes: [
+        'remove "route" from edges[11] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[12] uses "via" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/12' },
+      evidence: { bannedKey: 'via' },
+      supportedFixes: [
+        'remove "via" from edges[12] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[12] uses "channelX" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/12' },
+      evidence: { bannedKey: 'channelX' },
+      supportedFixes: [
+        'remove "channelX" from edges[12] and re-render; the layout engine computes it'
+      ]
+    },
+    {
+      code: 'schema/authored-geometry',
+      severity: 'error',
+      message: 'Authored geometry is banned (SYS-003): workflow edges[12] uses "route" — remove it; the layout engine owns all geometry.',
+      subject: { diagramType: 'workflow', path: '/edges/12' },
+      evidence: { bannedKey: 'route' },
+      supportedFixes: [
+        'remove "route" from edges[12] and re-render; the layout engine computes it'
+      ]
+    }
+  ]
+}
+
+Node.js v25.5.0

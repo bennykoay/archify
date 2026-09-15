@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Ref Chart 2 - OROM Sandboxing</title>
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;}
+  svg{display:block;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+  .box-text{fill:#262324;font-size:14px;text-anchor:middle;}
+  .quote{fill:#262324;font-size:13px;text-anchor:middle;}
+  .lane-label{fill:#262324;font-size:13px;font-weight:600;}
+  .lane-sub{fill:#5a5a5a;font-size:11px;}
+</style>
+</head>
+<body>
+<svg width="840" height="609" viewBox="0 0 840 609" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowBlack2" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#000000"/>
+    </marker>
+  </defs>
+
+  <!-- lane labels -->
+  <text class="lane-label" x="8" y="122">Ring 3</text>
+  <text class="lane-sub" x="8" y="135">(less privileged)</text>
+
+  <text class="lane-label" x="8" y="362">Ring 0</text>
+  <text class="lane-sub" x="8" y="375">(more privileged)</text>
+
+  <text class="lane-label" x="8" y="552">Hardware</text>
+  <text class="lane-sub" x="8" y="565">(more privileged)</text>
+
+  <!-- Ring3 containers: white fill, blue border rgb(188,228,250) sampled -->
+  <rect x="175" y="14" width="200" height="236" rx="6" fill="#ffffff" stroke="#bce4fa" stroke-width="2"/>
+  <rect x="395" y="14" width="200" height="236" rx="6" fill="#ffffff" stroke="#bce4fa" stroke-width="2"/>
+  <rect x="615" y="14" width="180" height="236" rx="6" fill="#ffffff" stroke="#bce4fa" stroke-width="2"/>
+
+  <text class="box-text" x="275" y="48">
+    <tspan x="275" dy="0">Virtual memory</tspan>
+    <tspan x="275" dy="18">space 1</tspan>
+  </text>
+  <text class="box-text" x="495" y="48">
+    <tspan x="495" dy="0">Virtual memory</tspan>
+    <tspan x="495" dy="18">space 2</tspan>
+  </text>
+  <text class="box-text" x="705" y="48">
+    <tspan x="705" dy="0">Virtual memory</tspan>
+    <tspan x="705" dy="18">space 3</tspan>
+  </text>
+
+  <!-- OROM boxes: col1 fill rgb(211,232,212) sampled = allowed; col2/3 fill rgb(250,194,185) sampled = blocked -->
+  <rect x="184" y="105" width="185" height="41" rx="4" fill="#d3e8d4"/>
+  <text class="box-text" x="276" y="130">OROM 1</text>
+
+  <rect x="404" y="105" width="185" height="41" rx="4" fill="#fac2b9"/>
+  <text class="box-text" x="495" y="130">OROM 2</text>
+
+  <rect x="624" y="105" width="161" height="41" rx="4" fill="#fac2b9"/>
+  <text class="box-text" x="705" y="130">OROM 3</text>
+
+  <text class="quote" x="276" y="178">
+    <tspan x="276" dy="0">&#8220;I&#8217;m a storage</tspan>
+    <tspan x="276" dy="17">driver (for card 1)&#8221;</tspan>
+  </text>
+  <text class="quote" x="495" y="178">
+    <tspan x="495" dy="0">&#8220;I&#8217;m a network</tspan>
+    <tspan x="495" dy="17">driver (for card 1)&#8221;</tspan>
+  </text>
+  <text class="quote" x="705" y="178">
+    <tspan x="705" dy="0">&#8220;I&#8217;m a</tspan>
+    <tspan x="705" dy="17">secure boot driver&#8221;</tspan>
+  </text>
+
+  <!-- arrows Ring3 -> sandbox row, black -->
+  <line x1="276" y1="146" x2="276" y2="280" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack2)"/>
+  <line x1="495" y1="146" x2="495" y2="280" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack2)"/>
+  <line x1="705" y1="146" x2="705" y2="280" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack2)"/>
+
+  <!-- dashed tier divider 1, color rgb(141,141,141) sampled -->
+  <line x1="10" y1="262" x2="830" y2="262" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6,5"/>
+
+  <!-- sandbox driver row, fill rgb(254,213,178) sampled -->
+  <rect x="187" y="287" width="605" height="42" rx="4" fill="#fed5b2"/>
+  <text class="box-text" x="600" y="313">OROM sandbox driver</text>
+
+  <!-- status icons: green check = fill rgb(211,232,212), red X = fill rgb(250,194,185), black stroke+glyph sampled -->
+  <circle cx="205" cy="308" r="12" fill="#d3e8d4" stroke="#000000" stroke-width="2"/>
+  <path d="M199,308 L204,313 L212,303" stroke="#000000" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <circle cx="420" cy="308" r="12" fill="#fac2b9" stroke="#000000" stroke-width="2"/>
+  <path d="M414,302 L426,314 M426,302 L414,314" stroke="#000000" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="408" y1="308" x2="382" y2="308" stroke="#000000" stroke-width="2" marker-end="url(#arrowBlack2)"/>
+
+  <circle cx="762" cy="308" r="12" fill="#fac2b9" stroke="#000000" stroke-width="2"/>
+  <path d="M756,302 L768,314 M768,302 L756,314" stroke="#000000" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Ring0 container -->
+  <rect x="180" y="338" width="615" height="107" rx="6" fill="#ffffff" stroke="#bce4fa" stroke-width="2"/>
+  <rect x="187" y="345" width="601" height="41" rx="4" fill="#d3e8d4"/>
+  <text class="box-text" x="487" y="370">Nonsandboxed UEFI drivers</text>
+  <rect x="187" y="397" width="601" height="41" rx="4" fill="#d3e8d4"/>
+  <text class="box-text" x="487" y="422">Core UEFI firmware</text>
+
+  <!-- dashed tier divider 2 -->
+  <line x1="10" y1="463" x2="830" y2="463" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6,5"/>
+
+  <!-- Hardware row, fill rgb(182,226,250) sampled -->
+  <rect x="187" y="479" width="605" height="41" rx="4" fill="#b6e2fa"/>
+  <text class="box-text" x="489" y="504">x86 CPU</text>
+
+  <rect x="184" y="536" width="185" height="42" rx="4" fill="#d3e8d4"/>
+  <text class="box-text" x="276" y="562">PCIe card 1</text>
+
+  <rect x="398" y="536" width="184" height="42" rx="4" fill="#fac2b9"/>
+  <text class="box-text" x="490" y="562">PCIe card 2</text>
+
+  <rect x="612" y="536" width="183" height="42" rx="4" fill="#fac2b9"/>
+  <text class="box-text" x="703" y="562">PCIe card 3</text>
+
+</svg>
+</body>
+</html>

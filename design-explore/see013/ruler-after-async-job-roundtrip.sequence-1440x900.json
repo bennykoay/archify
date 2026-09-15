@@ -1,0 +1,777 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\see013\\after\\async-job-roundtrip.sequence.html",
+    "sha256": "a380eb65f39e026485bcb182e18ec0e8e798bbd67360a3573e2d0dbe4e159a3d",
+    "sha8": "a380eb65",
+    "bytes": 718633
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "kind": "architecture",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "transitSamples": 0,
+        "pillTransits": 0,
+        "laneHeaders": 0,
+        "pills": 0,
+        "pillMasks": 0,
+        "paths": 0
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no paths, lane headers, or pills to examine"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": false,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "DATA",
+      "measured": {
+        "population": 7,
+        "nodes": 7,
+        "violations": 0,
+        "worstMinInset": 19.11,
+        "worstSpread": 0.31
+      },
+      "elements": [
+        {
+          "node": "client",
+          "title": "Client"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 123.35,
+            "y": 282.23,
+            "w": 51.46,
+            "h": 21
+          },
+          "cardBox": {
+            "x": 78.19,
+            "y": 263.12,
+            "w": 141.17,
+            "h": 88.64
+          },
+          "insets": {
+            "l": 45.16,
+            "r": 44.54,
+            "t": 19.11,
+            "b": 48.53
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): worst \"Client\" inset 19.11px",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": false,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "DATA",
+      "measured": {
+        "population": 14,
+        "edgeLabels": 14,
+        "collisions": 2
+      },
+      "elements": [
+        {
+          "edgeLabel": "deliver",
+          "edgeKey": "3",
+          "vs": "boundary-stroke:1"
+        },
+        {
+          "edgeLabel": "job.completed",
+          "edgeKey": "8",
+          "vs": "boundary-stroke:2"
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 514.82,
+            "y": 647.22,
+            "w": 154.3,
+            "h": 32.83
+          }
+        },
+        {
+          "labelBox": {
+            "x": 692.1,
+            "y": 1041.17,
+            "w": 508.85,
+            "h": 32.83
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe FAIL): \"deliver\" vs boundary-stroke:1",
+      "wouldBe": "FAIL"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 14,
+        "edgeLabels": 14,
+        "orphans": 14,
+        "worstDist": null,
+        "worstInside": 0
+      },
+      "elements": [
+        {
+          "label": "POST /jobs",
+          "key": "0"
+        }
+      ],
+      "coords": [
+        {
+          "centroid": {
+            "x": 237.41,
+            "y": 423.99
+          },
+          "tip": null,
+          "labelBox": {
+            "x": 160.26,
+            "y": 407.57,
+            "w": 154.3,
+            "h": 32.83
+          }
+        }
+      ],
+      "reason": "label \"POST /jobs\" centroid (237.41,423.99) nullpx from own polyline (>24)"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": false,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "tips": 0,
+        "modal": null,
+        "outliers": 0,
+        "gaps": [],
+        "modalExemplar": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no marker-end tips measured",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 10,
+        "containers": 3,
+        "nodes": 7,
+        "minOccupancy": 0,
+        "globalInkRatio": 0.0431,
+        "inkArea": 32508
+      },
+      "elements": [
+        {
+          "container": "0",
+          "kids": []
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 125.79,
+            "y": 391.16,
+            "w": 1188.42,
+            "h": 226.52
+          }
+        }
+      ],
+      "reason": "container \"0\" occupancy 0 < 0.50 (0 child node(s): none)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 10,
+        "at1440x900": {
+          "scrollHeight": 1828,
+          "innerHeight": 900,
+          "screens": 2.03
+        },
+        "at1920x1080": {
+          "scrollHeight": 1930,
+          "innerHeight": 1080,
+          "screens": 1.79
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "overflowY at both viewports (1440x900 scrollHeight 1828 vs 900 = 2.03 screens)"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": true,
+      "threshold": "distinct spec pos[0] count>1 AND content-bbox/viewBox>=0.50 (viewBox from svg.viewBox.baseVal)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 14,
+        "distinctX": 7,
+        "xs": [
+          62,
+          170,
+          278,
+          386,
+          494,
+          602,
+          710
+        ],
+        "contentBox": {
+          "x": 19,
+          "y": 72,
+          "w": 753,
+          "h": 728
+        },
+        "viewBox": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 920
+        },
+        "ratio": 0.73
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentBox": {
+            "x": 19,
+            "y": 72,
+            "w": 753,
+            "h": 728
+          },
+          "viewBox": {
+            "x": 0,
+            "y": 0,
+            "width": 820,
+            "height": 920
+          }
+        }
+      ],
+      "reason": "spread ok: distinct-x=7, ratio 0.73"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 3,
+        "frames": 3,
+        "floorFails": 0,
+        "spreadFails": 0,
+        "spreadNAFrames": 3,
+        "worstFloorMin": null,
+        "worstSpread": null,
+        "worstFloorFrame": "0",
+        "worstSpreadFrame": null,
+        "allFrames": [
+          {
+            "frame": "0",
+            "floorMin": null,
+            "spread": null,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            }
+          },
+          {
+            "frame": "1",
+            "floorMin": null,
+            "spread": null,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            }
+          },
+          {
+            "frame": "2",
+            "floorMin": null,
+            "spread": null,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            }
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 3 frames clear >=12 and uniform <=6 over qualified sides (worst floor null \"0\", worst qualified spread NA \"0 NA\", 3 frame(s) spread-NA)"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "tips": 0,
+        "violations": 0,
+        "worstGap": null,
+        "worstInside": null,
+        "gaps": [],
+        "insideFlags": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no marker-end tips measured"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "rendered": 0,
+        "spec": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): svg lacks data-spec-edge-count"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "violations": 0,
+        "worstAngle": null,
+        "worstEdge": null,
+        "angles": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no marker-end heads with composition legs"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 10,
+        "left": 78.19,
+        "right": 125.79,
+        "top": 263.12,
+        "bottom": -558.1,
+        "diff": 47.6,
+        "tol": 72,
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "contentRendered": {
+          "x": 78.19,
+          "y": 263.12,
+          "w": 1236.02,
+          "h": 1194.98
+        }
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 78.19,
+            "y": 263.12,
+            "w": 1236.02,
+            "h": 1194.98
+          }
+        }
+      ],
+      "reason": "margins balanced: left 78.19px vs right 125.79px (diff 47.6 <= 72 = 5% of 1440)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "frames": 3,
+        "judged": 0,
+        "violations": 0,
+        "worstFrame": null,
+        "worstDiff": null,
+        "worstTol": null,
+        "worstShare": null,
+        "rows": [
+          {
+            "frame": "0",
+            "kids": [],
+            "left": null,
+            "right": null,
+            "top": null,
+            "bottom": null,
+            "leftWho": null,
+            "rightWho": null,
+            "topWho": null,
+            "bottomWho": null,
+            "diff": null,
+            "tol": 118.84
+          },
+          {
+            "frame": "1",
+            "kids": [],
+            "left": null,
+            "right": null,
+            "top": null,
+            "bottom": null,
+            "leftWho": null,
+            "rightWho": null,
+            "topWho": null,
+            "bottomWho": null,
+            "diff": null,
+            "tol": 118.84
+          },
+          {
+            "frame": "2",
+            "kids": [],
+            "left": null,
+            "right": null,
+            "top": null,
+            "bottom": null,
+            "leftWho": null,
+            "rightWho": null,
+            "topWho": null,
+            "bottomWho": null,
+            "diff": null,
+            "tol": 118.84
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no frame holds a card"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 14,
+        "labels": 14,
+        "violations": 0,
+        "worstGap": 55.81,
+        "worstLabel": "POST /jobs",
+        "worstVs": "card:client",
+        "rows": [
+          {
+            "label": "POST /jobs",
+            "key": "0",
+            "cardGap": 55.81,
+            "cardWho": "client",
+            "subGap": 77.43,
+            "subWho": "client:mobile app",
+            "minGap": 55.81,
+            "minWho": "client",
+            "minKind": "card"
+          },
+          {
+            "label": "enqueue job",
+            "key": "1",
+            "cardGap": 124.75,
+            "cardWho": "api",
+            "subGap": 146.37,
+            "subWho": "api:request edge",
+            "minGap": 124.75,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "202 + job id",
+            "key": "2",
+            "cardGap": 193.69,
+            "cardWho": "client",
+            "subGap": 215.31,
+            "subWho": "client:mobile app",
+            "minGap": 193.69,
+            "minWho": "client",
+            "minKind": "card"
+          },
+          {
+            "label": "deliver",
+            "key": "3",
+            "cardGap": 295.46,
+            "cardWho": "queue",
+            "subGap": 317.08,
+            "subWho": "queue:durable work",
+            "minGap": 295.46,
+            "minWho": "queue",
+            "minKind": "card"
+          },
+          {
+            "label": "perform work",
+            "key": "4",
+            "cardGap": 364.4,
+            "cardWho": "worker",
+            "subGap": 386.03,
+            "subWho": "worker:background",
+            "minGap": 364.4,
+            "minWho": "worker",
+            "minKind": "card"
+          },
+          {
+            "label": "result / timeout",
+            "key": "5",
+            "cardGap": 433.34,
+            "cardWho": "worker",
+            "subGap": 454.97,
+            "subWho": "worker:background",
+            "minGap": 433.34,
+            "minWho": "worker",
+            "minKind": "card"
+          },
+          {
+            "label": "retry if timeout",
+            "key": "6",
+            "cardGap": 502.29,
+            "cardWho": "queue",
+            "subGap": 523.91,
+            "subWho": "queue:durable work",
+            "minGap": 502.29,
+            "minWho": "queue",
+            "minKind": "card"
+          },
+          {
+            "label": "persist final state",
+            "key": "7",
+            "cardGap": 571.23,
+            "cardWho": "worker",
+            "subGap": 592.85,
+            "subWho": "worker:background",
+            "minGap": 571.23,
+            "minWho": "worker",
+            "minKind": "card"
+          },
+          {
+            "label": "job.completed",
+            "key": "8",
+            "cardGap": 689.41,
+            "cardWho": "worker",
+            "subGap": 711.03,
+            "subWho": "worker:background",
+            "minGap": 689.41,
+            "minWho": "worker",
+            "minKind": "card"
+          },
+          {
+            "label": "signed webhook",
+            "key": "9",
+            "cardGap": 758.35,
+            "cardWho": "client",
+            "subGap": 779.98,
+            "subWho": "client:mobile app",
+            "minGap": 758.35,
+            "minWho": "client",
+            "minKind": "card"
+          },
+          {
+            "label": "GET /jobs/:id",
+            "key": "10",
+            "cardGap": 827.29,
+            "cardWho": "client",
+            "subGap": 848.92,
+            "subWho": "client:mobile app",
+            "minGap": 827.29,
+            "minWho": "client",
+            "minKind": "card"
+          },
+          {
+            "label": "read status",
+            "key": "11",
+            "cardGap": 896.24,
+            "cardWho": "api",
+            "subGap": 917.86,
+            "subWho": "api:request edge",
+            "minGap": 896.24,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "completed",
+            "key": "12",
+            "cardGap": 965.18,
+            "cardWho": "api",
+            "subGap": 986.8,
+            "subWho": "api:request edge",
+            "minGap": 965.18,
+            "minWho": "api",
+            "minKind": "card"
+          },
+          {
+            "label": "200 final result",
+            "key": "13",
+            "cardGap": 1034.12,
+            "cardWho": "client",
+            "subGap": 1055.74,
+            "subWho": "client:mobile app",
+            "minGap": 1034.12,
+            "minWho": "client",
+            "minKind": "card"
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 14 edge labels clear >= 24px of cards and sublabels (tightest \"POST /jobs\" 55.81px vs card:client)"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 28,
+        "texts": 28,
+        "pxViolations": 28,
+        "contrastViolations": 10,
+        "scale": 1,
+        "minByDetail": {
+          "primary": {
+            "px": 11,
+            "text": "Client"
+          },
+          "context": {
+            "px": 7,
+            "text": "mobile app"
+          },
+          "edge": {
+            "px": 9,
+            "text": "POST /jobs"
+          }
+        },
+        "worstProjectedPx": 11,
+        "worstContrast": 21
+      },
+      "elements": [
+        {
+          "detail": "primary",
+          "text": "Client"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 123.35,
+            "y": 282.23,
+            "w": 51.46,
+            "h": 21
+          },
+          "sourceFontPx": 11
+        }
+      ],
+      "reason": "\"Client\" (primary) 11px < 15px floor"
+    }
+  ],
+  "complete": true
+}

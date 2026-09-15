@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Apple Silicon Mac Boot Validation Chain",
+    "quality_profile": "showcase",
+    "viewBox": [900, 480]
+  },
+  "lanes": [
+    { "id": "enclave", "label": "Secure Enclave" },
+    { "id": "chain", "label": "Boot Validation Chain" }
+  ],
+  "mainPath": ["bootfw", "llbpolicy", "iboot2", "macos"],
+  "nodes": [
+    { "id": "bootfw", "lane": "chain", "col": 0, "type": "security", "label": "ROM+FW sig", "width": 96 },
+    { "id": "llbpolicy", "lane": "chain", "col": 2, "type": "security", "label": "Policy sig", "width": 92 },
+    { "id": "iboot2", "lane": "chain", "col": 3, "type": "security", "label": "iBoot2+val", "width": 96 },
+    { "id": "macos", "lane": "chain", "col": 5, "type": "backend", "label": "macOS", "width": 92 },
+    { "id": "se_signed", "lane": "enclave", "col": 0, "type": "security", "label": "SE signs", "width": 92 },
+    { "id": "se_fetch", "lane": "enclave", "col": 2, "type": "security", "label": "SE fetches", "width": 92 }
+  ],
+  "edges": [
+    { "id": "e1", "from": "bootfw", "to": "llbpolicy", "role": "main" },
+    { "id": "e2", "from": "llbpolicy", "to": "iboot2", "role": "main" },
+    { "id": "e3", "from": "iboot2", "to": "macos", "role": "main" },
+    { "id": "e4", "from": "se_signed", "to": "llbpolicy", "label": "feeds", "role": "branch", "fromSide": "bottom", "toSide": "top", "route": "drop" },
+    { "id": "e5", "from": "se_fetch", "to": "llbpolicy", "label": "feeds", "role": "branch", "fromSide": "bottom", "toSide": "top", "route": "drop" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Full Step Text (Apple Platform Security Guide)",
+      "items": [
+        "Boot ROM validates LLB signature",
+        "LLB validates system-paired firmware signatures",
+        "LLB validates LocalPolicy signature",
+        "LLB evaluates iBoot stage 2 signature according to LocalPolicy",
+        "iBoot stage 2 validates macOS-paired firmware, Boot Kernel Collection, Auxiliary Kernel Collection (if applicable), system trust cache, and signed system volume signatures, according to LocalPolicy"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Secure Enclave Inputs",
+      "items": [
+        "Secure Enclave signed LocalPolicy",
+        "Secure Enclave Boot ROM fetches LocalPolicy nonces from Secure Storage Component"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Node Merges (layout constraint, not content loss)",
+      "items": [
+        "bootfw combines 'Boot ROM validates LLB signature' + 'LLB validates firmware signatures'",
+        "iboot2 combines 'LLB evaluates iBoot stage 2 signature' + 'iBoot stage 2 validates macOS-paired firmware...'",
+        "Full unmerged text preserved verbatim in the cards above"
+      ]
+    }
+  ]
+}

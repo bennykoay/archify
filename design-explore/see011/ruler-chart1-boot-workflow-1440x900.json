@@ -1,0 +1,769 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\chart1-boot-workflow.html",
+    "sha256": "5b93ef9b92908728cf52245eea4432becdf331a8070e75f8d3e57136c9dc36f1",
+    "sha8": "5b93ef9b",
+    "bytes": 685292
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "kind": "workflow",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "PASS",
+      "measured": {
+        "population": 7,
+        "transitSamples": 0,
+        "pillTransits": 0,
+        "laneHeaders": 2,
+        "pills": 0,
+        "pillMasks": 0,
+        "paths": 5
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no transit: lane 2, pills 0 (masks 0), paths 5"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": true,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 6,
+        "nodes": 6,
+        "violations": 6,
+        "worstMinInset": 10.7,
+        "worstSpread": 0
+      },
+      "elements": [
+        {
+          "node": "se_signed",
+          "title": "SE signs"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 322.61,
+            "y": 424.8,
+            "w": 47.4,
+            "h": 14
+          },
+          "cardBox": {
+            "x": 298.4,
+            "y": 414.1,
+            "w": 95.07,
+            "h": 53.73
+          },
+          "insets": {
+            "l": 24.21,
+            "r": 23.46,
+            "t": 10.7,
+            "b": 29.03
+          }
+        }
+      ],
+      "reason": "title \"SE signs\" (se_signed) min inset 10.7px < 16"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": true,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 2,
+        "edgeLabels": 2,
+        "collisions": 2
+      },
+      "elements": [
+        {
+          "edgeLabel": "feeds",
+          "edgeKey": "3",
+          "vs": "boundary-stroke:lane-0"
+        },
+        {
+          "edgeLabel": "feeds",
+          "edgeKey": "4",
+          "vs": "boundary-stroke:lane-0"
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 437.9,
+            "y": 468.87,
+            "w": 35.13,
+            "h": 14.47
+          }
+        },
+        {
+          "labelBox": {
+            "x": 547.43,
+            "y": 468.87,
+            "w": 35.13,
+            "h": 14.47
+          }
+        }
+      ],
+      "reason": "edge label \"feeds\" collides boundary-stroke:lane-0"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 2,
+        "edgeLabels": 2,
+        "orphans": 1,
+        "worstDist": 0,
+        "worstInside": 7
+      },
+      "elements": [
+        {
+          "label": "feeds",
+          "key": "4"
+        }
+      ],
+      "coords": [
+        {
+          "centroid": {
+            "x": 565,
+            "y": 476.1
+          },
+          "tip": {
+            "x": 565,
+            "y": 542.23
+          },
+          "labelBox": {
+            "x": 547.43,
+            "y": 468.87,
+            "w": 35.13,
+            "h": 14.47
+          }
+        }
+      ],
+      "reason": "label \"feeds\" sits on its own wire (7 own-polyline samples inside label bbox — mask severs the wire)"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": true,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 5,
+        "tips": 5,
+        "modal": 8,
+        "outliers": 0,
+        "gaps": [
+          8.2,
+          8.2,
+          8.12,
+          8.2,
+          8.2
+        ],
+        "modalExemplar": {
+          "edge": "bootfw>llbpolicy",
+          "gap": 8.2,
+          "tip": {
+            "x": 509.27,
+            "y": 569.1
+          }
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 5 tips within 2px of modal 8px"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 8,
+        "containers": 2,
+        "nodes": 6,
+        "minOccupancy": 0.1437,
+        "globalInkRatio": 0.0674,
+        "inkArea": 29120
+      },
+      "elements": [
+        {
+          "container": "lane-0",
+          "kids": [
+            "se_signed",
+            "se_fetch"
+          ]
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 296.33,
+            "y": 371.73,
+            "w": 661.33,
+            "h": 107.47
+          }
+        }
+      ],
+      "reason": "container \"lane-0\" occupancy 0.1437 < 0.50 (2 child node(s): se_signed, se_fetch)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 15,
+        "at1440x900": {
+          "scrollHeight": 1148,
+          "innerHeight": 900,
+          "screens": 1.28
+        },
+        "at1920x1080": {
+          "scrollHeight": 1249,
+          "innerHeight": 1080,
+          "screens": 1.16
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "overflowY at both viewports (1440x900 scrollHeight 1148 vs 900 = 1.28 screens)"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": false,
+      "threshold": "architecture-only: distinct spec pos[0] > 1 AND content-bbox/viewBox >= 0.50",
+      "verdict": "NA",
+      "measured": {
+        "population": 8,
+        "kind": "workflow"
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "workflow layout (lane frames present): spread does not apply (NA per SEE-004 contract)"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 7,
+        "frames": 2,
+        "floorFails": 0,
+        "spreadFails": 0,
+        "spreadNAFrames": 2,
+        "worstFloorMin": 89.9,
+        "worstSpread": null,
+        "worstFloorFrame": "lane-0",
+        "worstSpreadFrame": null,
+        "allFrames": [
+          {
+            "frame": "lane-0",
+            "floorMin": 89.9,
+            "spread": 136.71,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [
+              "bottom"
+            ],
+            "p1min": {
+              "top": 197.37,
+              "right": 137.75,
+              "bottom": 89.9,
+              "left": 133.88
+            },
+            "p2min": {
+              "top": 96.1,
+              "right": 137.75,
+              "bottom": 1.03,
+              "left": 49.6
+            },
+            "p1who": {
+              "top": "0",
+              "right": "2",
+              "bottom": "0",
+              "left": "0"
+            },
+            "p2who": {
+              "top": "3:term",
+              "right": "2",
+              "bottom": "3:mid",
+              "left": "3:term"
+            }
+          },
+          {
+            "frame": "lane-1",
+            "floorMin": null,
+            "spread": 103.33,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [
+              "top"
+            ],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": 1.03,
+              "right": 104.37,
+              "bottom": 38.23,
+              "left": 50.89
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": "3:mid",
+              "right": "2:term",
+              "bottom": "0:term",
+              "left": "3:mid"
+            }
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 2 frames clear >=12 and uniform <=6 over qualified sides (worst floor 89.9 \"lane-0\", worst qualified spread NA \"lane-0 NA\", 2 frame(s) spread-NA)"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 5,
+        "tips": 5,
+        "violations": 5,
+        "worstGap": 0,
+        "worstInside": true,
+        "gaps": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "insideFlags": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "elements": [
+        {
+          "edge": "bootfw>llbpolicy",
+          "key": "0",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "llbpolicy>iboot2",
+          "key": "1",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "iboot2>macos",
+          "key": "2",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "se_signed>llbpolicy",
+          "key": "3",
+          "inside": true,
+          "gap": 0
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 518.91,
+            "y": 569.1
+          },
+          "pathEnd": {
+            "x": 517.47,
+            "y": 569.1
+          },
+          "targetBox": {
+            "x": 517.47,
+            "y": 542.23,
+            "w": 95.07,
+            "h": 53.73
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 651.18,
+            "y": 569.1
+          },
+          "pathEnd": {
+            "x": 649.73,
+            "y": 569.1
+          },
+          "targetBox": {
+            "x": 649.73,
+            "y": 542.23,
+            "w": 99.2,
+            "h": 53.73
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 854.73,
+            "y": 569.1
+          },
+          "pathEnd": {
+            "x": 853.3,
+            "y": 569.1
+          },
+          "targetBox": {
+            "x": 853.3,
+            "y": 542.23,
+            "w": 95.07,
+            "h": 53.73
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 565,
+            "y": 543.68
+          },
+          "pathEnd": {
+            "x": 565,
+            "y": 542.23
+          },
+          "targetBox": {
+            "x": 517.47,
+            "y": 542.23,
+            "w": 95.07,
+            "h": 53.73
+          },
+          "gap": 0,
+          "inside": true
+        }
+      ],
+      "reason": "tip bootfw>llbpolicy INSIDE target box (gap 0px — inside always FAIL)"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 5,
+        "rendered": 5,
+        "spec": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): svg lacks data-spec-edge-count"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 5,
+        "violations": 0,
+        "worstAngle": 0,
+        "worstEdge": "bootfw>llbpolicy",
+        "angles": [
+          {
+            "edge": "bootfw>llbpolicy",
+            "angle": 0,
+            "pieceLen": 118
+          },
+          {
+            "edge": "llbpolicy>iboot2",
+            "angle": 0,
+            "pieceLen": 36
+          },
+          {
+            "edge": "iboot2>macos",
+            "angle": 0,
+            "pieceLen": 101
+          },
+          {
+            "edge": "se_signed>llbpolicy",
+            "angle": 0,
+            "pieceLen": 51
+          },
+          {
+            "edge": "se_fetch>llbpolicy",
+            "angle": 0,
+            "pieceLen": 51
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 5 heads face their last piece within 30deg (worst 0deg bootfw>llbpolicy)"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 10,
+        "left": 296.33,
+        "right": 482.34,
+        "top": 371.73,
+        "bottom": 292.67,
+        "diff": 186.01,
+        "tol": 72,
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "contentRendered": {
+          "x": 296.33,
+          "y": 371.73,
+          "w": 661.33,
+          "h": 235.6
+        }
+      },
+      "elements": [
+        {
+          "left": 296.33,
+          "right": 482.34,
+          "diff": 186.01,
+          "tol": 72
+        }
+      ],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 296.33,
+            "y": 371.73,
+            "w": 661.33,
+            "h": 235.6
+          }
+        }
+      ],
+      "reason": "picture shoved: left 296.33px vs right 482.34px (diff 186.01 > 72 = 5% of 1440)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 2,
+        "frames": 2,
+        "judged": 2,
+        "violations": 1,
+        "worstFrame": "lane-0",
+        "worstDiff": 343.07,
+        "worstTol": 66.13,
+        "worstShare": 51.88,
+        "rows": [
+          {
+            "frame": "lane-0",
+            "kids": [
+              "se_signed",
+              "se_fetch"
+            ],
+            "left": 2.07,
+            "right": 345.13,
+            "top": 42.37,
+            "bottom": 11.37,
+            "leftWho": "se_signed",
+            "rightWho": "se_fetch",
+            "topWho": "se_signed",
+            "bottomWho": "se_signed",
+            "diff": 343.07,
+            "tol": 66.13
+          },
+          {
+            "frame": "lane-1",
+            "kids": [
+              "bootfw",
+              "llbpolicy",
+              "iboot2",
+              "macos"
+            ],
+            "left": 0,
+            "right": 9.3,
+            "top": 42.37,
+            "bottom": 11.37,
+            "leftWho": "bootfw",
+            "rightWho": "macos",
+            "topWho": "bootfw",
+            "bottomWho": "bootfw",
+            "diff": 9.3,
+            "tol": 66.13
+          }
+        ]
+      },
+      "elements": [
+        {
+          "frame": "lane-0",
+          "left": 2.07,
+          "right": 345.13,
+          "diff": 343.07,
+          "tol": 66.13,
+          "leftWho": "se_signed",
+          "rightWho": "se_fetch"
+        }
+      ],
+      "coords": [
+        {
+          "frame": "lane-0",
+          "left": 2.07,
+          "right": 345.13,
+          "top": 42.37,
+          "bottom": 11.37
+        }
+      ],
+      "reason": "frame \"lane-0\" lopsided: left 2.07px (se_signed) vs right 345.13px (se_fetch) (diff 343.07 > 66.13 = 10% of 661.33)"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 2,
+        "labels": 2,
+        "violations": 1,
+        "worstGap": 1.03,
+        "worstLabel": "feeds",
+        "worstVs": "card:se_fetch",
+        "rows": [
+          {
+            "label": "feeds",
+            "key": "3",
+            "cardGap": 44.45,
+            "cardWho": "se_signed",
+            "subGap": null,
+            "subWho": null,
+            "minGap": 44.45,
+            "minWho": "se_signed",
+            "minKind": "card"
+          },
+          {
+            "label": "feeds",
+            "key": "4",
+            "cardGap": 1.03,
+            "cardWho": "se_fetch",
+            "subGap": null,
+            "subWho": null,
+            "minGap": 1.03,
+            "minWho": "se_fetch",
+            "minKind": "card"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "label": "feeds",
+          "key": "4",
+          "vs": "card:se_fetch",
+          "gap": 1.03
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 547.43,
+            "y": 468.87,
+            "w": 35.13,
+            "h": 14.47
+          },
+          "gap": 1.03,
+          "vs": "card:se_fetch"
+        }
+      ],
+      "reason": "edge label \"feeds\" (4) crowds card \"se_fetch\" at 1.03px (<24; card leg 1.03px vs se_fetch, sub leg nullpx vs null)"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 10,
+        "texts": 10,
+        "pxViolations": 10,
+        "contrastViolations": 2,
+        "scale": 1,
+        "minByDetail": {
+          "primary": {
+            "px": 11,
+            "text": "ROM+FW sig"
+          },
+          "boundary": {
+            "px": 10,
+            "text": "01 / Secure Enclave"
+          },
+          "edge": {
+            "px": 8,
+            "text": "feeds"
+          }
+        },
+        "worstProjectedPx": 11,
+        "worstContrast": 21
+      },
+      "elements": [
+        {
+          "detail": "primary",
+          "text": "ROM+FW sig"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 310.07,
+            "y": 552.93,
+            "w": 71.72,
+            "h": 14
+          },
+          "sourceFontPx": 11
+        }
+      ],
+      "reason": "\"ROM+FW sig\" (primary) 11px < 15px floor"
+    }
+  ],
+  "complete": true
+}

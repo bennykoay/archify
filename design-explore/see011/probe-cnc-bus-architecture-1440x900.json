@@ -1,0 +1,107 @@
+{
+  "tool": "see006-probe.mjs",
+  "html": "D:\\Onesimus\\tools\\archify\\design-explore\\cnc-bus-architecture.html",
+  "sha256": "aa342b4e5fac3a7ca90548e0cf889f0bf754b7a0c3253d33d86e0b5f8db576d6",
+  "viewport": {
+    "w": 1440,
+    "h": 900
+  },
+  "image": {
+    "width": 1440,
+    "height": 900
+  },
+  "svg": {
+    "x": 47,
+    "y": 80,
+    "w": 1346,
+    "h": 621
+  },
+  "frames": [
+    {
+      "id": "GSK-Link 总线菊花链",
+      "x": 61,
+      "y": 434,
+      "w": 1275,
+      "h": 170
+    }
+  ],
+  "cards": [
+    {
+      "id": "cnc",
+      "x": 104,
+      "y": 477,
+      "w": 213,
+      "h": 99
+    },
+    {
+      "id": "io",
+      "x": 430,
+      "y": 477,
+      "w": 213,
+      "h": 99
+    },
+    {
+      "id": "servoZ",
+      "x": 755,
+      "y": 477,
+      "w": 213,
+      "h": 99
+    },
+    {
+      "id": "servoX",
+      "x": 1081,
+      "y": 477,
+      "w": 213,
+      "h": 99
+    }
+  ],
+  "pills": [
+    {
+      "x": 67,
+      "y": 448,
+      "w": 160,
+      "h": 23
+    }
+  ],
+  "overlays": [
+    {
+      "sel": "[role=\"toolbar\"]",
+      "x": 1040,
+      "y": 16,
+      "w": 384,
+      "h": 44
+    },
+    {
+      "sel": "[role=\"toolbar\"]",
+      "x": 97,
+      "y": 634,
+      "w": 449,
+      "h": 56
+    },
+    {
+      "sel": "[role=\"toolbar\"]",
+      "x": 1081,
+      "y": 660,
+      "w": 310,
+      "h": 39
+    },
+    {
+      "sel": ".toolbar",
+      "x": 1040,
+      "y": 16,
+      "w": 384,
+      "h": 44
+    },
+    {
+      "sel": "[data-legend]",
+      "x": 97,
+      "y": 634,
+      "w": 449,
+      "h": 56
+    }
+  ],
+  "scroll": {
+    "w": 1440,
+    "h": 900
+  }
+}

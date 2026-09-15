@@ -1,0 +1,407 @@
+{
+  "tool": "colour-assert.mjs",
+  "png": "D:\\Onesimus\\tools\\archify\\design-explore\\see011\\png-aben-kkse-agent-flow-2048x1320-dark.png",
+  "image": {
+    "width": 2048,
+    "height": 1320
+  },
+  "floors": {
+    "P1": "de00 >= 1",
+    "P2": "de00 >= 1 (border-excluded bands)",
+    "P3": "de00 <= 2 vs declared token"
+  },
+  "pageMarginCheck": {
+    "insideSvgGap": {
+      "rgb": [
+        28,
+        28,
+        30
+      ],
+      "hex": "#1c1c1e",
+      "n": 1073
+    },
+    "outsideSvg": {
+      "rgb": [
+        0,
+        0,
+        0
+      ],
+      "hex": "#000000",
+      "n": 919
+    }
+  },
+  "assertions": [
+    {
+      "id": "P1",
+      "name": "SURFACE_SEPARATION",
+      "asserted": true,
+      "threshold": "touching-pair CIEDE2000 >= 1 (near bands 2..8px)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 9,
+        "fails": 0,
+        "rows": [
+          {
+            "pair": "frame/card:benny",
+            "nA": 2916,
+            "nB": 753,
+            "a": "#18181a",
+            "b": "#272729",
+            "de00": 4.72,
+            "contrast": 1.19,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cloud",
+            "nA": 2916,
+            "nB": 753,
+            "a": "#18181a",
+            "b": "#242426",
+            "de00": 3.77,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:john",
+            "nA": 2916,
+            "nB": 753,
+            "a": "#18181b",
+            "b": "#242426",
+            "de00": 3.84,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:chief",
+            "nA": 2352,
+            "nB": 753,
+            "a": "#18181b",
+            "b": "#2d1e20",
+            "de00": 9.23,
+            "contrast": 1.11,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:nbg",
+            "nA": 2916,
+            "nB": 753,
+            "a": "#18181a",
+            "b": "#242426",
+            "de00": 3.77,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:bailiff",
+            "nA": 2916,
+            "nB": 753,
+            "a": "#18181a",
+            "b": "#242426",
+            "de00": 3.77,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:james",
+            "nA": 2916,
+            "nB": 753,
+            "a": "#18181b",
+            "b": "#242426",
+            "de00": 3.84,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:kksesrv",
+            "nA": 2916,
+            "nB": 753,
+            "a": "#18181a",
+            "b": "#242426",
+            "de00": 3.77,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:benji",
+            "nA": 2352,
+            "nB": 753,
+            "a": "#18181b",
+            "b": "#2d1e20",
+            "de00": 9.23,
+            "contrast": 1.11,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2",
+      "name": "STRUCTURE_WITHOUT_BORDER",
+      "asserted": true,
+      "threshold": "same pairs CIEDE2000 >= 1 (far bands >=10px, hairline ignored)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 13,
+        "fails": 4,
+        "rows": [
+          {
+            "pair": "page/frame:lane-0",
+            "nA": 1073,
+            "nB": 1060,
+            "a": "#1c1c1e",
+            "b": "#1b1b1e",
+            "de00": 0.79,
+            "contrast": 1.01,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:lane-1",
+            "nA": 1073,
+            "nB": 1400,
+            "a": "#1c1c1e",
+            "b": "#1b1b1e",
+            "de00": 0.79,
+            "contrast": 1.01,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:lane-2",
+            "nA": 1073,
+            "nB": 1400,
+            "a": "#1c1c1e",
+            "b": "#1b1b1e",
+            "de00": 0.79,
+            "contrast": 1.01,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:lane-3",
+            "nA": 1073,
+            "nB": 1600,
+            "a": "#1c1c1e",
+            "b": "#1b1b1e",
+            "de00": 0.79,
+            "contrast": 1.01,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:benny",
+            "nA": 1400,
+            "nB": 2345,
+            "a": "#1b1b1e",
+            "b": "#272729",
+            "de00": 3.84,
+            "contrast": 1.15,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cloud",
+            "nA": 1400,
+            "nB": 2345,
+            "a": "#1b1b1e",
+            "b": "#242426",
+            "de00": 2.91,
+            "contrast": 1.11,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:john",
+            "nA": 1060,
+            "nB": 2345,
+            "a": "#1b1b1e",
+            "b": "#242426",
+            "de00": 2.91,
+            "contrast": 1.11,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:chief",
+            "nA": 1060,
+            "nB": 2345,
+            "a": "#1b1b1e",
+            "b": "#2d1e20",
+            "de00": 8.97,
+            "contrast": 1.08,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:nbg",
+            "nA": 1060,
+            "nB": 2345,
+            "a": "#1b1b1e",
+            "b": "#242426",
+            "de00": 2.91,
+            "contrast": 1.11,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:bailiff",
+            "nA": 1060,
+            "nB": 2345,
+            "a": "#1b1b1e",
+            "b": "#242426",
+            "de00": 2.91,
+            "contrast": 1.11,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:james",
+            "nA": 1400,
+            "nB": 2345,
+            "a": "#1b1b1e",
+            "b": "#242426",
+            "de00": 2.91,
+            "contrast": 1.11,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:kksesrv",
+            "nA": 1400,
+            "nB": 2345,
+            "a": "#1b1b1e",
+            "b": "#242426",
+            "de00": 2.91,
+            "contrast": 1.11,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:benji",
+            "nA": 1600,
+            "nB": 2345,
+            "a": "#1b1b1e",
+            "b": "#2d1e20",
+            "de00": 8.97,
+            "contrast": 1.08,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P3",
+      "name": "DECLARED_VS_DELIVERED",
+      "asserted": true,
+      "threshold": "sampled vs declared-token CIEDE2000 <= 2",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 14,
+        "fails": 13,
+        "rows": [
+          {
+            "surface": "page",
+            "n": 1073,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-0",
+            "n": 1060,
+            "sampled": "#1b1b1e",
+            "declared": "#2c2c2e",
+            "de00": 5.4,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "frame:lane-1",
+            "n": 1400,
+            "sampled": "#1b1b1e",
+            "declared": "#2c2c2e",
+            "de00": 5.4,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "frame:lane-2",
+            "n": 1400,
+            "sampled": "#1b1b1e",
+            "declared": "#2c2c2e",
+            "de00": 5.4,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "frame:lane-3",
+            "n": 1600,
+            "sampled": "#1b1b1e",
+            "declared": "#2c2c2e",
+            "de00": 5.4,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:benny",
+            "n": 2345,
+            "sampled": "#272729",
+            "declared": "#1c1c1e",
+            "de00": 3.46,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:cloud",
+            "n": 2345,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:john",
+            "n": 2345,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:chief",
+            "n": 2345,
+            "sampled": "#2d1e20",
+            "declared": "#1c1c1e",
+            "de00": 9.02,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:nbg",
+            "n": 2345,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:bailiff",
+            "n": 2345,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:james",
+            "n": 2345,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:kksesrv",
+            "n": 2345,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:benji",
+            "n": 2345,
+            "sampled": "#2d1e20",
+            "declared": "#1c1c1e",
+            "de00": 9.02,
+            "verdict": "FAIL"
+          }
+        ]
+      }
+    }
+  ],
+  "excludedForThinSample": 4
+}

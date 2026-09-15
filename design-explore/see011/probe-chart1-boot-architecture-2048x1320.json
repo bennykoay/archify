@@ -1,0 +1,113 @@
+{
+  "tool": "see006-probe.mjs",
+  "html": "D:\\Onesimus\\tools\\archify\\design-explore\\chart1-boot-architecture.html",
+  "sha256": "7b02de85e893a5e4cdcb3d9124afcd6e2f6dd39c6a799821eb0fe3f3fb5b752a",
+  "viewport": {
+    "w": 2048,
+    "h": 1320
+  },
+  "image": {
+    "width": 2048,
+    "height": 1320
+  },
+  "svg": {
+    "x": 329,
+    "y": 110,
+    "w": 1390,
+    "h": 898
+  },
+  "frames": [],
+  "cards": [
+    {
+      "id": "bootrom",
+      "x": 763,
+      "y": 153,
+      "w": 492,
+      "h": 80
+    },
+    {
+      "id": "llbfw",
+      "x": 763,
+      "y": 269,
+      "w": 492,
+      "h": 80
+    },
+    {
+      "id": "llbpolicy",
+      "x": 763,
+      "y": 385,
+      "w": 492,
+      "h": 80
+    },
+    {
+      "id": "llbiboot",
+      "x": 763,
+      "y": 501,
+      "w": 492,
+      "h": 87
+    },
+    {
+      "id": "ibootvalidate",
+      "x": 763,
+      "y": 624,
+      "w": 492,
+      "h": 130
+    },
+    {
+      "id": "macos",
+      "x": 763,
+      "y": 791,
+      "w": 492,
+      "h": 80
+    },
+    {
+      "id": "se_signed",
+      "x": 358,
+      "y": 378,
+      "w": 369,
+      "h": 94
+    },
+    {
+      "id": "se_fetch",
+      "x": 1290,
+      "y": 378,
+      "w": 369,
+      "h": 94
+    }
+  ],
+  "pills": [],
+  "overlays": [
+    {
+      "sel": "[role=\"toolbar\"]",
+      "x": 1648,
+      "y": 16,
+      "w": 384,
+      "h": 44
+    },
+    {
+      "sel": "[role=\"toolbar\"]",
+      "x": 1417,
+      "y": 977,
+      "w": 310,
+      "h": 39
+    },
+    {
+      "sel": ".toolbar",
+      "x": 1648,
+      "y": 16,
+      "w": 384,
+      "h": 44
+    },
+    {
+      "sel": "[data-legend]",
+      "x": 380,
+      "y": 939,
+      "w": 282,
+      "h": 58
+    }
+  ],
+  "scroll": {
+    "w": 2048,
+    "h": 1320
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "tool": "colour-assert.mjs",
+  "png": "D:\\Onesimus\\tools\\archify\\design-explore\\see011\\png-chart1-boot-architecture-2048x1320-dark.png",
+  "image": {
+    "width": 2048,
+    "height": 1320
+  },
+  "floors": {
+    "P1": "de00 >= 1",
+    "P2": "de00 >= 1 (border-excluded bands)",
+    "P3": "de00 <= 2 vs declared token"
+  },
+  "pageMarginCheck": {
+    "insideSvgGap": {
+      "rgb": [
+        44,
+        44,
+        46
+      ],
+      "hex": "#2c2c2e",
+      "n": 2159
+    },
+    "outsideSvg": {
+      "rgb": [
+        1,
+        1,
+        2
+      ],
+      "hex": "#010102",
+      "n": 1177
+    }
+  },
+  "assertions": [
+    {
+      "id": "P1",
+      "name": "SURFACE_SEPARATION",
+      "asserted": true,
+      "threshold": "touching-pair CIEDE2000 >= 1 (near bands 2..8px)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "fails": 0,
+        "rows": []
+      },
+      "reason": "no measurable population (N=0): no touching pairs with both sides sampled"
+    },
+    {
+      "id": "P2",
+      "name": "STRUCTURE_WITHOUT_BORDER",
+      "asserted": true,
+      "threshold": "same pairs CIEDE2000 >= 1 (far bands >=10px, hairline ignored)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "fails": 0,
+        "rows": []
+      },
+      "reason": "no measurable population (N=0): no pairs with border-excluded samples"
+    },
+    {
+      "id": "P3",
+      "name": "DECLARED_VS_DELIVERED",
+      "asserted": true,
+      "threshold": "sampled vs declared-token CIEDE2000 <= 2",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "fails": 0,
+        "rows": []
+      },
+      "reason": "no measurable population (N=0): no surfaces sampled"
+    }
+  ],
+  "excludedForThinSample": 9
+}

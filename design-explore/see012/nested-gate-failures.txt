@@ -1,0 +1,25 @@
+file:///D:/Onesimus/tools/archify/archify/renderers/shared/diagnostics.mjs:55
+  throw new Error(`${prefix}:\n- ${messages.join('\n- ')}`);
+        ^
+
+Error: Architecture layout validation failed:
+- Connection "precheck->submit" is too short (20px; minimum 24px) — place its components farther apart.
+- Connection "submit->dopi" is too short (20px; minimum 24px) — place its components farther apart.
+- Connection "dopi->collect" is too short (20px; minimum 24px) — place its components farther apart.
+- [clean-flow/edge-through-node] architecture connections[11] id "c12" "match" -> "request" crosses component "costing" (unrelated to this relationship) on segment 0 [1155, 465] -> [1155, 985] (2px clearance) — adjust fromSide/toSide, set route/via, or move the component.
+- [clean-flow/edge-through-node] architecture connections[11] id "c12" "match" -> "request" crosses component "quote" (unrelated to this relationship) on segment 2 [237, 985] -> [237, 550] (2px clearance) — adjust fromSide/toSide, set route/via, or move the component.
+- [clean-flow/edge-through-node] architecture connections[11] id "c12" "match" -> "request" crosses component "signoff" (unrelated to this relationship) on segment 2 [237, 985] -> [237, 550] (2px clearance) — adjust fromSide/toSide, set route/via, or move the component.
+- [clean-flow/edge-through-node] architecture connections[11] id "c12" "match" -> "request" crosses component "dopi" (unrelated to this relationship) on segment 0 [1155, 465] -> [1155, 985] (2px clearance) — adjust fromSide/toSide, set route/via, or move the component.
+- [clean-flow/edge-through-node] architecture connections[12] id "c13" "md_signoff" -> "costing" crosses component "bum_price" (unrelated to this relationship) on segment 0 [1911, 271] -> [1911, 985] (2px clearance) — adjust fromSide/toSide, set route/via, or move the component.
+- [clean-flow/edge-through-node] architecture connections[12] id "c13" "md_signoff" -> "costing" crosses component "dopi" (unrelated to this relationship) on segment 2 [1155, 985] -> [1155, 545] (2px clearance) — adjust fromSide/toSide, set route/via, or move the component.
+- [composition/proper-crossing] showcase architecture connections[1] id "c02" "match" -> "bum_price" crosses connections[3] id "c04" "costing" -> "md_signoff" at [1711, 424] (segments 0 and 1) — adjust route/via or fromSide/toSide so the connections use separate corridors.
+- [composition/proper-crossing] showcase architecture connections[2] id "c03" "bum_price" -> "costing" crosses connections[11] id "c12" "match" -> "request" at [1155, 592] (segments 4 and 0) — adjust route/via or fromSide/toSide so the connections use separate corridors.
+- [composition/proper-crossing] showcase architecture connections[4] id "c05" "md_signoff" -> "quote" crosses connections[11] id "c12" "match" -> "request" at [237, 559] (segments 6 and 2) — adjust route/via or fromSide/toSide so the connections use separate corridors.
+- [composition/proper-crossing] showcase architecture connections[5] id "c06" "quote" -> "po" crosses connections[7] id "c08" "signoff" -> "precheck" at [437, 690] (segments 2 and 0) — adjust route/via or fromSide/toSide so the connections use separate corridors.
+- [composition/proper-crossing] showcase architecture connections[6] id "c07" "po" -> "signoff" crosses connections[11] id "c12" "match" -> "request" at [1155, 844] (segments 1 and 0) — adjust route/via or fromSide/toSide so the connections use separate corridors.
+- [composition/proper-crossing] showcase architecture connections[6] id "c07" "po" -> "signoff" crosses connections[12] id "c13" "md_signoff" -> "costing" at [1155, 844] (segments 1 and 2) — adjust route/via or fromSide/toSide so the connections use separate corridors.
+- [composition/ambiguous-corridor] showcase architecture connections[5] id "c06" "quote" -> "po" shares a 10px corridor with connections[11] id "c12" "match" -> "request" at [237, 640] -> [237, 650] (segments 0 and 2; minimum 8px) — adjust route/via or fromSide/toSide so unrelated connections do not visually merge.
+- [composition/ambiguous-corridor] showcase architecture connections[6] id "c07" "po" -> "signoff" shares a 10px corridor with connections[11] id "c12" "match" -> "request" at [237, 731] -> [237, 741] (segments 6 and 2; minimum 8px) — adjust route/via or fromSide/toSide so unrelated connections do not visually merge.
+- [composition/ambiguous-corridor] showcase architecture connections[11] id "c12" "match" -> "request" shares a 440px corridor with connections[12] id "c13" "md_signoff" -> "costing" at [1155, 545] -> [1155, 985] (segments 0 and 2; minimum 8px) — adjust route/via or fromSide/toSide so unrelated connections do not visually merge.
+    at throwDiagnosticProblems (file:///D:/Onesimus/tools/archify/archify/renderers/shared/diagnostics.mjs:55:9)
+    at validateArchitecture (file:///D:/Onesimus/tools/archify/archify/renderers/architecture/render-architecture.mjs:666:5)

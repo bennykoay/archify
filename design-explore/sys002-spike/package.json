@@ -1,0 +1,9 @@
+{
+  "name": "sys002-spike",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "elkjs": "^0.12.0"
+  }
+}

@@ -1,0 +1,307 @@
+{
+  "tool": "colour-assert.mjs",
+  "png": "D:\\Onesimus\\tools\\archify\\design-explore\\see011\\png-chart1-boot-workflow-1440x900-dark.png",
+  "image": {
+    "width": 1440,
+    "height": 900
+  },
+  "floors": {
+    "P1": "de00 >= 1",
+    "P2": "de00 >= 1 (border-excluded bands)",
+    "P3": "de00 <= 2 vs declared token"
+  },
+  "pageMarginCheck": {
+    "insideSvgGap": {
+      "rgb": [
+        44,
+        44,
+        46
+      ],
+      "hex": "#2c2c2e",
+      "n": 1340
+    },
+    "outsideSvg": {
+      "rgb": [
+        28,
+        28,
+        30
+      ],
+      "hex": "#1c1c1e",
+      "n": 853
+    }
+  },
+  "assertions": [
+    {
+      "id": "P1",
+      "name": "SURFACE_SEPARATION",
+      "asserted": true,
+      "threshold": "touching-pair CIEDE2000 >= 1 (near bands 2..8px)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 8,
+        "fails": 2,
+        "rows": [
+          {
+            "pair": "page/frame:lane-0",
+            "nA": 9408,
+            "nB": 244,
+            "a": "#2c2c2e",
+            "b": "#2c2c2e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:lane-1",
+            "nA": 9408,
+            "nB": 189,
+            "a": "#2c2c2e",
+            "b": "#2c2c2e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:bootfw",
+            "nA": 1596,
+            "nB": 1834,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:llbpolicy",
+            "nA": 1980,
+            "nB": 1778,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:iboot2",
+            "nA": 2028,
+            "nB": 1834,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:macos",
+            "nA": 1980,
+            "nB": 1778,
+            "a": "#2c2c2e",
+            "b": "#343436",
+            "de00": 2.56,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:se_signed",
+            "nA": 1572,
+            "nB": 1778,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:se_fetch",
+            "nA": 1980,
+            "nB": 1778,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2",
+      "name": "STRUCTURE_WITHOUT_BORDER",
+      "asserted": true,
+      "threshold": "same pairs CIEDE2000 >= 1 (far bands >=10px, hairline ignored)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 8,
+        "fails": 2,
+        "rows": [
+          {
+            "pair": "page/frame:lane-0",
+            "nA": 1340,
+            "nB": 1830,
+            "a": "#2c2c2e",
+            "b": "#2c2c2e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:lane-1",
+            "nA": 1340,
+            "nB": 1326,
+            "a": "#2c2c2e",
+            "b": "#2c2c2e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:bootfw",
+            "nA": 1326,
+            "nB": 3654,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:llbpolicy",
+            "nA": 1326,
+            "nB": 3486,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:iboot2",
+            "nA": 1326,
+            "nB": 3654,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:macos",
+            "nA": 1326,
+            "nB": 3486,
+            "a": "#2c2c2e",
+            "b": "#343436",
+            "de00": 2.56,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:se_signed",
+            "nA": 1830,
+            "nB": 3486,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:se_fetch",
+            "nA": 1830,
+            "nB": 3486,
+            "a": "#2c2c2e",
+            "b": "#3c2d2f",
+            "de00": 8.55,
+            "contrast": 1.07,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P3",
+      "name": "DECLARED_VS_DELIVERED",
+      "asserted": true,
+      "threshold": "sampled vs declared-token CIEDE2000 <= 2",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 9,
+        "fails": 7,
+        "rows": [
+          {
+            "surface": "page",
+            "n": 1340,
+            "sampled": "#2c2c2e",
+            "declared": "#1c1c1e",
+            "de00": 5.04,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "frame:lane-0",
+            "n": 1830,
+            "sampled": "#2c2c2e",
+            "declared": "#2c2c2e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-1",
+            "n": 1326,
+            "sampled": "#2c2c2e",
+            "declared": "#2c2c2e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:bootfw",
+            "n": 3654,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:llbpolicy",
+            "n": 3486,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:iboot2",
+            "n": 3654,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:macos",
+            "n": 3486,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:se_signed",
+            "n": 3486,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:se_fetch",
+            "n": 3486,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          }
+        ]
+      }
+    }
+  ],
+  "excludedForThinSample": 0
+}

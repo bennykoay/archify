@@ -1,0 +1,605 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\chart1-boot-architecture-apple-hig.html",
+    "sha256": "1fabc1e99ad3e37acec85ee4aaac201d389bdbd278ca685d58f40df5f761ac13",
+    "sha8": "1fabc1e9",
+    "bytes": 707509
+  },
+  "viewport": {
+    "width": 2048,
+    "height": 1320
+  },
+  "kind": "architecture",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "PASS",
+      "measured": {
+        "population": 7,
+        "transitSamples": 0,
+        "pillTransits": 0,
+        "laneHeaders": 0,
+        "pills": 0,
+        "pillMasks": 0,
+        "paths": 7
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no lane headers nor pills: vacuously clean"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": false,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "DATA",
+      "measured": {
+        "population": 8,
+        "nodes": 8,
+        "violations": 0,
+        "worstMinInset": 23.54,
+        "worstSpread": 0.07
+      },
+      "elements": [
+        {
+          "node": "llbiboot",
+          "title": "LLB evaluates iBoot stage 2 signature"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 875.42,
+            "y": 527.48,
+            "w": 268.74,
+            "h": 21
+          },
+          "cardBox": {
+            "x": 763.38,
+            "y": 503.94,
+            "w": 492.29,
+            "h": 86.87
+          },
+          "insets": {
+            "l": 112.04,
+            "r": 111.5,
+            "t": 23.54,
+            "b": 42.33
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): worst \"LLB evaluates iBoot stage 2 signature\" inset 23.54px",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": false,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "edgeLabels": 0,
+        "collisions": 0
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no edge labels to examine",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "edgeLabels": 0,
+        "orphans": 0,
+        "worstDist": null,
+        "worstInside": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no edge labels measured"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": false,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "DATA",
+      "measured": {
+        "population": 7,
+        "tips": 7,
+        "modal": 14,
+        "outliers": 1,
+        "gaps": [
+          14.2,
+          14.2,
+          14.2,
+          14.2,
+          14.2,
+          11.83,
+          12.31
+        ],
+        "modalExemplar": {
+          "edge": "bootrom>llbfw",
+          "gap": 14.2,
+          "tip": {
+            "x": 1009.52,
+            "y": 258.07
+          }
+        }
+      },
+      "elements": [
+        {
+          "edge": "se_signed>llbpolicy",
+          "key": "5"
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 751.54,
+            "y": 427.92
+          },
+          "pathEnd": {
+            "x": 763.38,
+            "y": 427.92
+          },
+          "targetEdge": {
+            "x": 763.38,
+            "y": 388.1,
+            "w": 492.29,
+            "h": 79.63
+          },
+          "gap": 11.83
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe FAIL): modal 14px",
+      "wouldBe": "FAIL"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 8,
+        "containers": 0,
+        "nodes": 8,
+        "minOccupancy": null,
+        "globalInkRatio": 0.2671,
+        "inkArea": 158950
+      },
+      "elements": [
+        {
+          "container": "viewBox(global ink/area)"
+        }
+      ],
+      "coords": [],
+      "reason": "global ink/viewBox 0.2671 < 0.50 (ink/area; per-container min \"?\": ?)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 15,
+        "at1440x900": {
+          "scrollHeight": 1106,
+          "innerHeight": 900,
+          "screens": 1.23
+        },
+        "at1920x1080": {
+          "scrollHeight": 1178,
+          "innerHeight": 1080,
+          "screens": 1.09
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "overflowY at both viewports (1440x900 scrollHeight 1106 vs 900 = 1.23 screens)"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": true,
+      "threshold": "distinct spec pos[0] count>1 AND content-bbox/viewBox>=0.50 (viewBox from svg.viewBox.baseVal)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 11,
+        "distinctX": 3,
+        "xs": [
+          148,
+          470,
+          792
+        ],
+        "contentBox": {
+          "x": 20,
+          "y": 30,
+          "w": 899,
+          "h": 495
+        },
+        "viewBox": {
+          "x": 0,
+          "y": 0,
+          "width": 960,
+          "height": 620
+        },
+        "ratio": 0.75
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentBox": {
+            "x": 20,
+            "y": 30,
+            "w": 899,
+            "h": 495
+          },
+          "viewBox": {
+            "x": 0,
+            "y": 0,
+            "width": 960,
+            "height": 620
+          }
+        }
+      ],
+      "reason": "spread ok: distinct-x=3, ratio 0.75"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 7,
+        "frames": 0,
+        "floorFails": 0,
+        "spreadFails": 0,
+        "spreadNAFrames": 0,
+        "worstFloorMin": null,
+        "worstSpread": null,
+        "worstFloorFrame": null,
+        "worstSpreadFrame": null,
+        "allFrames": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no frames measured"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 7,
+        "tips": 7,
+        "violations": 7,
+        "worstGap": 0,
+        "worstInside": true,
+        "gaps": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "insideFlags": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "elements": [
+        {
+          "edge": "bootrom>llbfw",
+          "key": "0",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "llbfw>llbpolicy",
+          "key": "1",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "llbpolicy>llbiboot",
+          "key": "2",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "llbiboot>ibootvalidate",
+          "key": "3",
+          "inside": true,
+          "gap": 0
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 1009.52,
+            "y": 274.78
+          },
+          "pathEnd": {
+            "x": 1009.52,
+            "y": 272.27
+          },
+          "targetBox": {
+            "x": 763.38,
+            "y": 272.27,
+            "w": 492.29,
+            "h": 79.63
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 1009.52,
+            "y": 390.61
+          },
+          "pathEnd": {
+            "x": 1009.52,
+            "y": 388.1
+          },
+          "targetBox": {
+            "x": 763.38,
+            "y": 388.1,
+            "w": 492.29,
+            "h": 79.63
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 1009.52,
+            "y": 506.44
+          },
+          "pathEnd": {
+            "x": 1009.52,
+            "y": 503.94
+          },
+          "targetBox": {
+            "x": 763.38,
+            "y": 503.94,
+            "w": 492.29,
+            "h": 86.87
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 1009.52,
+            "y": 629.51
+          },
+          "pathEnd": {
+            "x": 1009.52,
+            "y": 627.01
+          },
+          "targetBox": {
+            "x": 763.38,
+            "y": 627.01,
+            "w": 492.29,
+            "h": 130.31
+          },
+          "gap": 0,
+          "inside": true
+        }
+      ],
+      "reason": "tip bootrom>llbfw INSIDE target box (gap 0px — inside always FAIL)"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 7,
+        "rendered": 7,
+        "spec": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): svg lacks data-spec-edge-count"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 7,
+        "violations": 0,
+        "worstAngle": 0,
+        "worstEdge": "bootrom>llbfw",
+        "angles": [
+          {
+            "edge": "bootrom>llbfw",
+            "angle": 0,
+            "pieceLen": 25
+          },
+          {
+            "edge": "llbfw>llbpolicy",
+            "angle": 0,
+            "pieceLen": 25
+          },
+          {
+            "edge": "llbpolicy>llbiboot",
+            "angle": 0,
+            "pieceLen": 25
+          },
+          {
+            "edge": "llbiboot>ibootvalidate",
+            "angle": 0,
+            "pieceLen": 25
+          },
+          {
+            "edge": "ibootvalidate>macos",
+            "angle": 0,
+            "pieceLen": 25
+          },
+          {
+            "edge": "se_signed>llbpolicy",
+            "angle": 0,
+            "pieceLen": 25
+          },
+          {
+            "edge": "se_fetch>llbpolicy",
+            "angle": 0,
+            "pieceLen": 24
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 7 heads face their last piece within 30deg (worst 0deg bootrom>llbfw)"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 8,
+        "left": 357.96,
+        "right": 388.37,
+        "top": 156.44,
+        "bottom": 446.85,
+        "diff": 30.41,
+        "tol": 102.4,
+        "viewportWidth": 2048,
+        "viewportHeight": 1320,
+        "contentRendered": {
+          "x": 357.96,
+          "y": 156.44,
+          "w": 1301.67,
+          "h": 716.71
+        }
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 357.96,
+            "y": 156.44,
+            "w": 1301.67,
+            "h": 716.71
+          }
+        }
+      ],
+      "reason": "margins balanced: left 357.96px vs right 388.37px (diff 30.41 <= 102.4 = 5% of 2048)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "frames": 0,
+        "judged": 0,
+        "violations": 0,
+        "worstFrame": null,
+        "worstDiff": null,
+        "worstTol": null,
+        "worstShare": null,
+        "rows": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no frame holds a card"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "labels": 0,
+        "violations": 0,
+        "worstGap": null,
+        "worstLabel": null,
+        "worstVs": null,
+        "rows": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no edge labels to examine"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 11,
+        "texts": 11,
+        "pxViolations": 11,
+        "contrastViolations": 0,
+        "scale": 1,
+        "minByDetail": {
+          "primary": {
+            "px": 10.8,
+            "text": "SE Boot ROM fetches LocalPolicy nonces"
+          },
+          "context": {
+            "px": 6.5,
+            "text": "Boot Kernel Collection, Auxiliary Kernel Collection, trust cache, signed volume sigs"
+          }
+        },
+        "worstProjectedPx": 6.5,
+        "worstContrast": 10.94
+      },
+      "elements": [
+        {
+          "detail": "context",
+          "text": "Boot Kernel Collection, Auxiliary Kernel Collection, trust cache, signed volume sigs"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 840.28,
+            "y": 702.43,
+            "w": 338.48,
+            "h": 12
+          },
+          "sourceFontPx": 6.5
+        }
+      ],
+      "reason": "\"Boot Kernel Collection, Auxiliary Kernel Collection, trust cache, signed volume sigs\" (context) 6.5px < 11px floor"
+    }
+  ],
+  "complete": true
+}

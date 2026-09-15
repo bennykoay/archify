@@ -1,0 +1,693 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\cnc-bus-architecture.html",
+    "sha256": "aa342b4e5fac3a7ca90548e0cf889f0bf754b7a0c3253d33d86e0b5f8db576d6",
+    "sha8": "aa342b4e",
+    "bytes": 699624
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "kind": "architecture",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "PASS",
+      "measured": {
+        "population": 4,
+        "transitSamples": 0,
+        "pillTransits": 0,
+        "laneHeaders": 0,
+        "pills": 1,
+        "pillMasks": 1,
+        "paths": 3
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no transit: lane 0, pills 1 (masks 1), paths 3"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": false,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "DATA",
+      "measured": {
+        "population": 4,
+        "nodes": 4,
+        "violations": 0,
+        "worstMinInset": 31.75,
+        "worstSpread": 0.06
+      },
+      "elements": [
+        {
+          "node": "cnc",
+          "title": "980TC3"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 179.24,
+            "y": 508.46,
+            "w": 61.5,
+            "h": 19
+          },
+          "cardBox": {
+            "x": 103.69,
+            "y": 476.71,
+            "w": 212.52,
+            "h": 99.18
+          },
+          "insets": {
+            "l": 75.55,
+            "r": 75.48,
+            "t": 31.75,
+            "b": 48.42
+          }
+        }
+      ],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): worst \"980TC3\" inset 31.75px",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": false,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "DATA",
+      "measured": {
+        "population": 3,
+        "edgeLabels": 3,
+        "collisions": 0
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): no overlap",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 3,
+        "edgeLabels": 3,
+        "orphans": 2,
+        "worstDist": 65.17,
+        "worstInside": 0
+      },
+      "elements": [
+        {
+          "label": "C1 新购 1.5米 GE-RJ45",
+          "key": "1"
+        }
+      ],
+      "coords": [
+        {
+          "centroid": {
+            "x": 698.75,
+            "y": 591.47
+          },
+          "tip": {
+            "x": 755.42,
+            "y": 526.29
+          },
+          "labelBox": {
+            "x": 620.26,
+            "y": 581.55,
+            "w": 156.98,
+            "h": 19.84
+          }
+        }
+      ],
+      "reason": "label \"C1 新购 1.5米 GE-RJ45\" centroid (698.75,591.47) 65.17px from own polyline (>24)"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": false,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "DATA",
+      "measured": {
+        "population": 3,
+        "tips": 3,
+        "modal": 14,
+        "outliers": 0,
+        "gaps": [
+          12.04,
+          14.45,
+          14.45
+        ],
+        "modalExemplar": {
+          "edge": "cnc>io",
+          "gap": 12.04,
+          "tip": {
+            "x": 417.51,
+            "y": 526.29
+          }
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): modal 14px",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 5,
+        "containers": 1,
+        "nodes": 4,
+        "minOccupancy": 0.3889,
+        "globalInkRatio": 0.1009,
+        "inkArea": 42000
+      },
+      "elements": [
+        {
+          "container": "GSK-Link 总线菊花链",
+          "kids": [
+            "cnc",
+            "io",
+            "servoZ",
+            "servoX"
+          ]
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 61.18,
+            "y": 434.2,
+            "w": 1275.13,
+            "h": 170.02
+          }
+        }
+      ],
+      "reason": "container \"GSK-Link 总线菊花链\" occupancy 0.3889 < 0.50 (4 child node(s): cnc, io, servoZ, servoX)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "PASS",
+      "measured": {
+        "population": 8,
+        "at1440x900": {
+          "scrollHeight": 900,
+          "innerHeight": 900,
+          "screens": 1
+        },
+        "at1920x1080": {
+          "scrollHeight": 1080,
+          "innerHeight": 1080,
+          "screens": 1
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "fits without vertical scroll at >=1 declared viewport"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": true,
+      "threshold": "distinct spec pos[0] count>1 AND content-bbox/viewBox>=0.50 (viewBox from svg.viewBox.baseVal)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 8,
+        "distinctX": 4,
+        "xs": [
+          115,
+          345,
+          575,
+          805
+        ],
+        "contentBox": {
+          "x": 10,
+          "y": 250,
+          "w": 900,
+          "h": 120
+        },
+        "viewBox": {
+          "x": 0,
+          "y": 0,
+          "width": 950,
+          "height": 438
+        },
+        "ratio": 0.26
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentBox": {
+            "x": 10,
+            "y": 250,
+            "w": 900,
+            "h": 120
+          },
+          "viewBox": {
+            "x": 0,
+            "y": 0,
+            "width": 950,
+            "height": 438
+          }
+        }
+      ],
+      "reason": "no spread: distinct-x=4, ratio 0.26 (<0.50 or single-x column)"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 4,
+        "frames": 1,
+        "floorFails": 0,
+        "spreadFails": 0,
+        "spreadNAFrames": 1,
+        "worstFloorMin": null,
+        "worstSpread": null,
+        "worstFloorFrame": "GSK-Link 总线菊花链",
+        "worstSpreadFrame": null,
+        "allFrames": [
+          {
+            "frame": "GSK-Link 总线菊花链",
+            "floorMin": null,
+            "spread": 177.1,
+            "spreadQualified": null,
+            "spreadNA": true,
+            "qualifiedSides": [],
+            "p1min": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2min": {
+              "top": 92.09,
+              "right": 255.03,
+              "bottom": 77.92,
+              "left": 255.03
+            },
+            "p1who": {
+              "top": null,
+              "right": null,
+              "bottom": null,
+              "left": null
+            },
+            "p2who": {
+              "top": "0:term",
+              "right": "2:term",
+              "bottom": "0:term",
+              "left": "0:term"
+            }
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 1 frames clear >=12 and uniform <=6 over qualified sides (worst floor null \"GSK-Link 总线菊花链\", worst qualified spread NA \"GSK-Link 总线菊花链 NA\", 1 frame(s) spread-NA)"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 3,
+        "tips": 3,
+        "violations": 3,
+        "worstGap": 0,
+        "worstInside": true,
+        "gaps": [
+          0,
+          0,
+          0
+        ],
+        "insideFlags": [
+          true,
+          true,
+          true
+        ]
+      },
+      "elements": [
+        {
+          "edge": "cnc>io",
+          "key": "0",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "io>servoZ",
+          "key": "1",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "servoZ>servoX",
+          "key": "2",
+          "inside": true,
+          "gap": 0
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 431.68,
+            "y": 526.29
+          },
+          "pathEnd": {
+            "x": 429.55,
+            "y": 526.29
+          },
+          "targetBox": {
+            "x": 429.55,
+            "y": 476.71,
+            "w": 212.52,
+            "h": 99.18
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 757.97,
+            "y": 526.29
+          },
+          "pathEnd": {
+            "x": 755.42,
+            "y": 526.29
+          },
+          "targetBox": {
+            "x": 755.42,
+            "y": 476.71,
+            "w": 212.52,
+            "h": 99.18
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 1083.84,
+            "y": 526.29
+          },
+          "pathEnd": {
+            "x": 1081.29,
+            "y": 526.29
+          },
+          "targetBox": {
+            "x": 1081.29,
+            "y": 476.71,
+            "w": 212.52,
+            "h": 99.18
+          },
+          "gap": 0,
+          "inside": true
+        }
+      ],
+      "reason": "tip cnc>io INSIDE target box (gap 0px — inside always FAIL)"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 3,
+        "rendered": 3,
+        "spec": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): svg lacks data-spec-edge-count"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 3,
+        "violations": 0,
+        "worstAngle": 0,
+        "worstEdge": "cnc>io",
+        "angles": [
+          {
+            "edge": "cnc>io",
+            "angle": 0,
+            "pieceLen": 80
+          },
+          {
+            "edge": "io>servoZ",
+            "angle": 0,
+            "pieceLen": 80
+          },
+          {
+            "edge": "servoZ>servoX",
+            "angle": 0,
+            "pieceLen": 80
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 3 heads face their last piece within 30deg (worst 0deg cnc>io)"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 5,
+        "left": 61.18,
+        "right": 103.69,
+        "top": 434.2,
+        "bottom": 295.78,
+        "diff": 42.51,
+        "tol": 72,
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "contentRendered": {
+          "x": 61.18,
+          "y": 434.2,
+          "w": 1275.13,
+          "h": 170.02
+        }
+      },
+      "elements": [],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 61.18,
+            "y": 434.2,
+            "w": 1275.13,
+            "h": 170.02
+          }
+        }
+      ],
+      "reason": "margins balanced: left 61.18px vs right 103.69px (diff 42.51 <= 72 = 5% of 1440)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 1,
+        "frames": 1,
+        "judged": 1,
+        "violations": 0,
+        "worstFrame": "GSK-Link 总线菊花链",
+        "worstDiff": 0,
+        "worstTol": 127.51,
+        "worstShare": 0,
+        "rows": [
+          {
+            "frame": "GSK-Link 总线菊花链",
+            "kids": [
+              "cnc",
+              "io",
+              "servoZ",
+              "servoX"
+            ],
+            "left": 42.5,
+            "right": 42.5,
+            "top": 42.5,
+            "bottom": 28.34,
+            "leftWho": "cnc",
+            "rightWho": "servoX",
+            "topWho": "cnc",
+            "bottomWho": "cnc",
+            "diff": 0,
+            "tol": 127.51
+          }
+        ]
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "all 1 held frames balanced within 10% (worst \"GSK-Link 总线菊花链\" diff 0)"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 3,
+        "labels": 3,
+        "violations": 2,
+        "worstGap": 5.67,
+        "worstLabel": "C1 新购 1.5米 GE-RJ45",
+        "worstVs": "card:io",
+        "rows": [
+          {
+            "label": "现有线",
+            "key": "0",
+            "cardGap": 29.19,
+            "cardWho": "io",
+            "subGap": 81.04,
+            "subWho": "cnc:CNC控制器 Master",
+            "minGap": 29.19,
+            "minWho": "io",
+            "minKind": "card"
+          },
+          {
+            "label": "C1 新购 1.5米 GE-RJ45",
+            "key": "1",
+            "cardGap": 5.67,
+            "cardWho": "io",
+            "subGap": 46.89,
+            "subWho": "servoZ:新Z轴 CN4 RJ45",
+            "minGap": 5.67,
+            "minWho": "io",
+            "minKind": "card"
+          },
+          {
+            "label": "C2 新购 1.5米 RJ45-E口",
+            "key": "2",
+            "cardGap": 5.67,
+            "cardWho": "servoZ",
+            "subGap": 44.89,
+            "subWho": "servoZ:新Z轴 CN4 RJ45",
+            "minGap": 5.67,
+            "minWho": "servoZ",
+            "minKind": "card"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "label": "C1 新购 1.5米 GE-RJ45",
+          "key": "1",
+          "vs": "card:io",
+          "gap": 5.67
+        },
+        {
+          "label": "C2 新购 1.5米 RJ45-E口",
+          "key": "2",
+          "vs": "card:servoZ",
+          "gap": 5.67
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 620.26,
+            "y": 581.55,
+            "w": 156.98,
+            "h": 19.84
+          },
+          "gap": 5.67,
+          "vs": "card:io"
+        },
+        {
+          "labelBox": {
+            "x": 942.72,
+            "y": 581.55,
+            "w": 163.78,
+            "h": 19.84
+          },
+          "gap": 5.67,
+          "vs": "card:servoZ"
+        }
+      ],
+      "reason": "edge label \"C1 新购 1.5米 GE-RJ45\" (1) crowds card \"io\" at 5.67px (<24; card leg 5.67px vs io, sub leg 46.89px vs servoZ:新Z轴 CN4 RJ45)"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 12,
+        "texts": 12,
+        "pxViolations": 12,
+        "contrastViolations": 0,
+        "scale": 1,
+        "minByDetail": {
+          "primary": {
+            "px": 11,
+            "text": "980TC3"
+          },
+          "context": {
+            "px": 9,
+            "text": "CNC控制器 Master"
+          },
+          "boundary": {
+            "px": 9,
+            "text": "GSK-Link 总线菊花链"
+          },
+          "edge": {
+            "px": 9,
+            "text": "现有线"
+          }
+        },
+        "worstProjectedPx": 11,
+        "worstContrast": 21
+      },
+      "elements": [
+        {
+          "detail": "primary",
+          "text": "980TC3"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 179.24,
+            "y": 508.46,
+            "w": 61.5,
+            "h": 19
+          },
+          "sourceFontPx": 11
+        }
+      ],
+      "reason": "\"980TC3\" (primary) 11px < 15px floor"
+    }
+  ],
+  "complete": true
+}

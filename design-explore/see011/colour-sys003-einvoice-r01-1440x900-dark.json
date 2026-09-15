@@ -1,0 +1,293 @@
+{
+  "tool": "colour-assert.mjs",
+  "png": "D:\\Onesimus\\tools\\archify\\design-explore\\see011\\png-sys003-einvoice-r01-1440x900-dark.png",
+  "image": {
+    "width": 1440,
+    "height": 900
+  },
+  "floors": {
+    "P1": "de00 >= 1",
+    "P2": "de00 >= 1 (border-excluded bands)",
+    "P3": "de00 <= 2 vs declared token"
+  },
+  "pageMarginCheck": {
+    "insideSvgGap": {
+      "rgb": [
+        28,
+        28,
+        30
+      ],
+      "hex": "#1c1c1e",
+      "n": 187
+    },
+    "outsideSvg": {
+      "rgb": [
+        28,
+        28,
+        30
+      ],
+      "hex": "#1c1c1e",
+      "n": 382
+    }
+  },
+  "assertions": [
+    {
+      "id": "P1",
+      "name": "SURFACE_SEPARATION",
+      "asserted": true,
+      "threshold": "touching-pair CIEDE2000 >= 1 (near bands 2..8px)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 6,
+        "fails": 2,
+        "rows": [
+          {
+            "pair": "page/frame:CS Team",
+            "nA": 11670,
+            "nB": 43,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:BUM",
+            "nA": 10980,
+            "nB": 98,
+            "a": "#1c1c1e",
+            "b": "#1e1e20",
+            "de00": 0.63,
+            "contrast": 1.02,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:request",
+            "nA": 7812,
+            "nB": 346,
+            "a": "#18181a",
+            "b": "#242426",
+            "de00": 3.77,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:match",
+            "nA": 7326,
+            "nB": 346,
+            "a": "#18181a",
+            "b": "#242426",
+            "de00": 3.77,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:bum_price",
+            "nA": 7812,
+            "nB": 346,
+            "a": "#18181a",
+            "b": "#242426",
+            "de00": 3.77,
+            "contrast": 1.14,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:costing",
+            "nA": 4020,
+            "nB": 126,
+            "a": "#1a1a1c",
+            "b": "#242426",
+            "de00": 3.14,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2",
+      "name": "STRUCTURE_WITHOUT_BORDER",
+      "asserted": true,
+      "threshold": "same pairs CIEDE2000 >= 1 (far bands >=10px, hairline ignored)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 7,
+        "fails": 3,
+        "rows": [
+          {
+            "pair": "page/frame:Sales",
+            "nA": 187,
+            "nB": 423,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:CS Team",
+            "nA": 187,
+            "nB": 897,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "page/frame:BUM",
+            "nA": 187,
+            "nB": 982,
+            "a": "#1c1c1e",
+            "b": "#1c1c1e",
+            "de00": 0,
+            "contrast": 1,
+            "verdict": "FAIL"
+          },
+          {
+            "pair": "frame/card:request",
+            "nA": 423,
+            "nB": 2100,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:match",
+            "nA": 897,
+            "nB": 2100,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:bum_price",
+            "nA": 982,
+            "nB": 2100,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:costing",
+            "nA": 897,
+            "nB": 1200,
+            "a": "#1c1c1e",
+            "b": "#242426",
+            "de00": 2.52,
+            "contrast": 1.1,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P3",
+      "name": "DECLARED_VS_DELIVERED",
+      "asserted": true,
+      "threshold": "sampled vs declared-token CIEDE2000 <= 2",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 11,
+        "fails": 10,
+        "rows": [
+          {
+            "surface": "page",
+            "n": 187,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:Sales",
+            "n": 423,
+            "sampled": "#1c1c1e",
+            "declared": "#2c2c2e",
+            "de00": 5.04,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "frame:CS Team",
+            "n": 897,
+            "sampled": "#1c1c1e",
+            "declared": "#2c2c2e",
+            "de00": 5.04,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "frame:BUM",
+            "n": 982,
+            "sampled": "#1c1c1e",
+            "declared": "#2c2c2e",
+            "de00": 5.04,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:request",
+            "n": 2100,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:match",
+            "n": 2100,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:bum_price",
+            "n": 2100,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:costing",
+            "n": 1200,
+            "sampled": "#242426",
+            "declared": "#1c1c1e",
+            "de00": 2.52,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "labelbox:0",
+            "n": 810,
+            "sampled": "#000000",
+            "declared": "#2c2c2e",
+            "de00": 11.31,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "labelbox:1",
+            "n": 996,
+            "sampled": "#000000",
+            "declared": "#2c2c2e",
+            "de00": 11.31,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "labelbox:2",
+            "n": 624,
+            "sampled": "#000000",
+            "declared": "#2c2c2e",
+            "de00": 11.31,
+            "verdict": "FAIL"
+          }
+        ]
+      }
+    }
+  ],
+  "excludedForThinSample": 37
+}

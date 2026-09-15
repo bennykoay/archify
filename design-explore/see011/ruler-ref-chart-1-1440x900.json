@@ -1,0 +1,329 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\ref-chart-1.html",
+    "sha256": "26b53aa678f1a06c6c768859d07f47fe9bcf6d336d1a2f6ce638cca047fa65ed",
+    "sha8": "26b53aa6",
+    "bytes": 4430
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "kind": "architecture",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "transitSamples": 0,
+        "pillTransits": 0,
+        "laneHeaders": 0,
+        "pills": 0,
+        "pillMasks": 0,
+        "paths": 0
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no paths, lane headers, or pills to examine"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": false,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "nodes": 0,
+        "violations": 0,
+        "worstMinInset": null,
+        "worstSpread": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no titled nodes measured",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": false,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "edgeLabels": 0,
+        "collisions": 0
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no edge labels to examine",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "edgeLabels": 0,
+        "orphans": 0,
+        "worstDist": null,
+        "worstInside": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no edge labels measured"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": false,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "tips": 0,
+        "modal": null,
+        "outliers": 0,
+        "gaps": [],
+        "modalExemplar": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no marker-end tips measured",
+      "wouldBe": "PASS"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "containers": 0,
+        "nodes": 0,
+        "minOccupancy": null,
+        "globalInkRatio": 0,
+        "inkArea": 0
+      },
+      "elements": [
+        {
+          "container": "viewBox(global ink/area)"
+        }
+      ],
+      "coords": [],
+      "reason": "no measurable population (N=0): no containers or ink-bearing nodes to examine"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "at1440x900": {
+          "scrollHeight": 900,
+          "innerHeight": 900,
+          "screens": 1
+        },
+        "at1920x1080": {
+          "scrollHeight": 1080,
+          "innerHeight": 1080,
+          "screens": 1
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no nodes, routes, or frames to contain"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": true,
+      "threshold": "distinct spec pos[0] count>1 AND content-bbox/viewBox>=0.50 (viewBox from svg.viewBox.baseVal)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "distinctX": 0,
+        "xs": [],
+        "contentBox": null,
+        "viewBox": {
+          "x": 0,
+          "y": 0,
+          "width": 868,
+          "height": 630
+        },
+        "ratio": 0
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no nodes or positions to examine"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "frames": 0,
+        "floorFails": 0,
+        "spreadFails": 0,
+        "spreadNAFrames": 0,
+        "worstFloorMin": null,
+        "worstSpread": null,
+        "worstFloorFrame": null,
+        "worstSpreadFrame": null,
+        "allFrames": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no frames or routes to examine"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "tips": 0,
+        "violations": 0,
+        "worstGap": null,
+        "worstInside": null,
+        "gaps": [],
+        "insideFlags": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no marker-end tips measured"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "rendered": 0,
+        "spec": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): svg lacks data-spec-edge-count"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "violations": 0,
+        "worstAngle": null,
+        "worstEdge": null,
+        "angles": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no marker-end heads with composition legs"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "left": null,
+        "right": null,
+        "top": null,
+        "bottom": null,
+        "diff": null,
+        "tol": 72,
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "contentRendered": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no nodes or frames to examine"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "frames": 0,
+        "judged": 0,
+        "violations": 0,
+        "worstFrame": null,
+        "worstDiff": null,
+        "worstTol": null,
+        "worstShare": null,
+        "rows": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no frame holds a card"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "labels": 0,
+        "violations": 0,
+        "worstGap": null,
+        "worstLabel": null,
+        "worstVs": null,
+        "rows": []
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): no edge labels to examine"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "NA",
+      "measured": {
+        "population": 0,
+        "texts": 0,
+        "pxViolations": 0,
+        "contrastViolations": 0,
+        "scale": 1,
+        "minByDetail": {},
+        "worstProjectedPx": null,
+        "worstContrast": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no text measured"
+    }
+  ],
+  "complete": true
+}

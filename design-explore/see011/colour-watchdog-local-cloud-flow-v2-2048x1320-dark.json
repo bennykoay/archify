@@ -1,0 +1,513 @@
+{
+  "tool": "colour-assert.mjs",
+  "png": "D:\\Onesimus\\tools\\archify\\design-explore\\see011\\png-watchdog-local-cloud-flow-v2-2048x1320-dark.png",
+  "image": {
+    "width": 2048,
+    "height": 1320
+  },
+  "floors": {
+    "P1": "de00 >= 1",
+    "P2": "de00 >= 1 (border-excluded bands)",
+    "P3": "de00 <= 2 vs declared token"
+  },
+  "pageMarginCheck": {
+    "insideSvgGap": {
+      "rgb": [
+        28,
+        28,
+        30
+      ],
+      "hex": "#1c1c1e",
+      "n": 312
+    },
+    "outsideSvg": {
+      "rgb": [
+        1,
+        1,
+        2
+      ],
+      "hex": "#010102",
+      "n": 882
+    }
+  },
+  "assertions": [
+    {
+      "id": "P1",
+      "name": "SURFACE_SEPARATION",
+      "asserted": true,
+      "threshold": "touching-pair CIEDE2000 >= 1 (near bands 2..8px)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 16,
+        "fails": 0,
+        "rows": [
+          {
+            "pair": "page/frame:lane-0",
+            "nA": 17436,
+            "nB": 129,
+            "a": "#1c1c1e",
+            "b": "#262628",
+            "de00": 3.15,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-1",
+            "nA": 17436,
+            "nB": 129,
+            "a": "#1c1c1e",
+            "b": "#262628",
+            "de00": 3.15,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-2",
+            "nA": 17436,
+            "nB": 129,
+            "a": "#1c1c1e",
+            "b": "#262628",
+            "de00": 3.15,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-3",
+            "nA": 17436,
+            "nB": 129,
+            "a": "#1c1c1e",
+            "b": "#252628",
+            "de00": 3.16,
+            "contrast": 1.12,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:sense_watch",
+            "nA": 2968,
+            "nB": 896,
+            "a": "#212123",
+            "b": "#343436",
+            "de00": 6.03,
+            "contrast": 1.29,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:reboot_523",
+            "nA": 2968,
+            "nB": 896,
+            "a": "#212123",
+            "b": "#353538",
+            "de00": 6.4,
+            "contrast": 1.31,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:sense_ntfy",
+            "nA": 3708,
+            "nB": 364,
+            "a": "#212123",
+            "b": "#343436",
+            "de00": 6.03,
+            "contrast": 1.29,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:decide_hyst",
+            "nA": 3708,
+            "nB": 364,
+            "a": "#212123",
+            "b": "#3c2d2f",
+            "de00": 9.75,
+            "contrast": 1.23,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:local_engine",
+            "nA": 3708,
+            "nB": 364,
+            "a": "#242425",
+            "b": "#343436",
+            "de00": 5.15,
+            "contrast": 1.25,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cloud_engine",
+            "nA": 3528,
+            "nB": 896,
+            "a": "#212123",
+            "b": "#343436",
+            "de00": 6.03,
+            "contrast": 1.29,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:quality_gate",
+            "nA": 3936,
+            "nB": 388,
+            "a": "#212123",
+            "b": "#3c2d2f",
+            "de00": 9.75,
+            "contrast": 1.23,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cond_close",
+            "nA": 3528,
+            "nB": 896,
+            "a": "#212123",
+            "b": "#3c2d2f",
+            "de00": 9.75,
+            "contrast": 1.23,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cost_gate",
+            "nA": 3528,
+            "nB": 896,
+            "a": "#212223",
+            "b": "#343436",
+            "de00": 5.9,
+            "contrast": 1.28,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:gate_log",
+            "nA": 1236,
+            "nB": 174,
+            "a": "#232325",
+            "b": "#343436",
+            "de00": 5.4,
+            "contrast": 1.26,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cloud_watch",
+            "nA": 3708,
+            "nB": 364,
+            "a": "#212123",
+            "b": "#343436",
+            "de00": 6.03,
+            "contrast": 1.29,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:act_remedy",
+            "nA": 1236,
+            "nB": 174,
+            "a": "#232325",
+            "b": "#343436",
+            "de00": 5.4,
+            "contrast": 1.26,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2",
+      "name": "STRUCTURE_WITHOUT_BORDER",
+      "asserted": true,
+      "threshold": "same pairs CIEDE2000 >= 1 (far bands >=10px, hairline ignored)",
+      "verdict": "PASS",
+      "measured": {
+        "population": 15,
+        "fails": 0,
+        "rows": [
+          {
+            "pair": "page/frame:lane-0",
+            "nA": 312,
+            "nB": 1537,
+            "a": "#1c1c1e",
+            "b": "#262628",
+            "de00": 3.15,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-1",
+            "nA": 312,
+            "nB": 1337,
+            "a": "#1c1c1e",
+            "b": "#262628",
+            "de00": 3.15,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-2",
+            "nA": 312,
+            "nB": 1527,
+            "a": "#1c1c1e",
+            "b": "#262628",
+            "de00": 3.15,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-3",
+            "nA": 312,
+            "nB": 1347,
+            "a": "#1c1c1e",
+            "b": "#262628",
+            "de00": 3.15,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "page/frame:lane-4",
+            "nA": 312,
+            "nB": 743,
+            "a": "#1c1c1e",
+            "b": "#262628",
+            "de00": 3.15,
+            "contrast": 1.13,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:sense_watch",
+            "nA": 1537,
+            "nB": 3652,
+            "a": "#262628",
+            "b": "#343436",
+            "de00": 4.46,
+            "contrast": 1.22,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:reboot_523",
+            "nA": 1337,
+            "nB": 3652,
+            "a": "#262628",
+            "b": "#353538",
+            "de00": 4.84,
+            "contrast": 1.24,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:sense_ntfy",
+            "nA": 1537,
+            "nB": 1830,
+            "a": "#262628",
+            "b": "#343436",
+            "de00": 4.46,
+            "contrast": 1.22,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:decide_hyst",
+            "nA": 1337,
+            "nB": 1830,
+            "a": "#262628",
+            "b": "#3c2d2f",
+            "de00": 9.07,
+            "contrast": 1.16,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:local_engine",
+            "nA": 1527,
+            "nB": 1830,
+            "a": "#262628",
+            "b": "#343436",
+            "de00": 4.46,
+            "contrast": 1.22,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cloud_engine",
+            "nA": 1347,
+            "nB": 3652,
+            "a": "#262628",
+            "b": "#343436",
+            "de00": 4.46,
+            "contrast": 1.22,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:quality_gate",
+            "nA": 1337,
+            "nB": 2010,
+            "a": "#262628",
+            "b": "#3c2d2f",
+            "de00": 9.07,
+            "contrast": 1.16,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cond_close",
+            "nA": 1527,
+            "nB": 3652,
+            "a": "#262628",
+            "b": "#3c2d2f",
+            "de00": 9.07,
+            "contrast": 1.16,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cost_gate",
+            "nA": 1347,
+            "nB": 3652,
+            "a": "#262628",
+            "b": "#343436",
+            "de00": 4.46,
+            "contrast": 1.22,
+            "verdict": "PASS"
+          },
+          {
+            "pair": "frame/card:cloud_watch",
+            "nA": 1347,
+            "nB": 1830,
+            "a": "#262628",
+            "b": "#343436",
+            "de00": 4.46,
+            "contrast": 1.22,
+            "verdict": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P3",
+      "name": "DECLARED_VS_DELIVERED",
+      "asserted": true,
+      "threshold": "sampled vs declared-token CIEDE2000 <= 2",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 16,
+        "fails": 10,
+        "rows": [
+          {
+            "surface": "page",
+            "n": 312,
+            "sampled": "#1c1c1e",
+            "declared": "#1c1c1e",
+            "de00": 0,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-0",
+            "n": 1537,
+            "sampled": "#262628",
+            "declared": "#2c2c2e",
+            "de00": 1.9,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-1",
+            "n": 1337,
+            "sampled": "#262628",
+            "declared": "#2c2c2e",
+            "de00": 1.9,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-2",
+            "n": 1527,
+            "sampled": "#262628",
+            "declared": "#2c2c2e",
+            "de00": 1.9,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-3",
+            "n": 1347,
+            "sampled": "#262628",
+            "declared": "#2c2c2e",
+            "de00": 1.9,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "frame:lane-4",
+            "n": 743,
+            "sampled": "#262628",
+            "declared": "#2c2c2e",
+            "de00": 1.9,
+            "verdict": "PASS"
+          },
+          {
+            "surface": "card:sense_watch",
+            "n": 3652,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:reboot_523",
+            "n": 3652,
+            "sampled": "#353538",
+            "declared": "#1c1c1e",
+            "de00": 7.96,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:sense_ntfy",
+            "n": 1830,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:decide_hyst",
+            "n": 1830,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:local_engine",
+            "n": 1830,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:cloud_engine",
+            "n": 3652,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:quality_gate",
+            "n": 2010,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:cond_close",
+            "n": 3652,
+            "sampled": "#3c2d2f",
+            "declared": "#1c1c1e",
+            "de00": 10.63,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:cost_gate",
+            "n": 3652,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          },
+          {
+            "surface": "card:cloud_watch",
+            "n": 1830,
+            "sampled": "#343436",
+            "declared": "#1c1c1e",
+            "de00": 7.6,
+            "verdict": "FAIL"
+          }
+        ]
+      }
+    }
+  ],
+  "excludedForThinSample": 23
+}

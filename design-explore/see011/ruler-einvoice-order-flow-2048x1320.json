@@ -1,0 +1,1348 @@
+{
+  "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15)",
+  "artifact": {
+    "path": "D:\\Onesimus\\tools\\archify\\design-explore\\einvoice-order-flow.html",
+    "sha256": "88bfed0b92a071bcf2c7f734c420d284b928ffad4ec8f0740bdbac765ca8a294",
+    "sha8": "88bfed0b",
+    "bytes": 715129
+  },
+  "viewport": {
+    "width": 2048,
+    "height": 1320
+  },
+  "kind": "workflow",
+  "assertions": [
+    {
+      "id": "A1",
+      "name": "HEADER_TRANSIT",
+      "asserted": true,
+      "threshold": "samples of P in bbox(H)+4px = 0 AND polyline segments vs pill bbox g[structural-frame-label] (mask incl) = 0",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 19,
+        "transitSamples": 3,
+        "pillTransits": 0,
+        "laneHeaders": 6,
+        "pills": 0,
+        "pillMasks": 0,
+        "paths": 13
+      },
+      "elements": [
+        {
+          "header": "02 / Client & Supplier (external)",
+          "edgeKey": "0"
+        },
+        {
+          "header": "03 / CS Team",
+          "edgeKey": "0"
+        }
+      ],
+      "coords": [
+        {
+          "pt": {
+            "x": 468,
+            "y": 432.22
+          },
+          "headerBox": {
+            "x": 414.3,
+            "y": 435.75,
+            "w": 225.97,
+            "h": 21
+          }
+        },
+        {
+          "pt": {
+            "x": 468,
+            "y": 628.08
+          },
+          "headerBox": {
+            "x": 414.3,
+            "y": 631.61,
+            "w": 93.3,
+            "h": 21
+          }
+        }
+      ],
+      "reason": "route transits lane-header text: 0 at (468,432.22) inside \"02 / Client & Supplier (external)\" bbox+4px"
+    },
+    {
+      "id": "A2",
+      "name": "TEXT_CONTAINMENT",
+      "asserted": true,
+      "threshold": "title inset>=16 all sides, sibling spread<=4",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 12,
+        "nodes": 12,
+        "violations": 10,
+        "worstMinInset": 11.3,
+        "worstSpread": 0.28
+      },
+      "elements": [
+        {
+          "node": "match",
+          "title": "Name+UOM tally?"
+        }
+      ],
+      "coords": [
+        {
+          "titleBox": {
+            "x": 403.68,
+            "y": 694.79,
+            "w": 128.83,
+            "h": 21
+          },
+          "cardBox": {
+            "x": 392.18,
+            "y": 678.62,
+            "w": 151.64,
+            "h": 82.14
+          },
+          "insets": {
+            "l": 11.5,
+            "r": 11.3,
+            "t": 16.17,
+            "b": 44.97
+          }
+        }
+      ],
+      "reason": "title \"Name+UOM tally?\" (match) min inset 11.3px < 16"
+    },
+    {
+      "id": "A3",
+      "name": "LABEL_COLLISION",
+      "asserted": true,
+      "threshold": "edge-label vs boundary strokes inflated w/2 + node titles/sublabels/cards + lane/boundary/edge labels = 0",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 2,
+        "edgeLabels": 2,
+        "collisions": 2
+      },
+      "elements": [
+        {
+          "edgeLabel": "mismatch retry cap 2",
+          "edgeKey": "11",
+          "vs": "boundary-stroke:lane-0"
+        },
+        {
+          "edgeLabel": "reject",
+          "edgeKey": "12",
+          "vs": "boundary-stroke:lane-2"
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 329,
+            "y": 264.78,
+            "w": 167.43,
+            "h": 22.11
+          }
+        },
+        {
+          "labelBox": {
+            "x": 705.09,
+            "y": 762.34,
+            "w": 61.29,
+            "h": 22.11
+          }
+        }
+      ],
+      "reason": "edge label \"mismatch retry cap 2\" collides boundary-stroke:lane-0"
+    },
+    {
+      "id": "A4",
+      "name": "LABEL_ORPHAN",
+      "asserted": true,
+      "threshold": "label centroid to own polyline <= 24px AND own-wire samples inside label bbox = 0 (ride near, never cover)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 2,
+        "edgeLabels": 2,
+        "orphans": 1,
+        "worstDist": 56.02,
+        "worstInside": 0
+      },
+      "elements": [
+        {
+          "label": "mismatch retry cap 2",
+          "key": "11"
+        }
+      ],
+      "coords": [
+        {
+          "centroid": {
+            "x": 412.72,
+            "y": 275.84
+          },
+          "tip": {
+            "x": 392.18,
+            "y": 327.97
+          },
+          "labelBox": {
+            "x": 329,
+            "y": 264.78,
+            "w": 167.43,
+            "h": 22.11
+          }
+        }
+      ],
+      "reason": "label \"mismatch retry cap 2\" centroid (412.72,275.84) 56.02px from own polyline (>24)"
+    },
+    {
+      "id": "A5",
+      "name": "ARROWHEAD_DOCK",
+      "asserted": true,
+      "threshold": "each tip-to-target gap within +-2px of modal (tip = rendered marker centroid via live marker polygon + CTM)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 13,
+        "tips": 13,
+        "modal": 16,
+        "outliers": 4,
+        "gaps": [
+          16.11,
+          16.11,
+          16.11,
+          16.11,
+          16.11,
+          16.11,
+          16.11,
+          16.08,
+          15.9,
+          12.53,
+          12.41,
+          12.53,
+          12.53
+        ],
+        "modalExemplar": {
+          "edge": "quote>po",
+          "gap": 16.11,
+          "tip": {
+            "x": 887.84,
+            "y": 523.83
+          }
+        }
+      },
+      "elements": [
+        {
+          "edge": "submit>dopi",
+          "key": "9"
+        },
+        {
+          "edge": "dopi>collect",
+          "key": "10"
+        },
+        {
+          "edge": "match>request",
+          "key": "11"
+        },
+        {
+          "edge": "md_signoff>costing",
+          "key": "12"
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 1316.22,
+            "y": 1377.47
+          },
+          "pathEnd": {
+            "x": 1316.22,
+            "y": 1364.93
+          },
+          "targetEdge": {
+            "x": 1229.34,
+            "y": 1314.39,
+            "w": 173.75,
+            "h": 50.55
+          },
+          "gap": 12.53
+        },
+        {
+          "tip": {
+            "x": 1415.5,
+            "y": 1274.9
+          },
+          "pathEnd": {
+            "x": 1403.09,
+            "y": 1274.9
+          },
+          "targetEdge": {
+            "x": 1229.34,
+            "y": 1249.63,
+            "w": 173.75,
+            "h": 50.55
+          },
+          "gap": 12.41
+        },
+        {
+          "tip": {
+            "x": 379.65,
+            "y": 327.97
+          },
+          "pathEnd": {
+            "x": 392.18,
+            "y": 327.97
+          },
+          "targetEdge": {
+            "x": 392.18,
+            "y": 286.9,
+            "w": 151.64,
+            "h": 82.14
+          },
+          "gap": 12.53
+        },
+        {
+          "tip": {
+            "x": 566.04,
+            "y": 719.69
+          },
+          "pathEnd": {
+            "x": 578.57,
+            "y": 719.69
+          },
+          "targetEdge": {
+            "x": 578.57,
+            "y": 678.62,
+            "w": 195.86,
+            "h": 82.14
+          },
+          "gap": 12.53
+        }
+      ],
+      "reason": "4 tips deviate from modal 16px (>2px): submit>dopi 12.53px, dopi>collect 12.41px, match>request 12.53px, md_signoff>costing 12.53px"
+    },
+    {
+      "id": "A6",
+      "name": "INK_OCCUPANCY",
+      "asserted": true,
+      "threshold": "union child-node area / container area >= 0.50 AND global ink area / viewBox area >= 0.50 (SVG units, exact attrs)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 18,
+        "containers": 6,
+        "nodes": 12,
+        "minOccupancy": 0.0813,
+        "globalInkRatio": 0.0732,
+        "inkArea": 61872
+      },
+      "elements": [
+        {
+          "container": "lane-4",
+          "kids": [
+            "md_signoff"
+          ]
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 392.18,
+            "y": 1005.59,
+            "w": 1010.91,
+            "h": 164.27
+          }
+        }
+      ],
+      "reason": "container \"lane-4\" occupancy 0.0813 < 0.50 (1 child node(s): md_signoff)"
+    },
+    {
+      "id": "A7",
+      "name": "CONTAINMENT",
+      "asserted": true,
+      "threshold": "scrollHeight<=innerHeight at >=1 of 1440x900, 1920x1080",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 37,
+        "at1440x900": {
+          "scrollHeight": 1952,
+          "innerHeight": 900,
+          "screens": 2.17
+        },
+        "at1920x1080": {
+          "scrollHeight": 2052,
+          "innerHeight": 1080,
+          "screens": 1.9
+        }
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "overflowY at both viewports (1440x900 scrollHeight 1952 vs 900 = 2.17 screens)"
+    },
+    {
+      "id": "A8",
+      "name": "LAYOUT_SPREAD",
+      "asserted": false,
+      "threshold": "architecture-only: distinct spec pos[0] > 1 AND content-bbox/viewBox >= 0.50",
+      "verdict": "NA",
+      "measured": {
+        "population": 18,
+        "kind": "workflow"
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "workflow layout (lane frames present): spread does not apply (NA per SEE-004 contract)"
+    },
+    {
+      "id": "A9",
+      "name": "ROUTE_TO_FRAME_CLEARANCE",
+      "asserted": true,
+      "threshold": "background segment-to-frame-edge >=12px AND per-side spread <=6px over qualified sides only (side counts iff p2min<=36px; <2 qualified => spread NA)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 19,
+        "frames": 6,
+        "floorFails": 4,
+        "spreadFails": 1,
+        "spreadNAFrames": 0,
+        "worstFloorMin": 0,
+        "worstSpread": 18.95,
+        "worstFloorFrame": "lane-1",
+        "worstSpreadFrame": "lane-1",
+        "allFrames": [
+          {
+            "frame": "lane-0",
+            "floorMin": 333.28,
+            "spread": 189.19,
+            "spreadQualified": 2.8,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "bottom",
+              "left"
+            ],
+            "p1min": {
+              "top": 497.56,
+              "right": 579.33,
+              "bottom": 333.28,
+              "left": 374.4
+            },
+            "p2min": {
+              "top": 105.83,
+              "right": 189.54,
+              "bottom": 0.36,
+              "left": 3.16
+            },
+            "p1who": {
+              "top": "3",
+              "right": "3",
+              "bottom": "3",
+              "left": "12"
+            },
+            "p2who": {
+              "top": "7:term",
+              "right": "7:mid",
+              "bottom": "7:mid",
+              "left": "11:mid"
+            }
+          },
+          {
+            "frame": "lane-1",
+            "floorMin": 0,
+            "spread": 189.54,
+            "spreadQualified": 18.95,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "bottom",
+              "left"
+            ],
+            "p1min": {
+              "top": 0,
+              "right": 189.54,
+              "bottom": 0,
+              "left": 18.95
+            },
+            "p2min": {
+              "top": 0,
+              "right": 189.54,
+              "bottom": 0,
+              "left": 18.95
+            },
+            "p1who": {
+              "top": "0",
+              "right": "7",
+              "bottom": "0",
+              "left": "11"
+            },
+            "p2who": {
+              "top": "0",
+              "right": "7",
+              "bottom": "0",
+              "left": "11"
+            }
+          },
+          {
+            "frame": "lane-2",
+            "floorMin": 0,
+            "spread": 189.54,
+            "spreadQualified": 3.16,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "bottom",
+              "left"
+            ],
+            "p1min": {
+              "top": 0,
+              "right": 189.54,
+              "bottom": 0,
+              "left": 410.68
+            },
+            "p2min": {
+              "top": 0,
+              "right": 189.54,
+              "bottom": 0,
+              "left": 3.16
+            },
+            "p1who": {
+              "top": "4",
+              "right": "7",
+              "bottom": "4",
+              "left": "4"
+            },
+            "p2who": {
+              "top": "4",
+              "right": "7",
+              "bottom": "4",
+              "left": "11:mid"
+            }
+          },
+          {
+            "frame": "lane-3",
+            "floorMin": 0,
+            "spread": 189.54,
+            "spreadQualified": 0,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "bottom"
+            ],
+            "p1min": {
+              "top": 0,
+              "right": 189.54,
+              "bottom": 0,
+              "left": 90.03
+            },
+            "p2min": {
+              "top": 0,
+              "right": 189.54,
+              "bottom": 0,
+              "left": 75.82
+            },
+            "p1who": {
+              "top": "3",
+              "right": "7",
+              "bottom": "3",
+              "left": "11"
+            },
+            "p2who": {
+              "top": "3",
+              "right": "7",
+              "bottom": "3",
+              "left": "1:mid"
+            }
+          },
+          {
+            "frame": "lane-4",
+            "floorMin": 0,
+            "spread": 117.7,
+            "spreadQualified": 0,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "bottom"
+            ],
+            "p1min": {
+              "top": 0,
+              "right": 105.04,
+              "bottom": 0,
+              "left": 117.7
+            },
+            "p2min": {
+              "top": 0,
+              "right": 105.04,
+              "bottom": 0,
+              "left": 117.7
+            },
+            "p1who": {
+              "top": "7",
+              "right": "10",
+              "bottom": "7",
+              "left": "1"
+            },
+            "p2who": {
+              "top": "7",
+              "right": "10",
+              "bottom": "7",
+              "left": "1"
+            }
+          },
+          {
+            "frame": "lane-5",
+            "floorMin": 90.03,
+            "spread": 294.99,
+            "spreadQualified": 2.34,
+            "spreadNA": false,
+            "qualifiedSides": [
+              "top",
+              "right",
+              "bottom"
+            ],
+            "p1min": {
+              "top": 90.03,
+              "right": 482.34,
+              "bottom": 254.31,
+              "left": 295.78
+            },
+            "p2min": {
+              "top": 0.89,
+              "right": 3.13,
+              "bottom": 0.79,
+              "left": 295.78
+            },
+            "p1who": {
+              "top": "3",
+              "right": "3",
+              "bottom": "3",
+              "left": "1"
+            },
+            "p2who": {
+              "top": "7:mid",
+              "right": "10:mid",
+              "bottom": "9:mid",
+              "left": "1"
+            }
+          }
+        ]
+      },
+      "elements": [
+        {
+          "frame": "lane-1",
+          "part": "floor",
+          "floorMin": 0
+        },
+        {
+          "frame": "lane-2",
+          "part": "floor",
+          "floorMin": 0
+        },
+        {
+          "frame": "lane-1",
+          "part": "uniformity",
+          "spread": 18.95,
+          "qualifiedSides": [
+            "top",
+            "bottom",
+            "left"
+          ]
+        }
+      ],
+      "coords": [
+        {
+          "frameBox": {
+            "x": 392.18,
+            "y": 418,
+            "w": 1010.91,
+            "h": 164.27
+          },
+          "p1min": {
+            "top": 0,
+            "right": 189.54,
+            "bottom": 0,
+            "left": 18.95
+          }
+        },
+        {
+          "frameBox": {
+            "x": 392.18,
+            "y": 613.86,
+            "w": 1010.91,
+            "h": 164.27
+          },
+          "p1min": {
+            "top": 0,
+            "right": 189.54,
+            "bottom": 0,
+            "left": 410.68
+          }
+        },
+        {
+          "frameBox": {
+            "x": 392.18,
+            "y": 418,
+            "w": 1010.91,
+            "h": 164.27
+          },
+          "p2min": {
+            "top": 0,
+            "right": 189.54,
+            "bottom": 0,
+            "left": 18.95
+          }
+        }
+      ],
+      "reason": "frame \"lane-1\" floor 0px < 12"
+    },
+    {
+      "id": "A10",
+      "name": "ARROWHEAD_DOCKING",
+      "asserted": true,
+      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 13,
+        "tips": 13,
+        "violations": 13,
+        "worstGap": 0,
+        "worstInside": true,
+        "gaps": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "insideFlags": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "elements": [
+        {
+          "edge": "request>match",
+          "key": "0",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "match>bum_price",
+          "key": "1",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "bum_price>costing",
+          "key": "2",
+          "inside": true,
+          "gap": 0
+        },
+        {
+          "edge": "costing>md_signoff",
+          "key": "3",
+          "inside": true,
+          "gap": 0
+        }
+      ],
+      "coords": [
+        {
+          "tip": {
+            "x": 468,
+            "y": 681.47
+          },
+          "pathEnd": {
+            "x": 468,
+            "y": 678.62
+          },
+          "targetBox": {
+            "x": 392.18,
+            "y": 678.62,
+            "w": 151.64,
+            "h": 82.14
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 565.62,
+            "y": 915.55
+          },
+          "pathEnd": {
+            "x": 562.77,
+            "y": 915.55
+          },
+          "targetBox": {
+            "x": 562.77,
+            "y": 874.49,
+            "w": 227.45,
+            "h": 82.14
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 676.5,
+            "y": 757.92
+          },
+          "pathEnd": {
+            "x": 676.5,
+            "y": 760.76
+          },
+          "targetBox": {
+            "x": 578.57,
+            "y": 678.62,
+            "w": 195.86,
+            "h": 82.14
+          },
+          "gap": 0,
+          "inside": true
+        },
+        {
+          "tip": {
+            "x": 882.16,
+            "y": 1111.42
+          },
+          "pathEnd": {
+            "x": 885,
+            "y": 1111.42
+          },
+          "targetBox": {
+            "x": 720.73,
+            "y": 1070.35,
+            "w": 164.27,
+            "h": 82.14
+          },
+          "gap": 0,
+          "inside": true
+        }
+      ],
+      "reason": "tip request>match INSIDE target box (gap 0px — inside always FAIL)"
+    },
+    {
+      "id": "A11",
+      "name": "EDGE_CONSERVATION",
+      "asserted": true,
+      "threshold": "rendered path count == spec edge count (svg data-spec-edge-count); mismatch = FAIL",
+      "verdict": "NA",
+      "measured": {
+        "population": 13,
+        "rendered": 13,
+        "spec": null
+      },
+      "elements": [],
+      "coords": [],
+      "reason": "no measurable population (N=0): svg lacks data-spec-edge-count"
+    },
+    {
+      "id": "A12",
+      "name": "ARROWHEAD_DIRECTION",
+      "asserted": true,
+      "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 13,
+        "violations": 3,
+        "worstAngle": 90,
+        "worstEdge": "submit>dopi",
+        "angles": [
+          {
+            "edge": "request>match",
+            "angle": 0,
+            "pieceLen": 113
+          },
+          {
+            "edge": "match>bum_price",
+            "angle": 0,
+            "pieceLen": 60
+          },
+          {
+            "edge": "bum_price>costing",
+            "angle": 0,
+            "pieceLen": 21
+          },
+          {
+            "edge": "costing>md_signoff",
+            "angle": 0,
+            "pieceLen": 28
+          },
+          {
+            "edge": "md_signoff>quote",
+            "angle": 0,
+            "pieceLen": 444
+          },
+          {
+            "edge": "quote>po",
+            "angle": 0,
+            "pieceLen": 64
+          },
+          {
+            "edge": "po>signoff",
+            "angle": 0,
+            "pieceLen": 21
+          },
+          {
+            "edge": "signoff>precheck",
+            "angle": 0,
+            "pieceLen": 32.5
+          },
+          {
+            "edge": "precheck>submit",
+            "angle": 0,
+            "pieceLen": 18
+          },
+          {
+            "edge": "submit>dopi",
+            "angle": 90,
+            "pieceLen": 64
+          },
+          {
+            "edge": "dopi>collect",
+            "angle": 0,
+            "pieceLen": 32
+          },
+          {
+            "edge": "match>request",
+            "angle": 90,
+            "pieceLen": 248
+          },
+          {
+            "edge": "md_signoff>costing",
+            "angle": 90,
+            "pieceLen": 47
+          }
+        ]
+      },
+      "elements": [
+        {
+          "edge": "submit>dopi",
+          "key": "9",
+          "angle": 90,
+          "pieceLen": 64
+        },
+        {
+          "edge": "match>request",
+          "key": "11",
+          "angle": 90,
+          "pieceLen": 248
+        },
+        {
+          "edge": "md_signoff>costing",
+          "key": "12",
+          "angle": 90,
+          "pieceLen": 47
+        }
+      ],
+      "coords": [
+        {
+          "head": {
+            "x": 1316.22,
+            "y": 1364.93
+          },
+          "piece": {
+            "dx": 64,
+            "dy": 0,
+            "len": 64
+          }
+        },
+        {
+          "head": {
+            "x": 392.18,
+            "y": 327.97
+          },
+          "piece": {
+            "dx": 0,
+            "dy": -248,
+            "len": 248
+          }
+        },
+        {
+          "head": {
+            "x": 578.57,
+            "y": 719.69
+          },
+          "piece": {
+            "dx": 0,
+            "dy": -47,
+            "len": 47
+          }
+        }
+      ],
+      "reason": "head submit>dopi faces 90deg off its last 64px piece (>30)"
+    },
+    {
+      "id": "A13",
+      "name": "MARGIN_BALANCE",
+      "asserted": true,
+      "threshold": "rendered |left gap - right gap| <= 5% of viewport width (CSS px at declared viewport; top/bottom reported only)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 24,
+        "left": 392.18,
+        "right": 644.91,
+        "top": 222.14,
+        "bottom": -45.73,
+        "diff": 252.73,
+        "tol": 102.4,
+        "viewportWidth": 2048,
+        "viewportHeight": 1320,
+        "contentRendered": {
+          "x": 392.18,
+          "y": 222.14,
+          "w": 1010.91,
+          "h": 1143.59
+        }
+      },
+      "elements": [
+        {
+          "left": 392.18,
+          "right": 644.91,
+          "diff": 252.73,
+          "tol": 102.4
+        }
+      ],
+      "coords": [
+        {
+          "contentRendered": {
+            "x": 392.18,
+            "y": 222.14,
+            "w": 1010.91,
+            "h": 1143.59
+          }
+        }
+      ],
+      "reason": "picture shoved: left 392.18px vs right 644.91px (diff 252.73 > 102.4 = 5% of 2048)"
+    },
+    {
+      "id": "A14",
+      "name": "INTERNAL_BALANCE",
+      "asserted": true,
+      "threshold": "|left gap - right gap| <= 10% of frame width (inner edge to nearest held card; top/bottom reported only)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 6,
+        "frames": 6,
+        "judged": 6,
+        "violations": 6,
+        "worstFrame": "lane-5",
+        "worstDiff": 641.29,
+        "worstTol": 101.09,
+        "worstShare": 63.44,
+        "rows": [
+          {
+            "frame": "lane-0",
+            "kids": [
+              "request",
+              "quote",
+              "signoff"
+            ],
+            "left": 0,
+            "right": 301.69,
+            "top": 64.76,
+            "bottom": 17.37,
+            "leftWho": "request",
+            "rightWho": "signoff",
+            "topWho": "request",
+            "bottomWho": "request",
+            "diff": 301.69,
+            "tol": 101.09
+          },
+          {
+            "frame": "lane-1",
+            "kids": [
+              "po"
+            ],
+            "left": 511.77,
+            "right": 290.64,
+            "top": 64.76,
+            "bottom": 17.37,
+            "leftWho": "po",
+            "rightWho": "po",
+            "topWho": "po",
+            "bottomWho": "po",
+            "diff": 221.14,
+            "tol": 101.09
+          },
+          {
+            "frame": "lane-2",
+            "kids": [
+              "match",
+              "costing"
+            ],
+            "left": 0,
+            "right": 628.66,
+            "top": 64.76,
+            "bottom": 17.37,
+            "leftWho": "match",
+            "rightWho": "costing",
+            "topWho": "match",
+            "bottomWho": "match",
+            "diff": 628.66,
+            "tol": 101.09
+          },
+          {
+            "frame": "lane-3",
+            "kids": [
+              "bum_price"
+            ],
+            "left": 170.59,
+            "right": 612.86,
+            "top": 64.76,
+            "bottom": 17.38,
+            "leftWho": "bum_price",
+            "rightWho": "bum_price",
+            "topWho": "bum_price",
+            "bottomWho": "bum_price",
+            "diff": 442.27,
+            "tol": 101.09
+          },
+          {
+            "frame": "lane-4",
+            "kids": [
+              "md_signoff"
+            ],
+            "left": 328.54,
+            "right": 518.09,
+            "top": 64.76,
+            "bottom": 17.37,
+            "leftWho": "md_signoff",
+            "rightWho": "md_signoff",
+            "topWho": "md_signoff",
+            "bottomWho": "md_signoff",
+            "diff": 189.54,
+            "tol": 101.09
+          },
+          {
+            "frame": "lane-5",
+            "kids": [
+              "precheck",
+              "submit",
+              "dopi",
+              "collect"
+            ],
+            "left": 641.29,
+            "right": 0,
+            "top": 48.18,
+            "bottom": 0.79,
+            "leftWho": "precheck",
+            "rightWho": "dopi",
+            "topWho": "precheck",
+            "bottomWho": "submit",
+            "diff": 641.29,
+            "tol": 101.09
+          }
+        ]
+      },
+      "elements": [
+        {
+          "frame": "lane-5",
+          "left": 641.29,
+          "right": 0,
+          "diff": 641.29,
+          "tol": 101.09,
+          "leftWho": "precheck",
+          "rightWho": "dopi"
+        },
+        {
+          "frame": "lane-2",
+          "left": 0,
+          "right": 628.66,
+          "diff": 628.66,
+          "tol": 101.09,
+          "leftWho": "match",
+          "rightWho": "costing"
+        },
+        {
+          "frame": "lane-3",
+          "left": 170.59,
+          "right": 612.86,
+          "diff": 442.27,
+          "tol": 101.09,
+          "leftWho": "bum_price",
+          "rightWho": "bum_price"
+        },
+        {
+          "frame": "lane-0",
+          "left": 0,
+          "right": 301.69,
+          "diff": 301.69,
+          "tol": 101.09,
+          "leftWho": "request",
+          "rightWho": "signoff"
+        }
+      ],
+      "coords": [
+        {
+          "frame": "lane-5",
+          "left": 641.29,
+          "right": 0,
+          "top": 48.18,
+          "bottom": 0.79
+        },
+        {
+          "frame": "lane-2",
+          "left": 0,
+          "right": 628.66,
+          "top": 64.76,
+          "bottom": 17.37
+        },
+        {
+          "frame": "lane-3",
+          "left": 170.59,
+          "right": 612.86,
+          "top": 64.76,
+          "bottom": 17.38
+        },
+        {
+          "frame": "lane-0",
+          "left": 0,
+          "right": 301.69,
+          "top": 64.76,
+          "bottom": 17.37
+        }
+      ],
+      "reason": "frame \"lane-5\" lopsided: left 641.29px (precheck) vs right 0px (dopi) (diff 641.29 > 101.09 = 10% of 1010.91)"
+    },
+    {
+      "id": "A15",
+      "name": "LABEL_CLEARANCE",
+      "asserted": true,
+      "threshold": "every edge label >= 24px box-gap from every node card and every node sublabel (A4 24px floor, both directions)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 2,
+        "labels": 2,
+        "violations": 2,
+        "worstGap": 0,
+        "worstLabel": "mismatch retry cap 2",
+        "worstVs": "card:request",
+        "rows": [
+          {
+            "label": "mismatch retry cap 2",
+            "key": "11",
+            "cardGap": 0,
+            "cardWho": "request",
+            "subGap": 49.02,
+            "subWho": "request:qty, UOM, price + terms",
+            "minGap": 0,
+            "minWho": "request",
+            "minKind": "card"
+          },
+          {
+            "label": "reject",
+            "key": "12",
+            "cardGap": 1.58,
+            "cardWho": "costing",
+            "subGap": 20.69,
+            "subWho": "costing:BUM price + 6 facts, no retype",
+            "minGap": 1.58,
+            "minWho": "costing",
+            "minKind": "card"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "label": "mismatch retry cap 2",
+          "key": "11",
+          "vs": "card:request",
+          "gap": 0
+        },
+        {
+          "label": "reject",
+          "key": "12",
+          "vs": "card:costing",
+          "gap": 1.58
+        }
+      ],
+      "coords": [
+        {
+          "labelBox": {
+            "x": 329,
+            "y": 264.78,
+            "w": 167.43,
+            "h": 22.11
+          },
+          "gap": 0,
+          "vs": "card:request"
+        },
+        {
+          "labelBox": {
+            "x": 705.09,
+            "y": 762.34,
+            "w": 61.29,
+            "h": 22.11
+          },
+          "gap": 1.58,
+          "vs": "card:costing"
+        }
+      ],
+      "reason": "edge label \"mismatch retry cap 2\" (11) crowds card \"request\" at 0px (<24; card leg 0px vs request, sub leg 49.02px vs request:qty, UOM, price + terms)"
+    },
+    {
+      "id": "O1a",
+      "name": "READABILITY_FLOORS",
+      "asserted": true,
+      "threshold": "primary 15px/7:1, context 11px/4.5:1, boundary 13px/4.5:1, edge 11px/4.5:1 (contrast vs sampled backdrop pixels; smallest viewport 1440x900)",
+      "verdict": "FAIL",
+      "measured": {
+        "population": 32,
+        "texts": 32,
+        "pxViolations": 32,
+        "contrastViolations": 7,
+        "scale": 1,
+        "minByDetail": {
+          "primary": {
+            "px": 9.7,
+            "text": "Collect 6 facts"
+          },
+          "context": {
+            "px": 6,
+            "text": "Rev-numbered, validity-dated"
+          },
+          "boundary": {
+            "px": 10,
+            "text": "01 / Sales"
+          },
+          "edge": {
+            "px": 8,
+            "text": "mismatch retry cap 2"
+          }
+        },
+        "worstProjectedPx": 9.7,
+        "worstContrast": 21
+      },
+      "elements": [
+        {
+          "detail": "primary",
+          "text": "Collect 6 facts"
+        }
+      ],
+      "coords": [
+        {
+          "box": {
+            "x": 419.42,
+            "y": 303.07,
+            "w": 97.54,
+            "h": 21
+          },
+          "sourceFontPx": 9.7
+        }
+      ],
+      "reason": "\"Collect 6 facts\" (primary) 9.7px < 15px floor"
+    }
+  ],
+  "complete": true
+}

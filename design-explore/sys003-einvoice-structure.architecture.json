@@ -1,0 +1,252 @@
+{
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Sales",
+      "wraps": [
+        "request",
+        "quote",
+        "signoff"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "CS Team",
+      "wraps": [
+        "match",
+        "costing"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "BUM",
+      "wraps": [
+        "bum_price"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "MD",
+      "wraps": [
+        "md_signoff"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Accounting",
+      "wraps": [
+        "precheck",
+        "submit",
+        "dopi",
+        "collect"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Client & Supplier (external)",
+      "wraps": [
+        "po"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "items": [
+        "The 6 facts: qty, description+UOM, price, delivery term, payment term (+1 carried in costing)",
+        "Rev + expiry current: PO must tally the latest Rev; quote is Rev-numbered, validity-dated",
+        "Descriptions identical everywhere: quote = PO = costing = invoice draft",
+        "UOM critical: DG air freight — UOM mismatch blocks at match and precheck",
+        "Match: names+UOM tally with supplier, mismatch to Request, cap 2",
+        "Costing = BUM price + 6 facts, copy-forward never retyped",
+        "MD gate: reject to Costing",
+        "Precheck: quote=PO=costing=invoice draft, last exit",
+        "Submit is the point of no return",
+        "PO tallies latest Rev; our-side signer Sales (node shows signer: Sales)",
+        "D/O + proforma preparer PROVISIONAL (node: preparer OPEN); collection owner PROVISIONAL (node: owner OPEN)",
+        "Rejection / CN-DN handling: card line in v1; full exception lane in v2"
+      ],
+      "title": "Facts card: what must tally end-to-end"
+    },
+    {
+      "dot": "slate",
+      "items": [
+        "12 steps · 4 gates · 2 loops — follow the blue path from 6 facts to paid",
+        "Blue = happy path to Submit; red = retry loops (match retry cap 2, MD reject to Costing)",
+        "OPEN = owner/signer/preparer not yet confirmed, not failed; full wording lives in the amber card"
+      ],
+      "title": "How to read this in 10 seconds"
+    }
+  ],
+  "components": [
+    {
+      "id": "request",
+      "label": "Collect 6 facts",
+      "sublabel": "qty, UOM, price + terms",
+      "type": "backend"
+    },
+    {
+      "id": "match",
+      "label": "Name+UOM tally?",
+      "sublabel": "tally w/ supplier cap 2",
+      "type": "backend"
+    },
+    {
+      "id": "bum_price",
+      "label": "Confirm supplier price",
+      "sublabel": "from BUM list + budget boundary",
+      "type": "backend"
+    },
+    {
+      "id": "costing",
+      "label": "Costing sheet",
+      "sublabel": "BUM price + 6 facts, no retype",
+      "type": "backend"
+    },
+    {
+      "id": "md_signoff",
+      "label": "Risk tally pass?",
+      "sublabel": "reject to Costing",
+      "type": "backend"
+    },
+    {
+      "id": "quote",
+      "label": "Our Quotation",
+      "sublabel": "Rev-numbered, validity-dated",
+      "type": "backend"
+    },
+    {
+      "id": "po",
+      "label": "Customer PO",
+      "sublabel": "authenticity signatory/number/chop",
+      "type": "backend"
+    },
+    {
+      "id": "signoff",
+      "label": "PO = latest Rev?",
+      "sublabel": "signer: Sales",
+      "type": "backend"
+    },
+    {
+      "id": "precheck",
+      "label": "All 4 tally?",
+      "sublabel": "4-way tally, last exit",
+      "type": "backend"
+    },
+    {
+      "id": "submit",
+      "label": "Submit e-invoice",
+      "sublabel": "point of no return",
+      "type": "backend"
+    },
+    {
+      "id": "dopi",
+      "label": "D/O + proforma",
+      "sublabel": "preparer OPEN",
+      "type": "backend"
+    },
+    {
+      "id": "collect",
+      "label": "Collect per terms",
+      "sublabel": "owner OPEN",
+      "type": "backend"
+    }
+  ],
+  "connections": [
+    {
+      "from": "request",
+      "id": "c01",
+      "to": "match",
+      "variant": "emphasis"
+    },
+    {
+      "from": "match",
+      "id": "c02",
+      "to": "bum_price",
+      "variant": "emphasis"
+    },
+    {
+      "from": "bum_price",
+      "id": "c03",
+      "to": "costing",
+      "variant": "emphasis"
+    },
+    {
+      "from": "costing",
+      "id": "c04",
+      "to": "md_signoff",
+      "variant": "emphasis"
+    },
+    {
+      "from": "md_signoff",
+      "id": "c05",
+      "to": "quote",
+      "variant": "emphasis"
+    },
+    {
+      "from": "quote",
+      "id": "c06",
+      "to": "po",
+      "variant": "emphasis"
+    },
+    {
+      "from": "po",
+      "id": "c07",
+      "to": "signoff",
+      "variant": "emphasis"
+    },
+    {
+      "from": "signoff",
+      "id": "c08",
+      "to": "precheck",
+      "variant": "emphasis"
+    },
+    {
+      "from": "precheck",
+      "id": "c09",
+      "to": "submit",
+      "variant": "emphasis"
+    },
+    {
+      "from": "submit",
+      "id": "c10",
+      "to": "dopi",
+      "variant": "default"
+    },
+    {
+      "from": "dopi",
+      "id": "c11",
+      "to": "collect",
+      "variant": "default"
+    },
+    {
+      "from": "match",
+      "id": "c12",
+      "label": "mismatch retry cap 2",
+      "to": "request",
+      "variant": "security"
+    },
+    {
+      "from": "md_signoff",
+      "id": "c13",
+      "label": "reject",
+      "to": "costing",
+      "variant": "security"
+    }
+  ],
+  "diagram_type": "architecture",
+  "meta": {
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Order step"
+        }
+      }
+    },
+    "quality_profile": "showcase",
+    "subtitle": "qty, description+UOM, price, delivery term, payment term (+1 carried in costing)",
+    "title": "e-invoice order flow — from 6 facts to paid (v3 architecture)",
+    "visual_preset": "apple-hig"
+  },
+  "schema_version": 1
+}
