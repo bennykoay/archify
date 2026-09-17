@@ -17,7 +17,7 @@
         "subtitle": { "type": "string" },
         "output": { "type": "string" },
         "animation": { "enum": ["trace", "none"] },
-        "visual_preset": { "enum": ["classic", "signal-flow", "blueprint", "editorial"] },
+        "visual_preset": { "enum": ["classic", "signal-flow", "blueprint", "apple-hig", "classic-original"] },
         "quality_profile": { "enum": ["standard", "showcase"] },
         "engineering_profile": { "enum": ["deployment-ownership"] },
         "repository": {
@@ -111,7 +111,6 @@
           },
           "row": { "type": "integer", "minimum": 0 },
           "col": { "type": "integer", "minimum": 0 },
-          "pos": { "$ref": "common.schema.json#/$defs/point" },
           "size": {
             "type": "array",
             "prefixItems": [
@@ -157,12 +156,6 @@
           "variant": { "$ref": "common.schema.json#/$defs/variant" },
           "fromSide": { "enum": ["left", "right", "top", "bottom"] },
           "toSide": { "enum": ["left", "right", "top", "bottom"] },
-          "route": { "enum": ["auto", "straight", "orthogonal-h", "orthogonal-v"] },
-          "via": {
-            "type": "array",
-            "items": { "$ref": "common.schema.json#/$defs/point" }
-          },
-          "labelAt": { "$ref": "common.schema.json#/$defs/point" },
           "labelDx": { "type": "number" },
           "labelDy": { "type": "number" },
           "labelSegment": { "type": "integer", "minimum": 0 },

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSM-SEE-016 before/after — frames mean something + preset tidy</title>
+<style>
+body { font-family: system-ui, sans-serif; max-width: 1100px; margin: 2rem auto; padding: 0 1rem; background: #111; color: #eee; }
+h1 { font-size: 1.4rem; } h2 { font-size: 1.1rem; margin-top: 2rem; border-top: 1px solid #444; padding-top: 1rem; }
+table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+th, td { border: 1px solid #444; padding: 0.3rem 0.5rem; text-align: left; }
+th { background: #222; }
+.fail { color: #ff8080; } .pass { color: #80ff80; } .na { color: #aaa; }
+img { max-width: 100%; border: 1px solid #444; }
+code { font-size: 0.8rem; }
+a { color: #8ab4ff; }
+</style>
+</head>
+<body>
+<h1>OSM-SEE-016 before / after — frames mean something + preset tidy</h1>
+<p>Session OSM-SEE-016, 2026-09-17. BEFORE = pre-fix renders (WIP-tree renderer + pre-O3 template).
+AFTER = post-O3 renders (same renderer bytes incl. the SEE-015 line; only the preset layer changed).
+Fix attempt (sibling-frame spread) tried and <strong>cleanly reverted</strong> per the pre-committed stop rule —
+it moved crossing 4 -&gt; 5 and thinned fills, so the AFTER files below are post-O3, pre-fix-geometry.</p>
+
+<h2>0. Before table (published pre-fix, ruler @1440x900, complete=true all rows)</h2>
+<table>
+<tr><th>chart</th><th>sha8</th><th>A16</th><th>crossings (names + areas px2)</th><th>A17 (frame = fill%)</th></tr>
+<tr><td>sys003-einvoice (12c/13e/6f, apple-hig)</td><td><code>8b7768fa</code></td><td class="fail">FAIL 4</td>
+<td>Sales x Accounting 177012; Sales x Client 50495.55; CS Team x Client 33613.91; Accounting x Client 50495.55 (+7 nested, e.g. Sales x CS Team 75147.31)</td>
+<td>Sales 35.06 | CS Team 39.29 | BUM 36.6 | MD 46.85 | Accounting 29.28 | Client 41.27 — FAIL</td></tr>
+<tr><td>sys003-org (8c/7e/0f, apple-hig)</td><td><code>17f4415a</code></td><td class="na">NA</td><td>&lt;2 frames — no pairs</td><td class="na">NA — no frame holds a card</td></tr>
+<tr><td>web-app (10c/9e/2f, undeclared→classic)</td><td><code>2e50594e</code></td><td class="pass">PASS 0</td><td>nested: sg-api inside AWS Region 99482.17 (containment, not damage)</td>
+<td>AWS Region 21.47 | sg-api 30.41 — FAIL</td></tr>
+<tr><td>repo-grid (9c/8e/1f, undeclared→classic)</td><td><code>c365ba65</code></td><td class="na">NA</td><td>1 frame — no pairs</td><td>skill package 25.51 — FAIL</td></tr>
+</table>
+<p>Full rows: <code>before-table.json</code>. 14 further *.architecture.json specs refuse under the SYS-003
+authored-geometry ban (verbatim <code>Authored geometry is banned (SYS-003)</code>) — no silent bypass.</p>
+
+<h2>1. e-invoice — before</h2>
+<p><a href="before/design-explore__sys003-einvoice-structure.html">before/design-explore__sys003-einvoice-structure.html</a>
+(sha8 <code>8b7768fa</code>) — capture of this exact file:</p>
+<img src="clip-before/full-view.png" alt="e-invoice before full view">
+<p>Plain words [Certain]: six dashed frames over 12 cards in 3 rows. The big Sales frame (top-left) and the big
+Accounting frame (stretched full-width) overlap across most of the canvas — A16 counts 4 crossings. The small BUM/MD/CS-Team
+frames sit inside both giants (nested, containment). The four pills Sales / Accounting / CS Team / Client pile
+verbatim on the top-left title rail — OPEN-21 confirmed, not fixed. Fill: Accounting holds all 12 card-centres but
+covers only 29.28% of its own area — the frame is mostly empty air.</p>
+
+<h2>2. Spread attempt — reverted (NOT shipped)</h2>
+<p>File <code>attempt/sys003-einvoice-spread.html</code> (sha8 <code>b37324c2</code>), diff
+<code>attempt/spread.diff</code> — capture of that exact file:</p>
+<img src="clip-attempt/full-view.png" alt="e-invoice spread attempt full view">
+<p>Plain words [Certain]: the same 12 cards unmoved; the frames ballooned — Accounting now swallows the whole canvas
+down past the legend, Sales stretched with it, titles still stacked top-left (OPEN-21 persists). Ruler: crossings
+4 -&gt; 5 (new CS Team x MD 66008.7; Sales x Accounting 177012 -&gt; 644704.97), Sales fill 35.06 -&gt; 16.81%,
+Accounting 29.28 -&gt; 21.62%, A7 PASS -&gt; FAIL (1.83 screens). Both must move right; both moved wrong — reverted.
+Renderer file restored to the WIP-tree bytes + the one SEE-015 line (1160 lines).</p>
+
+<h2>3. After table (post-O3, same geometry, @1440x900)</h2>
+<table>
+<tr><th>chart</th><th>sha8</th><th>A16</th><th>A17</th><th>geometry vs before</th></tr>
+<tr><td>sys003-einvoice</td><td><code>60f64185</code></td><td class="fail">FAIL 4 (same pairs)</td><td class="fail">FAIL same %</td><td>cards/routes/frames byte-equal</td></tr>
+<tr><td>sys003-org</td><td><code>bee97f55</code></td><td class="na">NA</td><td class="na">NA</td><td>cards/routes/frames byte-equal</td></tr>
+<tr><td>web-app</td><td><code>3827b0fb</code></td><td class="pass">PASS nested</td><td class="fail">FAIL same %</td><td>cards/routes/frames byte-equal</td></tr>
+<tr><td>repo-grid</td><td><code>22b1fb67</code></td><td class="na">NA</td><td class="fail">FAIL same %</td><td>cards/routes/frames byte-equal</td></tr>
+</table>
+<p>Full-file sha differs ONLY by the preset layer (style block, preset menu, preset attrs). Hash pairs:
+<code>hash-pairs.json</code>. Per-chart captures post-O3 were not re-clipped (geometry proven equal card-by-card);
+the before PNGs above are the pixel record.</p>
+
+<h2>4. O3 preset tidy</h2>
+<p>Census (live, 18 specs): editorial 0 users; signal-flow 4; blueprint 3; apple-hig 3; classic-original 0;
+classic explicit 0 + every undeclared chart stamped classic via cli.mjs:64. Token diff vs default: all three
+0/0 (dark/light). Editorial removed wholly (template 0 hits, 5 schemas, validators regenerated, docs updated).
+Signal-flow + blueprint theme blocks emptied to default-aliases (names resolve, zero tokens, no colour changed).
+Classic ruled DOCUMENTED-AS-DEFAULT (kept, no own block — it IS the :root fallback). apple-hig + classic-original untouched.</p>
+</body>
+</html>

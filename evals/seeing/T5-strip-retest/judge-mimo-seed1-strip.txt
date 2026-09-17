@@ -1,0 +1,12 @@
+Working...
+**CHECK-BY-CHECK JUDGMENT**
+
+1.  **TEXT (Y):** All text is fully legible. "03 / Release" and "approved" are sharp, with no clipping or overflow.
+2.  **KEEPOUT (N):** A blue vertical route line transits through the strip area where the "approved" label is positioned, crossing the keep-out zone.
+3.  **MASK (Y):** The label mask for "03 / Release" is intact and the text is clearly readable against the background.
+4.  **HEADER (N):** The header strip is not clear. A blue vertical route transits the strip from top to bottom.
+5.  **LEGEND (N/A):** This is not a legend-chip crop.
+
+**OVERALL VERDICT: FLAG**
+*Failing Check: 4 — Route line transits the header strip.*
+EXIT:0

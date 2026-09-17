@@ -1,0 +1,311 @@
+[
+  {
+    "file": "archify__examples__web-app.html",
+    "exit": 0,
+    "err": "",
+    "sha8": "2e50594e",
+    "bytes": 716824,
+    "frames": 2,
+    "A16": {
+      "verdict": "PASS",
+      "crossings": 0,
+      "relations": [
+        {
+          "a": "AWS Region: us-west-2",
+          "b": "sg-api :443/:8000",
+          "relation": "nested",
+          "area": 99482.17
+        }
+      ]
+    },
+    "A17": {
+      "verdict": "FAIL",
+      "rows": [
+        {
+          "frame": "AWS Region: us-west-2",
+          "kids": [
+            "users",
+            "auth",
+            "cdn",
+            "lb",
+            "api",
+            "cache",
+            "db",
+            "s3",
+            "queue",
+            "worker"
+          ],
+          "fill": 0.2147,
+          "pct": 21.47
+        },
+        {
+          "frame": "sg-api :443/:8000",
+          "kids": [
+            "auth",
+            "lb",
+            "api"
+          ],
+          "fill": 0.3041,
+          "pct": 30.41
+        }
+      ]
+    },
+    "A9": {
+      "verdict": "FAIL",
+      "floorFails": 0,
+      "spreadFails": 1
+    },
+    "all": "A1:PASS A2:DATA A3:DATA A4:FAIL A5:DATA A6:FAIL A7:PASS A8:PASS A9:FAIL A10:PASS A11:PASS A12:PASS A13:PASS A14:PASS A15:FAIL A16:PASS A17:FAIL O1a:FAIL",
+    "complete": true
+  },
+  {
+    "file": "design-explore__sys003-einvoice-structure.html",
+    "exit": 0,
+    "err": "",
+    "sha8": "8b7768fa",
+    "bytes": 720715,
+    "frames": 6,
+    "A16": {
+      "verdict": "FAIL",
+      "crossings": 4,
+      "relations": [
+        {
+          "a": "Sales",
+          "b": "CS Team",
+          "relation": "nested",
+          "area": 75147.31
+        },
+        {
+          "a": "Sales",
+          "b": "BUM",
+          "relation": "nested",
+          "area": 20167.22
+        },
+        {
+          "a": "Sales",
+          "b": "MD",
+          "relation": "nested",
+          "area": 31511.28
+        },
+        {
+          "a": "Sales",
+          "b": "Accounting",
+          "relation": "crossing",
+          "area": 177012
+        },
+        {
+          "a": "Sales",
+          "b": "Client & Supplier (external)",
+          "relation": "crossing",
+          "area": 50495.55
+        },
+        {
+          "a": "CS Team",
+          "b": "BUM",
+          "relation": "separate",
+          "area": 0
+        },
+        {
+          "a": "CS Team",
+          "b": "MD",
+          "relation": "nested",
+          "area": 31511.28
+        },
+        {
+          "a": "CS Team",
+          "b": "Accounting",
+          "relation": "nested",
+          "area": 75147.31
+        },
+        {
+          "a": "CS Team",
+          "b": "Client & Supplier (external)",
+          "relation": "crossing",
+          "area": 33613.91
+        },
+        {
+          "a": "BUM",
+          "b": "MD",
+          "relation": "separate",
+          "area": 0
+        },
+        {
+          "a": "BUM",
+          "b": "Accounting",
+          "relation": "nested",
+          "area": 20167.22
+        },
+        {
+          "a": "BUM",
+          "b": "Client & Supplier (external)",
+          "relation": "separate",
+          "area": 0
+        },
+        {
+          "a": "MD",
+          "b": "Accounting",
+          "relation": "nested",
+          "area": 31511.28
+        },
+        {
+          "a": "MD",
+          "b": "Client & Supplier (external)",
+          "relation": "separate",
+          "area": 0
+        },
+        {
+          "a": "Accounting",
+          "b": "Client & Supplier (external)",
+          "relation": "crossing",
+          "area": 50495.55
+        }
+      ]
+    },
+    "A17": {
+      "verdict": "FAIL",
+      "rows": [
+        {
+          "frame": "Sales",
+          "kids": [
+            "request",
+            "match",
+            "bum_price",
+            "costing",
+            "md_signoff",
+            "quote",
+            "po",
+            "signoff",
+            "precheck"
+          ],
+          "fill": 0.3506,
+          "pct": 35.06
+        },
+        {
+          "frame": "CS Team",
+          "kids": [
+            "request",
+            "match",
+            "costing",
+            "md_signoff"
+          ],
+          "fill": 0.3929,
+          "pct": 39.29
+        },
+        {
+          "frame": "BUM",
+          "kids": [
+            "bum_price"
+          ],
+          "fill": 0.366,
+          "pct": 36.6
+        },
+        {
+          "frame": "MD",
+          "kids": [
+            "match",
+            "md_signoff"
+          ],
+          "fill": 0.4685,
+          "pct": 46.85
+        },
+        {
+          "frame": "Accounting",
+          "kids": [
+            "request",
+            "match",
+            "bum_price",
+            "costing",
+            "md_signoff",
+            "quote",
+            "po",
+            "signoff",
+            "precheck",
+            "submit",
+            "dopi",
+            "collect"
+          ],
+          "fill": 0.2928,
+          "pct": 29.28
+        },
+        {
+          "frame": "Client & Supplier (external)",
+          "kids": [
+            "request",
+            "costing",
+            "po"
+          ],
+          "fill": 0.4127,
+          "pct": 41.27
+        }
+      ]
+    },
+    "A9": {
+      "verdict": "FAIL",
+      "floorFails": 4,
+      "spreadFails": 2
+    },
+    "all": "A1:PASS A2:DATA A3:DATA A4:PASS A5:DATA A6:FAIL A7:PASS A8:PASS A9:FAIL A10:PASS A11:PASS A12:PASS A13:PASS A14:PASS A15:FAIL A16:FAIL A17:FAIL O1a:FAIL",
+    "complete": true
+  },
+  {
+    "file": "design-explore__sys003-org-structure.html",
+    "exit": 0,
+    "err": "",
+    "sha8": "17f4415a",
+    "bytes": 706762,
+    "frames": 0,
+    "A16": {
+      "verdict": "NA",
+      "crossings": 0,
+      "relations": []
+    },
+    "A17": {
+      "verdict": "NA",
+      "rows": []
+    },
+    "A9": {
+      "verdict": "PASS",
+      "floorFails": 0,
+      "spreadFails": 0
+    },
+    "all": "A1:PASS A2:DATA A3:NA A4:NA A5:DATA A6:FAIL A7:FAIL A8:PASS A9:PASS A10:PASS A11:PASS A12:PASS A13:PASS A14:NA A15:NA A16:NA A17:NA O1a:PASS",
+    "complete": true
+  },
+  {
+    "file": "examples__archify-repo-grid.html",
+    "exit": 0,
+    "err": "",
+    "sha8": "c365ba65",
+    "bytes": 709965,
+    "frames": 1,
+    "A16": {
+      "verdict": "NA",
+      "crossings": 0,
+      "relations": []
+    },
+    "A17": {
+      "verdict": "FAIL",
+      "rows": [
+        {
+          "frame": "archify/ skill package",
+          "kids": [
+            "ir",
+            "schemas",
+            "renderers",
+            "template",
+            "checker"
+          ],
+          "fill": 0.2551,
+          "pct": 25.51
+        }
+      ]
+    },
+    "A9": {
+      "verdict": "PASS",
+      "floorFails": 0,
+      "spreadFails": 0
+    },
+    "all": "A1:PASS A2:DATA A3:NA A4:NA A5:DATA A6:FAIL A7:PASS A8:PASS A9:PASS A10:FAIL A11:PASS A12:PASS A13:PASS A14:PASS A15:NA A16:NA A17:FAIL O1a:FAIL",
+    "complete": true
+  }
+]

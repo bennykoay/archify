@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEE-014 page-fit gallery — before / after</title>
+<style>
+  :root { --bg:#f5f5f7; --card:#fff; --ink:#1c1c1e; --mut:#6e6e73; --line:#e5e5ea; --ok:#1a7f37; --warn:#b54708; }
+  body { font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); margin:0; }
+  main { max-width:1280px; margin:0 auto; padding:24px 20px 64px; }
+  h1 { font-size:24px; margin:8px 0 4px; }
+  .sub { color:var(--mut); margin:0 0 16px; }
+  .facts { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin:0 0 20px; font-size:14px; }
+  .facts li { margin:4px 0; }
+  section.chart { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin:0 0 20px; }
+  section.chart h2 { font-size:17px; margin:0 0 2px; }
+  .one-liner { color:var(--mut); font-size:14px; margin:0 0 10px; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .pair figure { margin:0; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .pair figcaption { font-size:13px; padding:6px 10px; background:var(--bg); }
+  .pair figcaption a { float:right; }
+  img.shot { width:100%; display:block; background:#fff; }
+  pre.quotes { font-size:12.5px; background:#1c1c1e; color:#e8e8ed; padding:12px 14px; border-radius:8px; overflow-x:auto; }
+  .tag { display:inline-block; font-size:12px; border:1px solid var(--line); border-radius:20px; padding:1px 10px; margin-right:6px; color:var(--mut); }
+  .tag.otl { color:var(--warn); border-color:var(--warn); }
+  table.count { border-collapse:collapse; font-size:13px; margin:8px 0; }
+  table.count th, table.count td { border:1px solid var(--line); padding:4px 8px; text-align:left; }
+</style>
+</head>
+<body>
+<main>
+  <h1>SEE-014 — does the page fit the drawing: before / after</h1>
+  <p class="sub">Session OSM-SEE-014 · one page, every chart O1 measured · each chart captured on its own (never the gallery wrapper) · all shots 1440x900 light</p>
+
+  <ul class="facts">
+    <li><b>Pre-flight:</b> <code>design-explore/</code> committed as <code>d34b2cf</code> — 791 files, corpus loss-proof before any other step.</li>
+    <li><b>Prediction 1 verdict (pre-code):</b> MIXED — 9 of 16 authored specs hand-write <code>meta.viewBox</code> (suspect 2 carries ~half the corpus), 7 auto-fit (suspect 3 territory). Both suspects live.</li>
+    <li><b>O1 result:</b> NO renderer change shipped. The only reachable auto-fit delta (architecture legend-probe reorder) is algebraically identical to the old code — proven by probe renders (probe-wide 381x271 both paths) and reverted. Hand-written pages keep their authored sizes (spec-wins); the three hand charts with real slack (chart1-boot-workflow 900x480 vs auto 720x404, aben 880x700 vs auto 720x652, einvoice-order-flow 880x960 vs auto 720x900) are recorded below as author decisions, not silently resized.</li>
+    <li><b>Margin:</b> 40px HIG empty gutter (<code>archify/renderers/shared/system-tokens.mjs</code> v1.2.0: <code>gutter.empty 40 = HIG 260pt-&gt;40pt pairing</code>). Source: Commander seed, pinned SYS-001. A13 still passing where it passed (20/23 charts PASS @1440; the 3 FAILs — aben 244.72, chart1-boot-workflow 186.01, einvoice-order-flow 244.73 — are lane-layout imbalance, untouched by this session).</li>
+    <li><b>O2 result:</b> regression cause named with quoted lines — <code>boundaryLabelClearance: 4</code> (a9a7379, line 72) → <code>SYSTEM_TOKENS.frameLabel.above, // 34</code> (working tree, line 89) plus engine-positioned specs (structure-only, no pos) behind the thin interface. Reversal note: the 4→34 rail is independently revertible; the engine path is not (it owns all geometry since SYS-003). Trade call is the Commander's.</li>
+    <li><b>O3 result:</b> 46/46 rows re-run equivalent — see011 ruler JSONs are FRESH (2026-09-15 10:07–10:11, after the last code mtimes: workflow renderer 18:21 prior day, geometry-assert 2026-09-14 23:06). NA split out (4 ref-chart rows all-NA). SEE-013 deltas: none beyond SEE-013's own 8-row card-fit (workflow renderer diff since d34b2cf is SEE-013's, already booked).</li>
+  </ul>
+
+  <section class="chart" id="count">
+    <h2>0 · Count table — page vs drawing per chart <span class="tag">BEFORE PICTURE</span></h2>
+    <p class="one-liner">Page = svg viewBox in the delivered html. Drawing = union of rendered rects. Hand/auto = meta.viewBox present/absent in the author spec. Engine charts have no author spec on disk (structure-only since SYS-003).</p>
+    <table class="count">
+      <tr><th>chart</th><th>page WxH</th><th>hand / auto</th><th>drawing WxH</th><th>empty share</th></tr>
+      <tr><td>aben-kkse-agent-flow</td><td>880x700</td><td>HAND [880,700]</td><td>678x570</td><td>37.3%</td></tr>
+      <tr><td>chart1-boot-architecture (+apple-hig)</td><td>960x620</td><td>HAND [960,620]</td><td>917x602</td><td>7.3%</td></tr>
+      <tr><td>chart1-boot-workflow</td><td>900x480</td><td>HAND [900,480]</td><td>660x273</td><td>58.3%</td></tr>
+      <tr><td>chart2-orom pair</td><td>820x780</td><td>HAND [820,780]</td><td>778x747</td><td>9.1%</td></tr>
+      <tr><td>cnc-bus-architecture</td><td>950x438</td><td>AUTO (no viewBox)</td><td>908x420</td><td>8.3%</td></tr>
+      <tr><td>einvoice-order-flow-v3</td><td>924x560</td><td>HAND [924,560]</td><td>888x504</td><td>13.5%</td></tr>
+      <tr><td>einvoice-order-flow</td><td>880x960</td><td>HAND [880,960]</td><td>680x769</td><td>38.1%</td></tr>
+      <tr><td>loop-open / closed-pilot / closed-full</td><td>720x900 / 720x776 / 720x900</td><td>AUTO</td><td>678x818 / 678x694 / 678x773</td><td>14–19%</td></tr>
+      <tr><td>ref-chart-1 / ref-chart-2</td><td>868x630 / 840x609</td><td>STATIC (no spec)</td><td>775x564 / 620x564</td><td>20.1% / 31.6%</td></tr>
+      <tr><td>sys003 r01–r04</td><td>678x1434 / 1357x576 / 987x864 / 1357x576</td><td>AUTO (engine, no author spec)</td><td>616x1346 / 1276x521 / 925x789 / 1276x521</td><td>~15%</td></tr>
+      <tr><td>sys004-einvoice</td><td>1352x613</td><td>AUTO (engine)</td><td>1272x586</td><td>10.1%</td></tr>
+      <tr><td>sys004-org</td><td>1012x673</td><td>AUTO (engine)</td><td>932x526</td><td>28.0%</td></tr>
+      <tr><td>watchdog / v2</td><td>720x1024 / 720x1148</td><td>AUTO</td><td>683x1064 / 683x1064</td><td>12.1%</td></tr>
+    </table>
+  </section>
+
+  <section class="chart" id="o2">
+    <h2>1 · O2 — the same chart, before the window vs after <span class="tag otl">REGRESSION SHOWN</span> <span class="tag">architecture</span></h2>
+    <p class="one-liner">Left: einvoice-order-flow-v3 (written 2026-09-13 00:53) — Sales (35,45), CS Team (35,77), BUM (51,167), MD (341,45), Accounting (615,45): three clean columns. Right: sys004-einvoice (written 2026-09-13 22:09) — Sales (65,16), Accounting (65,44), CS Team (65,72): three pills stacked in the top-left 65px column, font 13.0 → 18.9px. Same 6 frames, same wraps; only the rail + engine changed.</p>
+    <div class="pair">
+      <figure><figcaption><b>Before</b> einvoice-order-flow-v3.html · 719233 B · 924x560 <a href="../../../design-explore/einvoice-order-flow-v3.html" target="_blank" rel="noopener">open full ↗</a></figcaption><img class="shot" alt="einvoice-order-flow-v3 at 1440x900 light" src="before-einvoice-order-flow-v3-1440-light.png"></figure>
+      <figure><figcaption><b>After</b> sys004-einvoice.html · 719776 B · 1352x613 · sha8 810bf09c <a href="../../../design-explore/sys004-einvoice.html" target="_blank" rel="noopener">open full ↗</a></figcaption><img class="shot" alt="sys004-einvoice at 1440x900 light" src="after-sys004-einvoice-1440-light.png"></figure>
+    </div>
+<pre class="quotes">OLD (a9a7379:archify/renderers/architecture/render-architecture.mjs:72):
+  boundaryLabelClearance: 4,
+NEW (working tree archify/renderers/architecture/render-architecture.mjs:89):
+  boundaryLabelClearance: SYSTEM_TOKENS.frameLabel.above, // 34: proximity/grouping rail (was 4)
+PLUS (same file, lines 62-72): engine-positioned specs behind the thin interface:
+  let engineRoutes = null;
+  if (isStructureOnlyArchitecture(loaded.diagram)) {
+    const laid = await layoutArchitectureStructure(loaded.diagram);
+    arch = laid.spec; engineRoutes = laid.routes;
+  }
+Git window proof: tools/archify has 3 commits total (clone + a9a7379 2026-08-27 + d34b2cf 2026-09-15);
+the 00:53→22:09 change rode the uncommitted working tree (render-architecture.mjs mtime 2026-09-13 22:09).</pre>
+  </section>
+
+  <section class="chart" id="hand">
+    <h2>2 · Hand-written pages that keep their slack <span class="tag">NO CHANGE</span> <span class="tag">spec-wins</span></h2>
+    <p class="one-liner">chart1-boot-architecture 960x620 (drawing 917x602, 7.3% empty): authored size ≈ auto size — no fault. chart1-boot-workflow 900x480 (drawing 660x273, 58.3% empty, auto would be 720x404): the 180px right band is an author decision, kept.</p>
+    <div class="pair">
+      <figure><figcaption><b>chart1-boot-architecture</b> 960x620 HAND <a href="../../../design-explore/chart1-boot-architecture.html" target="_blank" rel="noopener">open full ↗</a></figcaption><img class="shot" alt="chart1-boot-architecture at 1440x900 light" src="hand-chart1-boot-architecture-1440-light.png"></figure>
+      <figure><figcaption><b>chart1-boot-workflow</b> 900x480 HAND (out of scope: toolbar note kept, not re-rendered) <a href="../../../design-explore/chart1-boot-workflow.html" target="_blank" rel="noopener">open full ↗</a></figcaption><img class="shot" alt="chart1-boot-workflow at 1440x900 light" src="hand-chart1-boot-workflow-1440-light.png"></figure>
+    </div>
+  </section>
+
+  <section class="chart" id="auto">
+    <h2>3 · Auto-fitted pages — the fit already works <span class="tag">NO CHANGE</span> <span class="tag">engine + lane auto</span></h2>
+    <p class="one-liner">sys003-einvoice-r01 678x1434 (drawing 616x1346, 14.7% empty, margin gap ≈ 40px each side): engine auto-fit holds the 40px HIG margin. watchdog-v2 720x1148 (right gap 34.8px, legend band intact): lane auto-fit holds. Re-render with the SEE-014 candidate produced byte-identical viewBox (1352x613 → 1352x613), so no pair is shown — the fit was already correct.</p>
+    <div class="pair">
+      <figure><figcaption><b>sys003-einvoice-r01</b> 678x1434 AUTO engine <a href="../../../design-explore/sys003-einvoice-r01.html" target="_blank" rel="noopener">open full ↗</a></figcaption><img class="shot" alt="sys003-einvoice-r01 at 1440x900 light" src="r01-sys003-einvoice-r01-1440-light.png"></figure>
+      <figure><figcaption><b>watchdog-local-cloud-flow-v2</b> 720x1148 AUTO lanes <a href="../../../design-explore/watchdog-local-cloud-flow-v2.html" target="_blank" rel="noopener">open full ↗</a></figcaption><img class="shot" alt="watchdog v2 at 1440x900 light" src="auto-watchdog-v2-1440-light.png"></figure>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

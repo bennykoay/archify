@@ -1,0 +1,34 @@
+[
+  {
+    "spec": "design-explore/sys003-einvoice-structure.architecture.json",
+    "exit": 0,
+    "err": "",
+    "beforeSha": "8b7768faa286b50c2f77451ab7e1ee47205b885134c7f2c3491799bf16df55c2",
+    "afterSha": "60f64185ad30440f5e0d666823b81f722311ad1566863393476ceee503ece6db",
+    "identical": false
+  },
+  {
+    "spec": "design-explore/sys003-org-structure.architecture.json",
+    "exit": 0,
+    "err": "",
+    "beforeSha": "17f4415a754f010ec92af189537d2b14512214569280218431670637ba593dea",
+    "afterSha": "bee97f55253f238e530bcdbae21820d306aeb454b19ca1bd0f9bc87dd0a1be48",
+    "identical": false
+  },
+  {
+    "spec": "archify/examples/web-app.architecture.json",
+    "exit": 0,
+    "err": "",
+    "beforeSha": "2e50594eeed48dcf265b67db18c93f86880713c744952061987297ab0143f73f",
+    "afterSha": "3827b0fb0dc81e2a3b30ed01bcfe52d9fdcc7c3c50002cf1d9cd76f27df77a6e",
+    "identical": false
+  },
+  {
+    "spec": "examples/archify-repo-grid.architecture.json",
+    "exit": 0,
+    "err": "",
+    "beforeSha": "c365ba657a1788feb2d429f740aa3142c4e0ffdb65049555823d9ee9e7cb9a1b",
+    "afterSha": "22b1fb6720da08b02910c255aea445b470c83c2c79a4f49a9a87750268d34c79",
+    "identical": false
+  }
+]

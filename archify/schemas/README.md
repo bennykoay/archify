@@ -21,9 +21,10 @@ level, so unknown fields are rejected rather than silently ignored.
 
 Every `meta` object also accepts `animation: "trace"` for opt-in SVG/CSS motion
 in generated HTML. Omit it, or set `"none"`, for the default static output.
-`visual_preset` accepts `classic` (the stable default), `signal-flow` (luminous
-motion-forward presentation), `blueprint` (high-contrast engineering review),
-or `editorial` (warm publication-style design review and documentation).
+`visual_preset` accepts `classic` (the stable default), `signal-flow` or `blueprint` (both aliases of `classic` since
+OSM-SEE-016 — the names keep resolving, the styling is the default), `apple-hig` (native macOS/iOS system typography
+and materials, documented Apple HIG system colors, no web-font dependency), or `classic-original` (pre-lineage classic
+rendering for visual diff).
 Presets change only viewer styling; they do not alter semantic IDs or geometry.
 Sequence `meta` additionally accepts `column_fit`. The default `fixed` keeps
 the historical 108px column gap and 86px participant boxes, so an authored

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "workflow",
+  "input": "D:\\Onesimus\\tools\\archify\\evals\\runs\\T5_with-skill\\candidate.json",
+  "output": "D:\\Onesimus\\tools\\archify\\evals\\runs\\T5_with-skill\\output.html",
+  "specification": {
+    "sha256": "b34b7c746f60ee721c54d414f75fd17a54a9a233e624550c683b4728735567b5",
+    "bytes": 1372
+  },
+  "artifact": {
+    "sha256": "e25e8640fc759d6ea0d9beaef4c6192e1493cae45ffcd090ed7bf1058936797c",
+    "bytes": 699554
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

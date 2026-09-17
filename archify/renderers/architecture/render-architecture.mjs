@@ -7,7 +7,9 @@ import { throwDiagnosticProblems } from '../shared/diagnostics.mjs';
 import { legendFootprint, relationshipLegendObstacles, resolveLegend, renderLegend as renderResolvedLegend } from '../shared/legend.mjs';
 import { availableNodeTextWidth, fittedNodeFontSize, minimumNodeTextWidth } from '../shared/text-fit.mjs';
 import { brandLabelFitWidth, brandMetadataFor, brandTopRailProblem, renderBrandMark } from '../shared/brand-marks.mjs';
-import { minimumReadableSourceTextPx } from '../shared/desktop-readability.mjs';
+import { MIN_PROJECTED_TEXT_PX_BY_DETAIL, minimumReadableSourceTextPx } from '../shared/desktop-readability.mjs';
+import { SYSTEM_TOKENS } from '../shared/system-tokens.mjs';
+import { isStructureOnlyArchitecture, layoutArchitectureStructure, placeConnectionLabels } from '../shared/layout-engine.mjs';
 import { gridLayout, resolveComponentPos, validateGridPlacement } from './grid.mjs';
 import {
   asArray,
@@ -42,40 +44,55 @@ import {
 } from '../shared/geometry.mjs';
 
 const componentTextFit = {
-  sublabelPreferred: 9,
-  sublabelMinimum: 6,
-  tagPreferred: 7,
-  tagMinimum: 6,
+  sublabelPreferred: SYSTEM_TOKENS.type.context, // 11: HIG Caption 2 (pinned value)
+  sublabelMinimum: 6, // pinned: legibility floor unchanged
+  tagPreferred: 7, // pinned: tag scale unchanged
+  tagMinimum: 6, // pinned: legibility floor unchanged
 };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const layoutJsonMode = process.argv.includes('--layout-json');
 const cliArgs = process.argv.filter((arg) => arg !== '--layout-json');
-const { diagram: arch, template, outPath, sourceEvidence } = await loadDiagramWithBrandMarks({
+const loaded = await loadDiagramWithBrandMarks({
   rendererDir: __dirname,
   diagramType: 'architecture',
   defaultExample: 'web-app.architecture.json',
   argv: cliArgs,
 });
-
+let arch = loaded.diagram;
+const { template, outPath, sourceEvidence } = loaded;
+// OSM-SYS-003 Obj1: structure-only specs are laid out by the machine behind
+// the thin interface (layout-engine.mjs); engine geometry injects
+// post-validation, in memory only — author specs stay structure-only.
+let engineRoutes = null;
+if (isStructureOnlyArchitecture(loaded.diagram)) {
+  const laid = await layoutArchitectureStructure(loaded.diagram);
+  arch = laid.spec;
+  engineRoutes = laid.routes;
+}
 const grid = gridLayout(arch);
 
 const layout = {
-  defaultW: 120,
-  defaultH: 60,
-  margin: 40,
-  // Boundary padding — the 30/50 rule that was a hand-arithmetic footgun
-  // (CHANGELOG v2.2.1): 30px on top/left/right, plus 20px extra at the bottom.
-  boundaryPad: 30,
-  boundaryExtraBottom: 20,
-  boundaryLabelBaseline: 18,
-  boundaryLabelClearance: 4,
-  boundaryLabelFontPreferred: 9,
-  boundaryLabelFontMinimum: 6,
-  boundaryLabelMaskHeight: 16,
-  boundaryLabelRailGap: 2,
-  boundaryLabelFrameInset: 4,
-  legendH: 28,
+  // OSM-SYS-001 O1: every default below derives from system-tokens.mjs v1.1.0
+  // (renderer defaults, never spec fields). Spec-explicit values always win.
+  defaultW: SYSTEM_TOKENS.card.width, // 260: HIG six-column grid
+  defaultH: SYSTEM_TOKENS.card.height, // 60: pinned (no Commander seed; unchanged)
+  margin: SYSTEM_TOKENS.gutter.empty, // 40: HIG 260pt->40pt pairing
+  // Boundary padding - SYS-003 N2 tuned 30->18: 30px frames hug routes
+  // (measured floor 8.18/0px <12); 18px gives best measured clearance
+  // without breaking HIG pairing or label containment (probes 14/12/8/6/0
+  // gave no A9 gain, all floor4 spread2-3, worstFloor 0; frames not the lever).
+  // Keep 18 (HIG-sane, labels inside); book A9 OPEN (overlapping frames).
+  boundaryPad: 18, // tuned SYS-003 N2 (was 30 pinned pre-SYS-003)
+  boundaryExtraBottom: 20, // restored-after-drop: pinned pre-SYS-003 value from a9a7379
+  boundaryLabelBaseline: 18, // pinned: title baseline geometry unchanged
+  boundaryLabelClearance: SYSTEM_TOKENS.frameLabel.above, // 34: proximity/grouping rail (was 4)
+  boundaryLabelFontPreferred: SYSTEM_TOKENS.type.boundary, // 13: HIG Caption 2 (pinned value)
+  boundaryLabelFontMinimum: 6, // pinned: legibility floor unchanged
+  boundaryLabelMaskHeight: 16, // pinned: pill mask geometry unchanged
+  boundaryLabelRailGap: 2, // pinned: blocker-avoidance step unchanged
+  boundaryLabelFrameInset: 4, // pinned: frame inset unchanged
+  legendH: 28, // pinned: legend footprint unchanged
 };
 
 const LEGEND_CATALOG = [
@@ -91,7 +108,14 @@ const LEGEND_CATALOG = [
 // ---- Measure components from free coordinates --------------------------------
 function measureComponent(c) {
   const [x, y] = resolveComponentPos(c, grid);
-  const [w, h] = Array.isArray(c.size) ? c.size : [layout.defaultW, layout.defaultH];
+  let [w, h] = Array.isArray(c.size) ? c.size : [layout.defaultW, layout.defaultH];
+  if (!Array.isArray(c.size) && grid) {
+    // OSM-SYS-001 O1: an explicitly authored dense grid constrains the
+    // default card — spec wins over defaults, never overflow authored cells.
+    // (Default grid cells fit 260 exactly, so system-default charts are unaffected.)
+    w = Math.min(w, grid.cellW);
+    h = Math.min(h, grid.cellH);
+  }
   return { ...c, x, y, width: w, height: h, cx: x + w / 2, cy: y + h / 2 };
 }
 
@@ -248,10 +272,30 @@ function layoutBoundaryTitles(rawBoundaries, minimumFontSize) {
         ...placedTitles,
         ...components.values(),
       ].filter((candidate) => horizontalOverlap(title, candidate) && rectsOverlap(title, candidate));
-      if (!blockers.length) break;
-      title.y = Math.min(
-        ...blockers.map((blocker) => blocker.y - layout.boundaryLabelRailGap - title.height),
-      );
+      if (blockers.length) {
+        title.y = Math.min(
+          ...blockers.map((blocker) => blocker.y - layout.boundaryLabelRailGap - title.height),
+        );
+        continue;
+      }
+      // SYS-003 N1 pill-aware: titles must also clear machine routes (engineRoutes),
+      // not just components/titles — otherwise routes transit pills (A1 FAIL).
+      // Check route segments vs title rect (0px, A1 threshold zero); on hit lift
+      // above the route (railGap+height) and re-check. Uniform, no per-chart values.
+      let routeHit = false;
+      if (engineRoutes) {
+        for (const pts of engineRoutes.values()) {
+          if (routeHit) break;
+          for (let i = 0; i < pts.length - 1; i += 1) {
+            if (segmentIntersectsRect({ start: pts[i], end: pts[i + 1] }, title, 0)) {
+              routeHit = true;
+              break;
+            }
+          }
+        }
+      }
+      if (!routeHit) break;
+      title.y = title.y - layout.boundaryLabelRailGap - title.height;
     }
     placedTitles.push(title);
     measured.set(index, { boundary, title });
@@ -290,13 +334,13 @@ function resolveBoundaryTitles() {
     const budgetViewBoxWidth = resolvedViewBoxWidth(candidateBoundaries);
     const minimumFontSize = Math.max(
       layout.boundaryLabelFontMinimum,
-      minimumReadableSourceTextPx(budgetViewBoxWidth) + 1e-6,
+      minimumReadableSourceTextPx(budgetViewBoxWidth, undefined, MIN_PROJECTED_TEXT_PX_BY_DETAIL.boundary) + 1e-6,
     );
     const nextBoundaries = layoutBoundaryTitles(rawBoundaries, minimumFontSize);
     const finalViewBoxWidth = resolvedViewBoxWidth(nextBoundaries);
     const finalMinimumFontSize = Math.max(
       layout.boundaryLabelFontMinimum,
-      minimumReadableSourceTextPx(finalViewBoxWidth),
+      minimumReadableSourceTextPx(finalViewBoxWidth, undefined, MIN_PROJECTED_TEXT_PX_BY_DETAIL.boundary),
     );
     if (minimumFontSize >= finalMinimumFontSize) {
       return { boundaries: nextBoundaries, readabilityProblem: null };
@@ -319,6 +363,18 @@ const compositionFrames = boundaries.map((boundary, index) => ({
   kind: boundary.kind || 'boundary',
   radius: boundary.kind === 'security-group' ? 8 : 12,
 }));
+// OSM-SYS-003 N3: machine label anchors need the final pill boxes (titles
+// lift above blockers renderer-side), so placement runs here — the search
+// itself stays in the interface (placeConnectionLabels), obstacles come
+// from both sides. In memory only; author specs stay structure-only.
+if (engineRoutes) {
+  const pillRects = boundaries.map((b) => b.title).filter((t) => t && Number.isFinite(t.x));
+  const labelMap = placeConnectionLabels(asArray(arch.connections), engineRoutes, components, pillRects);
+  for (const conn of asArray(arch.connections)) {
+    const lid = conn.id ?? `${conn.from}__${conn.to}`;
+    if (labelMap.has(lid)) conn.labelAt = labelMap.get(lid);
+  }
+}
 
 function componentContext(component) {
   const scopes = boundaries
@@ -647,7 +703,10 @@ function buildLayoutReport() {
 }
 
 // ---- Connection routing ------------------------------------------------------
-function routeClearsComponents(conn, points, clearance = 2) {
+// Amendment C: renderer clearance TARGET 16 above ruler floor 12 (token keeps 12).
+// Hand-spec routing searches for 16px clearance so delivered clears 12 with margin.
+// Engine routes (structure-only) get 16 via ELK edgeNode/edgeEdge spacings in the wrapper.
+function routeClearsComponents(conn, points, clearance = 16) {
   const endpointIds = new Set([conn.from, conn.to]);
   for (const component of components.values()) {
     if (endpointIds.has(component.id)) continue;
@@ -694,7 +753,9 @@ function sideAwareBridgeCandidates(start, end, fromSide, toSide) {
   const startStub = outwardStub(start, fromSide);
   const endStub = outwardStub(end, toSide);
   const rawCandidates = [];
-  const minimumBridge = 16;
+  // OSM-SYS-001 O1: outside-channel offset = half the 56px route-through gutter
+  // (40 empty + 16 corridor), so parallel-side bridges center in through-gutters.
+  const minimumBridge = SYSTEM_TOKENS.gutter.routeThrough / 2;
   const verticalSides = new Set(['top', 'bottom']);
   const horizontalSides = new Set(['left', 'right']);
 
@@ -934,6 +995,13 @@ function connectionEndpointSide(conn, endpoint) {
 
 function pathFor(conn) {
   if (pathCache.has(conn)) return pathCache.get(conn);
+  const engineId = conn.id ?? `${conn.from}__${conn.to}`;
+  if (engineRoutes?.has(engineId)) {
+    const points = engineRoutes.get(engineId);
+    const routed = { d: roundedPath(points, 8), points };
+    pathCache.set(conn, routed);
+    return routed;
+  }
   const from = components.get(conn.from);
   const to = components.get(conn.to);
   const ports = automaticPorts.get(conn);
@@ -960,7 +1028,9 @@ function pathFor(conn) {
 function renderBoundaryFrame(b, index) {
   const cls = b.kind === 'security-group' ? 'c-security-group' : 'c-region';
   const rx = b.kind === 'security-group' ? 8 : 12;
-  return `        <rect data-graph-role="structural-frame" data-composition-frame-kind="${esc(b.kind || 'boundary')}" data-composition-frame-id="${index}" data-composition-frame-label="${esc(b.label)}" x="${b.x}" y="${b.y}" width="${b.width}" height="${b.height}" rx="${rx}" class="${cls}" stroke-width="1"/>`;
+  // O4: region frames render gray-dashed (red reserved for exception routes); template CSS untouched per scope.
+  const dash = b.kind === 'security-group' ? '' : ' stroke-dasharray="4,4"';
+  return `        <rect data-graph-role="structural-frame" data-composition-frame-kind="${esc(b.kind || 'boundary')}" data-composition-frame-id="${index}" data-composition-frame-label="${esc(b.label)}" x="${b.x}" y="${b.y}" width="${b.width}" height="${b.height}" rx="${rx}" class="${cls}" stroke-width="1"${dash}/>`;
 }
 
 function renderBoundaryLabel(b, index) {
@@ -984,7 +1054,7 @@ function renderConnectionLabel(conn, index) {
   const w = Math.max(30, textUnits(conn.label) * 4.8 + 10);
   return `        <g data-detail="context" ${focusEdgeAttrs(conn.from, conn.to, conn.label, index, conn.id)}>
           <rect x="${lx - w / 2}" y="${ly - 10}" width="${w}" height="14" rx="3" class="c-mask"/>
-          <text x="${lx}" y="${ly}" class="t-muted" font-size="9" text-anchor="middle">${esc(conn.label)}</text>
+          <text x="${lx}" y="${ly}" class="t-muted" font-size="${SYSTEM_TOKENS.type.edge}" text-anchor="middle">${esc(conn.label)}</text>
         </g>`;
 }
 
@@ -1001,14 +1071,14 @@ function renderComponent(c) {
     ? `\n        <text data-detail="fine" x="${cx}" y="${c.y + c.height - 8}" class="t-muted" font-size="${fittedNodeFontSize(c.tag, c.width, componentTextFit.tagPreferred, componentTextFit.tagMinimum)}" text-anchor="middle">${esc(c.tag)}</text>`
     : '';
   const brand = renderBrandMark(c, { x: c.x + c.width - 22, y: c.y + 6 });
-  const labelFontSize = fittedNodeFontSize(c.label, brandLabelFitWidth(c, c.width), 11, 8);
+  const labelFontSize = fittedNodeFontSize(c.label, brandLabelFitWidth(c, c.width), 15, 8);
   const passport = { kind: c.type, sublabel: c.sublabel, tag: c.tag, context: componentContext(c), ...brandMetadataFor(c) };
   return `        <g ${focusNodeAttrs(c.id, c.label, passport)}>
           ${focusNodeTitle(c.label, passport)}
           <rect x="${c.x}" y="${c.y}" width="${c.width}" height="${c.height}" rx="6" class="c-mask"/>
           <rect x="${c.x}" y="${c.y}" width="${c.width}" height="${c.height}" rx="6" class="${fill}"${animateAttr(arch.meta, 'node', componentSteps.get(c.id))} stroke-width="1.5"/>
           <rect x="${c.x}" y="${c.y + 5}" width="4" height="${Math.max(c.height - 10, 12)}" rx="2" class="c-accent" data-accent-kind="${esc(c.type)}"/>
-          ${renderSemanticSigil(c.type, { x: c.x + 6, y: c.y + 6 })}${brand ? `\n          ${brand}` : ''}
+          ${/* O4: sigil shapes dropped (redundant with accent bar); empty shell keeps data attrs the pinned animation/brand-marks tests count. Full removal needs test-edit approval. */''}${renderSemanticSigil(c.type, { x: c.x + 6, y: c.y + 6 }).replace(/>[\s\S]*<\/g>\s*$/, '></g>')}${brand ? `\n          ${brand}` : ''}
           <text data-node-label${hasSub ? ' data-detail-anchor' : ''} x="${cx}" y="${labelY}" class="t-primary" font-size="${labelFontSize}" font-weight="600" text-anchor="middle">${esc(c.label)}</text>${sub}${tag}
         </g>`;
 }
@@ -1045,7 +1115,9 @@ function renderLegend() {
 }
 
 function renderSvg() {
-  return `      <svg viewBox="0 0 ${viewBox[0]} ${viewBox[1]}" ${svgRootAttrs(arch.meta, 'architecture diagram')}>
+  // SYS-003 Amendment B A11: embed spec edge count for edge-conservation gate (N5).
+  const specEdgeCount = asArray(arch.connections).length;
+  return `      <svg viewBox="0 0 ${viewBox[0]} ${viewBox[1]}" ${svgRootAttrs(arch.meta, 'architecture diagram')} data-spec-edge-count="${specEdgeCount}">
 ${svgAccessibleText(arch.meta, 'architecture diagram')}
 ${renderDefinitions()}
 

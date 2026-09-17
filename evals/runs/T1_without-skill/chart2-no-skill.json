@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "OROM Sandboxing Security Boundaries",
+    "visual_preset": "apple-hig",
+    "viewBox": [
+      820,
+      780
+    ]
+  },
+  "components": [
+    {
+      "id": "orom1",
+      "type": "backend",
+      "label": "OROM 1",
+      "sublabel": "storage driver (card 1)",
+      "pos": [
+        60,
+        100
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "orom2",
+      "type": "security",
+      "label": "OROM 2",
+      "sublabel": "network driver (card 1)",
+      "pos": [
+        335,
+        100
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "orom3",
+      "type": "security",
+      "label": "OROM 3",
+      "sublabel": "secure boot driver",
+      "pos": [
+        600,
+        100
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "sandbox",
+      "type": "security",
+      "label": "OROM Sandbox Driver",
+      "sublabel": "allow / deny gate",
+      "pos": [
+        60,
+        320
+      ],
+      "size": [
+        690,
+        55
+      ]
+    },
+    {
+      "id": "uefi_nonsandboxed",
+      "type": "backend",
+      "label": "Nonsandboxed UEFI Drivers",
+      "pos": [
+        60,
+        400
+      ],
+      "size": [
+        690,
+        55
+      ]
+    },
+    {
+      "id": "uefi_core",
+      "type": "backend",
+      "label": "Core UEFI Firmware",
+      "pos": [
+        60,
+        470
+      ],
+      "size": [
+        690,
+        55
+      ]
+    },
+    {
+      "id": "cpu",
+      "type": "frontend",
+      "label": "x86 CPU",
+      "pos": [
+        60,
+        600
+      ],
+      "size": [
+        690,
+        55
+      ]
+    },
+    {
+      "id": "pcie1",
+      "type": "backend",
+      "label": "PCIe Card 1",
+      "pos": [
+        60,
+        675
+      ],
+      "size": [
+        220,
+        55
+      ]
+    },
+    {
+      "id": "pcie2",
+      "type": "security",
+      "label": "PCIe Card 2",
+      "pos": [
+        300,
+        675
+      ],
+      "size": [
+        220,
+        55
+      ]
+    },
+    {
+      "id": "pcie3",
+      "type": "security",
+      "label": "PCIe Card 3",
+      "pos": [
+        530,
+        675
+      ],
+      "size": [
+        220,
+        55
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Virtual memory space 1",
+      "wraps": [
+        "orom1"
+      ],
+      "pad": 12
+    },
+    {
+      "kind": "region",
+      "label": "Virtual memory space 2",
+      "wraps": [
+        "orom2"
+      ],
+      "pad": 12
+    },
+    {
+      "kind": "region",
+      "label": "Virtual memory space 3",
+      "wraps": [
+        "orom3"
+      ],
+      "pad": 12
+    }
+  ],
+  "connections": [
+    {
+      "id": "orom1-sandbox",
+      "from": "orom1",
+      "to": "sandbox",
+      "label": "storage driver: allowed",
+      "variant": "default",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "orom2-sandbox",
+      "from": "orom2",
+      "to": "sandbox",
+      "label": "network driver: blocked",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "orom3-sandbox",
+      "from": "orom3",
+      "to": "sandbox",
+      "label": "secure boot driver: blocked",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Allowed",
+      "items": [
+        "OROM 1 (storage driver, card 1) passes the sandbox gate"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Blocked",
+      "items": [
+        "OROM 2 (network driver, card 1) denied by the sandbox gate",
+        "OROM 3 (secure boot driver) denied by the sandbox gate"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Schema note",
+      "items": [
+        "Source PNG shows a check/X status icon per OROM; architecture.schema.json has no icon field, so allow/deny is encoded in the connection label + variant color instead"
+      ]
+    }
+  ]
+}

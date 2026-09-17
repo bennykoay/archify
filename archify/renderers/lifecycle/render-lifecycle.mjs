@@ -524,7 +524,9 @@ function renderLifecycleRail() {
 }
 
 function renderSvg() {
-  return `      <svg viewBox="0 0 ${viewBox[0]} ${viewBox[1]}" ${svgRootAttrs(lifecycle.meta, 'lifecycle diagram')}>
+  // SYS-003 Amendment B A11: embed spec edge count for edge-conservation gate (N5).
+  const specEdgeCount = asArray(lifecycle.transitions).length;
+  return `      <svg viewBox="0 0 ${viewBox[0]} ${viewBox[1]}" ${svgRootAttrs(lifecycle.meta, 'lifecycle diagram')} data-spec-edge-count="${specEdgeCount}">
 ${svgAccessibleText(lifecycle.meta, 'lifecycle diagram')}
 ${renderDefinitions()}
 

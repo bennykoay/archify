@@ -16,12 +16,12 @@ function usage() {
   return `Usage:
   archify render <type> <input.json> [output.html] [--quality standard|showcase] [--repo-root path]
   archify compare architecture <base.json> <head.json> [output.html] [--receipt path] [--json] [--quality standard|showcase] [--repo-root path]
-  archify deliver <type> <input.json> [output.html] [--json] [--open] [--quality standard|showcase] [--repo-root path]
+  archify deliver <type> <input.json> [output.html] [--json] [--open] [--no-gate] [--quality standard|showcase] [--repo-root path]
   archify preview <type> <input.json> [output.html] [--no-open] [--quality standard|showcase] [--repo-root path]
   archify validate <type> <input.json> [--json] [--layout-json] [--quality standard|showcase] [--repo-root path]
   archify inspect <type> <input.json>
   archify check <output.html>
-  archify visual-check <output.html> [--json]
+  archify visual-check <output.html> [--json] [--no-gate]
   archify guide [scenario or question] [--json] [--lang en|zh]
   archify brands [name, alias, domain, or category] [--json]
   archify brands capture <url> [--json]
@@ -761,7 +761,10 @@ async function commandDeliver(args) {
   const repoArgs = extractRepoRootArgs(qualityArgs.rest);
   const json = repoArgs.rest.includes('--json');
   const open = repoArgs.rest.includes('--open');
-  const knownOptions = new Set(['--json', '--open']);
+  // OSM-SYS-001 O2A: geometry gate runs unless explicitly skipped. A skip is
+  // stamped gated:false on the receipt — visible, never silent.
+  const noGate = repoArgs.rest.includes('--no-gate');
+  const knownOptions = new Set(['--json', '--open', '--no-gate']);
   const unknown = repoArgs.rest.filter((arg) => arg.startsWith('--') && !knownOptions.has(arg));
   if (unknown.length) fail(`Unknown deliver option "${unknown[0]}".`);
   const positional = repoArgs.rest.filter((arg) => !knownOptions.has(arg));
@@ -1003,6 +1006,42 @@ async function commandDeliver(args) {
       return;
     }
     const engineeringProfile = engineeringProfileFromArtifact(artifact);
+    // OSM-SYS-001 O2A: geometry gate over the staged candidate. A gate FAIL
+    // never touches the previous trusted artifact (commit happens below).
+    let gate = null;
+    if (!noGate) {
+      const { runGeometryGate } = await import('./geometry-gate.mjs');
+      gate = runGeometryGate(candidatePath);
+      if (!gate.ok) {
+        const gateDiagnostics = gate.transport
+          ? [diagnostic({
+            code: 'delivery/gate-transport',
+            message: gate.error,
+            subject: { candidate: candidatePath },
+            evidence: { ruler: 'geometry-assert.mjs' },
+            supportedFixes: ['ensure Chrome/Chromium is available and retry'],
+          })]
+          : [diagnostic({
+            code: 'delivery/geometry-gate',
+            message: `Geometry gate FAIL: asserted ruler verdicts failing: ${gate.failures.join(', ')}`,
+            subject: { candidate: candidatePath, failingAssertions: gate.failures },
+            evidence: { ruler: 'geometry-assert.mjs', viewport: '1440x900', verdicts: gate.verdicts },
+            supportedFixes: ['fix the diagnosed geometry in the spec and re-deliver, or re-run with --no-gate to record an explicit ungated delivery'],
+          })];
+        reportDeliveryFailure({
+          json,
+          stage: 'gate',
+          type,
+          input: inputPath,
+          output: outputPath,
+          error: gate.transport ? gate.error : `Geometry gate failed: ${gate.failures.join(', ')}`,
+          diagnostics: gateDiagnostics,
+          status: 1,
+          checker: { gated: false, gate },
+        });
+        return;
+      }
+    }
     const receipt = {
       schemaVersion: 1,
       ok: true,
@@ -1035,6 +1074,11 @@ async function commandDeliver(args) {
           references: sourceEvidence.referenceCount,
         },
       } : {}),
+      // OSM-SYS-001 O2A: gate stamp. gated:false appears ONLY with --no-gate.
+      gated: !noGate,
+      gate: noGate
+        ? { skipped: true, reason: '--no-gate flag: geometry ruler not run' }
+        : { skipped: false, ruler: 'geometry-assert.mjs', viewport: '1440x900', failures: gate.failures, sha8: gate.sha8, kind: gate.kind, verdicts: gate.verdicts },
     };
 
     try {
@@ -1163,7 +1207,10 @@ function commandCheck(args) {
 
 async function commandVisualCheck(args) {
   const json = args.includes('--json');
-  const knownOptions = new Set(['--json']);
+  // OSM-SYS-001 O2A: geometry gate runs unless explicitly skipped; the skip is
+  // stamped gated:false on the receipt — visible, never silent.
+  const noGate = args.includes('--no-gate');
+  const knownOptions = new Set(['--json', '--no-gate']);
   const unknown = args.filter((arg) => arg.startsWith('--') && !knownOptions.has(arg));
   if (unknown.length) fail(`Unknown visual-check option "${unknown[0]}".`, 1);
   const positional = args.filter((arg) => !knownOptions.has(arg));
@@ -1196,12 +1243,43 @@ async function commandVisualCheck(args) {
     process.exitCode = 1;
     return;
   }
+  // OSM-SYS-001 O2A: geometry gate. A gate FAIL forces status fail + exit
+  // non-zero even when containment/captures pass; transport failure does too.
+  // Exit 2 (visual-check skipped: Chrome unavailable) is preserved per the
+  // skipped-passed doctrine — the gate is unrunnable without Chrome, stamped
+  // skipped, never a silent pass.
+  if (result.exitCode === 2) {
+    result.receipt.gated = true;
+    result.receipt.geometry = { status: 'skipped', reason: 'visual-check skipped (Chrome unavailable): geometry gate unrunnable' };
+  } else if (!noGate) {
+    const { runGeometryGate } = await import('./geometry-gate.mjs');
+    const gate = runGeometryGate(path.resolve(positional[0]));
+    result.receipt.gated = true;
+    result.receipt.geometry = gate.transport
+      ? { status: 'error', error: gate.error, failures: [], verdicts: [] }
+      : { status: gate.ok ? 'pass' : 'fail', failures: gate.failures, verdicts: gate.verdicts, sha8: gate.sha8, kind: gate.kind };
+    if (!gate.ok) {
+      result.receipt.ok = false;
+      result.receipt.status = 'fail';
+      result.receipt.geometry.error = gate.error || `asserted ruler verdicts failing: ${gate.failures.join(', ')}`;
+      result.exitCode = 1;
+    }
+  } else {
+    result.receipt.gated = false;
+    result.receipt.geometry = { status: 'skipped', reason: '--no-gate flag: geometry ruler not run' };
+  }
+  try {
+    const { sidecarPaths } = await import('./visual-check.mjs');
+    fs.writeFileSync(sidecarPaths(path.resolve(positional[0])).receipt, `${JSON.stringify(result.receipt, null, 2)}\n`);
+  } catch {
+    // stdout receipt below still carries the stamp; sidecar refresh is best-effort.
+  }
 
   if (json) {
     console.log(JSON.stringify(result.receipt, null, 2));
   } else {
     console.log(`visual-check ${result.receipt.status}: ${result.receipt.artifact.path}`);
-    console.log(`containment ${result.receipt.containment.status}; captures ${result.receipt.captures.status}; visual review pending`);
+    console.log(`containment ${result.receipt.containment.status}; captures ${result.receipt.captures.status}; geometry ${result.receipt.geometry ? result.receipt.geometry.status : 'n/a'}${result.receipt.gated === false ? ' (gate skipped --no-gate)' : ''}; visual review pending`);
     console.log(`receipt ${path.join(path.dirname(result.receipt.artifact.path), result.receipt.sidecars.receipt)}`);
     if (result.receipt.captures.contactSheet) {
       console.log(`contact sheet ${path.join(path.dirname(result.receipt.artifact.path), result.receipt.captures.contactSheet)}`);

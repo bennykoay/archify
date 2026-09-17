@@ -1,0 +1,13 @@
+Working...
+**1) Text fully legible, nothing cut/clipped/overflowing?** — **Y**
+"03 / Release" renders completely; no truncation, no overflow, no clipping at any edge.
+
+**2) Any route/line crossing through text or header strip?** — **Y** (clean)
+No lane line, route curve, or decorative element intersects the text region.
+
+**3) Label pill/mask intact and readable?** — **N/A**
+No pill/mask container present — this is a bare text label directly on the background, not wrapped in a chip or badge shape.
+
+**Overall: PASS**
+Low-contrast gray-on-dark-gray is the only concern, but every character is readable at this crop size; no structural defects.
+EXIT:0

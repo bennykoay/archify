@@ -47,7 +47,8 @@
             "classic",
             "signal-flow",
             "blueprint",
-            "editorial"
+            "apple-hig",
+            "classic-original"
           ]
         },
         "quality_profile": {
@@ -215,17 +216,6 @@
           "variant": {
             "$ref": "common.schema.json#/$defs/variant"
           },
-          "route": {
-            "enum": [
-              "auto",
-              "straight",
-              "drop",
-              "bottom-channel",
-              "top-channel",
-              "right-channel",
-              "left-channel"
-            ]
-          },
           "fromSide": {
             "enum": [
               "left",
@@ -242,18 +232,9 @@
               "bottom"
             ]
           },
-          "channelX": {
-            "type": "number"
-          },
-          "channelY": {
-            "type": "number"
-          },
           "cornerRadius": {
             "type": "number",
             "minimum": 0
-          },
-          "labelAt": {
-            "$ref": "common.schema.json#/$defs/point"
           },
           "labelDx": {
             "type": "number"
@@ -264,12 +245,6 @@
           "labelSegment": {
             "type": "integer",
             "minimum": 0
-          },
-          "via": {
-            "type": "array",
-            "items": {
-              "$ref": "common.schema.json#/$defs/point"
-            }
           },
           "width": {
             "type": "number",

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { MIN_PROJECTED_NODE_TEXT_PX } from '../renderers/shared/desktop-readability.mjs';
+import { MIN_PROJECTED_TEXT_PX_BY_DETAIL } from '../renderers/shared/desktop-readability.mjs';
 
 export const VISUAL_CHECK_VIEWPORTS = Object.freeze([
   Object.freeze({ width: 1440, height: 900 }),
@@ -135,25 +135,26 @@ export function findChrome({ env = process.env, platform = process.platform } = 
   return null;
 }
 
+// NOTE (Windows): chrome may daemonize on launch — child 'exit' is NOT failure.
+// Readiness = CDP /json/version answering on our port; shutdown = Browser.close.
+// (Mirrors tools/archify/scripts/clip-zones.mjs pickPort/poll/shutdown.)
 class PipeCdp {
-  constructor(child, { failureDetails = () => '' } = {}) {
+  constructor(socket, { child = null, failureDetails = () => '' } = {}) {
+    this.socket = socket;
     this.child = child;
     this.failureDetails = failureDetails;
     this.nextId = 1;
-    this.buffer = '';
     this.pending = new Map();
     this.waiters = [];
-    this.writePipe = child.stdio[3];
-    this.readPipe = child.stdio[4];
-    this.readPipe.setEncoding('utf8');
-    this.readPipe.on('data', (chunk) => this.consume(chunk));
-    this.writePipe.on('error', (error) => this.failAll(this.failure('write pipe', error)));
-    this.readPipe.on('error', (error) => this.failAll(this.failure('read pipe', error)));
-    child.once('error', (error) => this.failAll(this.failure('process launch', error)));
-    child.once('close', (code, signal) => {
-      const ending = signal ? `signal ${signal}` : `exit code ${code}`;
-      this.failAll(this.failure('process exit', new Error(`Chrome closed with ${ending}`)));
-    });
+    this.closing = false;
+    this.socket.onmessage = (event) => this.consume(String(event.data));
+    this.socket.onerror = (event) => {
+      if (this.closing) return;
+      this.failAll(this.failure('socket error', event?.error || event || new Error('websocket error')));
+    };
+    if (child) {
+      child.once('error', (error) => this.failAll(this.failure('process launch', error)));
+    }
   }
 
   failure(stage, error) {
@@ -165,36 +166,30 @@ class PipeCdp {
     ].filter(Boolean).join('\n'));
   }
 
-  consume(chunk) {
-    this.buffer += chunk;
-    let boundary;
-    while ((boundary = this.buffer.indexOf('\0')) >= 0) {
-      const raw = this.buffer.slice(0, boundary);
-      this.buffer = this.buffer.slice(boundary + 1);
-      if (!raw) continue;
-      let message;
-      try {
-        message = JSON.parse(raw);
-      } catch (error) {
-        this.failAll(new Error(`Chrome DevTools returned invalid JSON: ${error.message}`));
-        continue;
-      }
-      if (message.id) {
-        const pending = this.pending.get(message.id);
-        if (!pending) continue;
-        clearTimeout(pending.timer);
-        this.pending.delete(message.id);
-        if (message.error) pending.reject(new Error(`${pending.method}: ${message.error.message}`));
-        else pending.resolve(message.result || {});
-        continue;
-      }
-      for (const waiter of [...this.waiters]) {
-        if (waiter.method !== message.method) continue;
-        if (waiter.sessionId && waiter.sessionId !== message.sessionId) continue;
-        clearTimeout(waiter.timer);
-        this.waiters.splice(this.waiters.indexOf(waiter), 1);
-        waiter.resolve(message.params || {});
-      }
+  consume(raw) {
+    if (!raw) return;
+    let message;
+    try {
+      message = JSON.parse(raw);
+    } catch (error) {
+      this.failAll(new Error(`Chrome DevTools returned invalid JSON: ${error.message}`));
+      return;
+    }
+    if (message.id) {
+      const pending = this.pending.get(message.id);
+      if (!pending) return;
+      clearTimeout(pending.timer);
+      this.pending.delete(message.id);
+      if (message.error) pending.reject(new Error(`${pending.method}: ${message.error.message}`));
+      else pending.resolve(message.result || {});
+      return;
+    }
+    for (const waiter of [...this.waiters]) {
+      if (waiter.method !== message.method) continue;
+      if (waiter.sessionId && waiter.sessionId !== message.sessionId) continue;
+      clearTimeout(waiter.timer);
+      this.waiters.splice(this.waiters.indexOf(waiter), 1);
+      waiter.resolve(message.params || {});
     }
   }
 
@@ -203,17 +198,19 @@ class PipeCdp {
     const message = { id, method, params };
     if (sessionId) message.sessionId = sessionId;
     return new Promise((resolve, reject) => {
+      if (this.closing || this.socket.readyState !== 1) {
+        reject(new Error(`${method}: socket closed`));
+        return;
+      }
       const timer = setTimeout(() => {
         this.pending.delete(id);
         reject(new Error(`${method}: timed out after ${timeoutMs}ms`));
       }, timeoutMs);
       this.pending.set(id, { method, resolve, reject, timer });
       try {
-        this.writePipe.write(`${JSON.stringify(message)}\0`, (error) => {
-          if (error) this.failAll(this.failure('write pipe', error));
-        });
+        this.socket.send(JSON.stringify(message));
       } catch (error) {
-        this.failAll(this.failure('write pipe', error));
+        this.failAll(this.failure('socket send', error));
       }
     });
   }
@@ -241,15 +238,53 @@ class PipeCdp {
     this.pending.clear();
     this.waiters = [];
   }
+
+  close() {
+    this.closing = true;
+    try {
+      this.socket.close();
+    } catch {
+      // Already gone — daemon-tolerant.
+    }
+  }
+}
+
+async function pickVisualCheckPort() {
+  for (const p of [19341, 19342, 19343, 19344, 19345]) {
+    try {
+      const r = await fetch(`http://127.0.0.1:${p}/json/version`);
+      if (!r.ok) return p;
+      await r.body.cancel().catch(() => {});
+      const v = await Promise.race([r.json(), new Promise((_, rej) => setTimeout(() => rej(new Error('t')), 3000))]).catch(() => null);
+      if (!v || !v.Browser) return p;
+    } catch { return p; }
+  }
+  throw new Error('no free debug port in 19341-19345');
+}
+
+async function waitForCdpPort(port, timeoutMs = 20000) {
+  const t0 = Date.now();
+  for (;;) {
+    try {
+      const r = await fetch(`http://127.0.0.1:${port}/json/version`);
+      if (r.ok) { await r.body.cancel().catch(() => {}); return `http://127.0.0.1:${port}`; }
+    } catch {}
+    if (Date.now() - t0 > timeoutMs) {
+      throw new Error(`visual-check: CDP port ${port} never answered`);
+    }
+    await new Promise((r) => setTimeout(r, 250));
+  }
 }
 
 export function chromeVisualBrowserArgs(profileRoot, {
+  port = 19341,
   env = process.env,
   getuid = typeof process.getuid === 'function' ? () => process.getuid() : null,
 } = {}) {
   const args = [
     '--headless=new',
-    '--remote-debugging-pipe',
+    `--remote-debugging-port=${port}`,
+    '--remote-debugging-address=127.0.0.1',
     '--disable-gpu',
     '--hide-scrollbars',
     '--disable-background-networking',
@@ -293,9 +328,21 @@ export class ChromeVisualBrowser {
     spawnImpl = spawn,
   } = {}) {
     this.profileRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-visual-check-profile-'));
+    this.chromePath = chromePath;
+    this.env = env;
+    this.getuid = getuid;
+    this.spawnImpl = spawnImpl;
     this.stderr = '';
-    const args = chromeVisualBrowserArgs(this.profileRoot, { env, getuid });
-    this.child = spawnImpl(chromePath, args, { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'] });
+    this.child = null;
+    this.cdp = null;
+    this.sessionPromise = this.launch().then(() => this.attach());
+  }
+
+  async launch() {
+    const port = await pickVisualCheckPort();
+    this.port = port;
+    const args = chromeVisualBrowserArgs(this.profileRoot, { port, env: this.env, getuid: this.getuid });
+    this.child = this.spawnImpl(this.chromePath, args, { stdio: ['ignore', 'ignore', 'pipe'] });
     this.child.stderr.setEncoding('utf8');
     this.child.stderr.on('data', (chunk) => {
       this.stderr = `${this.stderr}${chunk}`.slice(-8000);
@@ -303,11 +350,21 @@ export class ChromeVisualBrowser {
     this.child.stderr.on('error', (error) => {
       this.stderr = `${this.stderr}\nChrome stderr stream failed: ${error.message}`.trim().slice(-8000);
     });
-    this.cdp = new PipeCdp(this.child, {
+    const httpBase = await waitForCdpPort(port);
+    const version = await (await fetch(`${httpBase}/json/version`)).json();
+    if (!version.webSocketDebuggerUrl) throw new Error('Chrome DevTools port answered without a debugger URL.');
+    const socket = new WebSocket(version.webSocketDebuggerUrl);
+    await new Promise((resolve, reject) => {
+      socket.onopen = () => resolve();
+      socket.onerror = () => reject(new Error('cdp connect failed'));
+    });
+    this.cdp = new PipeCdp(socket, {
+      child: this.child,
       failureDetails: () => {
-        const exit = this.child.signalCode
-          ? `signal ${this.child.signalCode}`
-          : this.child.exitCode == null ? 'still running' : `exit code ${this.child.exitCode}`;
+        const exit = !this.child ? 'not started'
+          : this.child.signalCode
+            ? `signal ${this.child.signalCode}`
+            : this.child.exitCode == null ? 'still running' : `exit code ${this.child.exitCode}`;
         const stderr = this.stderr.trim();
         return [
           `Chrome process: ${exit}.`,
@@ -315,7 +372,6 @@ export class ChromeVisualBrowser {
         ].filter(Boolean).join('\n');
       },
     });
-    this.sessionPromise = this.attach();
   }
 
   async attach() {
@@ -456,19 +512,30 @@ export class ChromeVisualBrowser {
   }
 
   async close() {
-    this.cdp.failAll(new Error('visual-check finished'));
-    if (this.child.exitCode === null && this.child.signalCode === null) {
-      this.child.kill('SIGTERM');
-      await new Promise((resolve) => {
-        const timer = setTimeout(() => {
-          if (this.child.exitCode === null && this.child.signalCode === null) this.child.kill('SIGKILL');
-          resolve();
-        }, 1500);
-        this.child.once('exit', () => {
-          clearTimeout(timer);
-          resolve();
-        });
-      });
+    if (this.cdp) {
+      try {
+        await Promise.race([
+          this.cdp.send('Browser.close'),
+          new Promise((resolve) => setTimeout(resolve, 5000)),
+        ]);
+      } catch {
+        // Already gone — daemon-tolerant.
+      }
+      try {
+        this.cdp.close();
+      } catch {
+        // Already gone — daemon-tolerant.
+      }
+      this.cdp.failAll(new Error('visual-check finished'));
+      this.cdp = null;
+    }
+    if (this.child) {
+      try {
+        this.child.kill();
+      } catch {
+        // Already gone — daemon-tolerant.
+      }
+      this.child = null;
     }
     try {
       fs.rmSync(this.profileRoot, { recursive: true, force: true });
@@ -488,8 +555,12 @@ function observation({ width, height, theme, metrics }) {
   const minimumProjectedNodeTextPx = metrics.minimumProjectedNodeTextPx == null
     ? null
     : Number(metrics.minimumProjectedNodeTextPx);
+  const minimumRequiredNodeTextPx = Object.prototype.hasOwnProperty.call(
+    MIN_PROJECTED_TEXT_PX_BY_DETAIL, metrics.minimumProjectedNodeTextDetail,
+  ) ? MIN_PROJECTED_TEXT_PX_BY_DETAIL[metrics.minimumProjectedNodeTextDetail] : null;
   const readabilityOk = minimumProjectedNodeTextPx == null
-    || minimumProjectedNodeTextPx >= MIN_PROJECTED_NODE_TEXT_PX;
+    || minimumRequiredNodeTextPx == null
+    || minimumProjectedNodeTextPx >= minimumRequiredNodeTextPx;
   const legendDockIntersectionArea = Number(metrics.legendDockIntersectionArea) || 0;
   const viewerChromeOk = legendDockIntersectionArea <= 0.5;
   return {
@@ -509,7 +580,7 @@ function observation({ width, height, theme, metrics }) {
     minimumProjectedNodeTextPx,
     minimumProjectedNodeText: metrics.minimumProjectedNodeText || null,
     minimumProjectedNodeTextDetail: metrics.minimumProjectedNodeTextDetail || null,
-    minimumRequiredNodeTextPx: MIN_PROJECTED_NODE_TEXT_PX,
+    minimumRequiredNodeTextPx,
     readabilityOk,
     hasLegend: Boolean(metrics.hasLegend),
     hasNavigationDock: Boolean(metrics.hasNavigationDock),
@@ -561,7 +632,7 @@ function baseReceipt({ artifactPath, artifact, outputs, chrome }) {
     state: { detail: 'read', motion: 'still' },
     chrome,
     containment: { status: 'fail', viewports: [] },
-    readability: { status: 'fail', minimumProjectedNodeTextPx: MIN_PROJECTED_NODE_TEXT_PX, viewports: [] },
+    readability: { status: 'fail', minimumProjectedNodeTextPx: null, viewports: [] },
     viewerChrome: { status: 'fail', viewports: [] },
     captures: { status: 'fail', screenshots: [], contactSheet: null },
     sidecars: {
@@ -657,6 +728,10 @@ export async function runVisualCheck({
       file: path.basename(entry.path),
     }));
     const allObservations = [...observations.values()];
+    const measuredMinima = receipt.readability.viewports
+      .map((entry) => entry.minimumProjectedNodeTextPx)
+      .filter((value) => Number.isFinite(value));
+    receipt.readability.minimumProjectedNodeTextPx = measuredMinima.length ? Math.min(...measuredMinima) : null;
     const containmentPass = allObservations.every((entry) => entry.ok);
     const readabilityPass = receipt.readability.viewports.every((entry) => entry.readabilityOk);
     const viewerChromePass = allObservations.every((entry) => entry.viewerChromeOk);

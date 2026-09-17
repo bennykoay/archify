@@ -1,251 +1,29 @@
 {
   "schemaVersion": 1,
-  "ok": false,
+  "ok": true,
   "command": "deliver",
-  "stage": "gate",
   "type": "workflow",
   "input": "D:\\Onesimus\\tools\\archify\\design-explore\\loop-closed-full.workflow.json",
   "output": "D:\\Onesimus\\tools\\archify\\design-explore\\loop-closed-full.html",
-  "error": "Geometry gate failed: A2, A5, A6, A7, A10, A14, O1a",
-  "diagnostics": [
-    {
-      "code": "delivery/geometry-gate",
-      "severity": "error",
-      "message": "Geometry gate FAIL: asserted ruler verdicts failing: A2, A5, A6, A7, A10, A14, O1a",
-      "subject": {
-        "candidate": "D:\\Onesimus\\tools\\archify\\design-explore\\.archify-delivery-WMjEJU\\loop-closed-full.html",
-        "failingAssertions": [
-          "A2",
-          "A5",
-          "A6",
-          "A7",
-          "A10",
-          "A14",
-          "O1a"
-        ]
-      },
-      "evidence": {
-        "ruler": "geometry-assert.mjs",
-        "viewport": "1440x900",
-        "verdicts": [
-          {
-            "id": "A1",
-            "verdict": "PASS",
-            "asserted": true,
-            "population": 14
-          },
-          {
-            "id": "A2",
-            "verdict": "FAIL",
-            "asserted": true,
-            "population": 9
-          },
-          {
-            "id": "A3",
-            "verdict": "NA",
-            "asserted": true,
-            "population": 0
-          },
-          {
-            "id": "A4",
-            "verdict": "NA",
-            "asserted": true,
-            "population": 0
-          },
-          {
-            "id": "A5",
-            "verdict": "FAIL",
-            "asserted": true,
-            "population": 8
-          },
-          {
-            "id": "A6",
-            "verdict": "FAIL",
-            "asserted": true,
-            "population": 15
-          },
-          {
-            "id": "A7",
-            "verdict": "FAIL",
-            "asserted": true,
-            "population": 29
-          },
-          {
-            "id": "A8",
-            "verdict": "NA",
-            "asserted": false,
-            "population": 15
-          },
-          {
-            "id": "A9",
-            "verdict": "PASS",
-            "asserted": true,
-            "population": 14
-          },
-          {
-            "id": "A10",
-            "verdict": "FAIL",
-            "asserted": true,
-            "population": 8
-          },
-          {
-            "id": "A11",
-            "verdict": "PASS",
-            "asserted": true,
-            "population": 9
-          },
-          {
-            "id": "A12",
-            "verdict": "PASS",
-            "asserted": true,
-            "population": 8
-          },
-          {
-            "id": "A13",
-            "verdict": "PASS",
-            "asserted": true,
-            "population": 21
-          },
-          {
-            "id": "A14",
-            "verdict": "FAIL",
-            "asserted": true,
-            "population": 6
-          },
-          {
-            "id": "A15",
-            "verdict": "NA",
-            "asserted": true,
-            "population": 0
-          },
-          {
-            "id": "O1a",
-            "verdict": "FAIL",
-            "asserted": true,
-            "population": 15
-          }
-        ]
-      },
-      "supportedFixes": [
-        "fix the diagnosed geometry in the spec and re-deliver, or re-run with --no-gate to record an explicit ungated delivery"
-      ]
-    }
-  ],
-  "checker": {
-    "gated": false,
-    "gate": {
-      "ok": false,
-      "transport": false,
-      "error": null,
-      "failures": [
-        "A2",
-        "A5",
-        "A6",
-        "A7",
-        "A10",
-        "A14",
-        "O1a"
-      ],
-      "sha8": "23dbdca0",
-      "kind": "workflow",
-      "verdicts": [
-        {
-          "id": "A1",
-          "verdict": "PASS",
-          "asserted": true,
-          "population": 14
-        },
-        {
-          "id": "A2",
-          "verdict": "FAIL",
-          "asserted": true,
-          "population": 9
-        },
-        {
-          "id": "A3",
-          "verdict": "NA",
-          "asserted": true,
-          "population": 0
-        },
-        {
-          "id": "A4",
-          "verdict": "NA",
-          "asserted": true,
-          "population": 0
-        },
-        {
-          "id": "A5",
-          "verdict": "FAIL",
-          "asserted": true,
-          "population": 8
-        },
-        {
-          "id": "A6",
-          "verdict": "FAIL",
-          "asserted": true,
-          "population": 15
-        },
-        {
-          "id": "A7",
-          "verdict": "FAIL",
-          "asserted": true,
-          "population": 29
-        },
-        {
-          "id": "A8",
-          "verdict": "NA",
-          "asserted": false,
-          "population": 15
-        },
-        {
-          "id": "A9",
-          "verdict": "PASS",
-          "asserted": true,
-          "population": 14
-        },
-        {
-          "id": "A10",
-          "verdict": "FAIL",
-          "asserted": true,
-          "population": 8
-        },
-        {
-          "id": "A11",
-          "verdict": "PASS",
-          "asserted": true,
-          "population": 9
-        },
-        {
-          "id": "A12",
-          "verdict": "PASS",
-          "asserted": true,
-          "population": 8
-        },
-        {
-          "id": "A13",
-          "verdict": "PASS",
-          "asserted": true,
-          "population": 21
-        },
-        {
-          "id": "A14",
-          "verdict": "FAIL",
-          "asserted": true,
-          "population": 6
-        },
-        {
-          "id": "A15",
-          "verdict": "NA",
-          "asserted": true,
-          "population": 0
-        },
-        {
-          "id": "O1a",
-          "verdict": "FAIL",
-          "asserted": true,
-          "population": 15
-        }
-      ]
-    }
+  "specification": {
+    "sha256": "aa6b32c3c0dc055fae84a43c976f2237943c195ff1db4eb5a75723fcc51d4b05",
+    "bytes": 2612
+  },
+  "artifact": {
+    "sha256": "23dbdca079fe75ebf96af35a5bf44e0102d8a49f87ecad0300a240ee4035640f",
+    "bytes": 708328
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  },
+  "gated": false,
+  "gate": {
+    "skipped": true,
+    "reason": "--no-gate flag: geometry ruler not run"
   }
 }

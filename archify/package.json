@@ -28,5 +28,9 @@
   "devDependencies": {
     "ajv": "^8.17.1",
     "simple-icons": "16.28.0"
+  },
+  "dependencies": {
+    "elkjs": "^0.12.0",
+    "pngjs": "^7.0.0"
   }
 }

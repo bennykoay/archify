@@ -35,11 +35,52 @@ function formatErrors(errors, data) {
   }).join('\n');
 }
 
+// OSM-SYS-003 Obj2: authored geometry is banned — coordinates (pos) plus the
+// five bypass channels (via, channelX, channelY, labelAt, route) — across
+// architecture/workflow/dataflow/lifecycle. This pre-check throws a CLEAR
+// error naming the key (never a silent ignore); the JSON Schemas also drop
+// these properties so AJV rejects them as a backstop.
+const BANNED_GEOMETRY = Object.freeze([
+  { types: ['architecture'], collection: 'components', keys: ['pos'] },
+  { types: ['architecture'], collection: 'connections', keys: ['via', 'channelX', 'channelY', 'labelAt', 'route'] },
+  { types: ['workflow'], collection: 'edges', keys: ['via', 'channelX', 'channelY', 'labelAt', 'route'] },
+  { types: ['dataflow'], collection: 'flows', keys: ['via', 'channelX', 'channelY', 'labelAt', 'route'] },
+  { types: ['lifecycle'], collection: 'transitions', keys: ['via', 'channelX', 'channelY', 'labelAt', 'route'] },
+]);
+
+export function assertNoAuthoredGeometry(diagramType, data) {
+  const problems = [];
+  for (const rule of BANNED_GEOMETRY) {
+    if (!rule.types.includes(diagramType)) continue;
+    const items = Array.isArray(data?.[rule.collection]) ? data[rule.collection] : [];
+    items.forEach((item, index) => {
+      for (const key of rule.keys) {
+        if (item != null && item[key] !== undefined) {
+          const tag = item.id != null ? ` (id: ${JSON.stringify(String(item.id))})` : '';
+          problems.push({
+            code: 'schema/authored-geometry',
+            severity: 'error',
+            message: `Authored geometry is banned (SYS-003): ${diagramType} ${rule.collection}[${index}]${tag} uses "${key}" — remove it; the layout engine owns all geometry.`,
+            subject: { diagramType, path: `/${rule.collection}/${index}`, ...(item.id != null ? { identity: String(item.id) } : {}) },
+            evidence: { bannedKey: key },
+            supportedFixes: [`remove "${key}" from ${rule.collection}[${index}]${tag} and re-render; the layout engine computes it`],
+          });
+        }
+      }
+    });
+  }
+  if (problems.length) {
+    const lines = problems.map((p) => `  ${p.message}`).join('\n');
+    throwDiagnosticError(`Authored geometry is banned (SYS-003):\n${lines}`, problems);
+  }
+}
+
 export function validateSchema(diagramType, data) {
   const validate = validators[diagramType];
   if (!validate) {
     throw new Error(`validateSchema: unknown diagram type "${diagramType}"`);
   }
+  assertNoAuthoredGeometry(diagramType, data);
   if (!validate(data)) {
     const diagnostics = validate.errors.map((error) => {
       const annotated = annotatedPath(error.instancePath, data);

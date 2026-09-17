@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { findChrome, runVisualCheck } from '../bin/visual-check.mjs';
-import { DESKTOP_READABILITY_VIEWPORT, MIN_PROJECTED_NODE_TEXT_PX } from '../renderers/shared/desktop-readability.mjs';
+import { DESKTOP_READABILITY_VIEWPORT, MIN_PROJECTED_TEXT_PX_BY_DETAIL } from '../renderers/shared/desktop-readability.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const skillRoot = path.resolve(__dirname, '..');
@@ -45,7 +45,7 @@ test('production showcase is readable in the real 1440 by 900 adaptive reader', 
         assert.ok(observation);
         assert.equal(observation.readerWidth, 960);
         assert.equal(observation.diagramWidth, 930);
-        assert.ok(observation.minimumProjectedNodeTextPx >= MIN_PROJECTED_NODE_TEXT_PX);
+        assert.ok(observation.minimumProjectedNodeTextPx >= MIN_PROJECTED_TEXT_PX_BY_DETAIL.boundary);
         assert.equal(observation.minimumProjectedNodeTextDetail, 'boundary');
         assert.equal(observation.minimumProjectedNodeText, 'AWS eu-west-1 / disaster recovery');
         assert.equal(observation.readabilityOk, true);

@@ -6,7 +6,7 @@ import { collectAmbiguousCorridors, collectBorderRuns, collectLabelRouteClearanc
 import {
   DESKTOP_READABILITY_VIEWPORT,
   DESKTOP_READER_DIAGRAM_WIDTH,
-  MIN_PROJECTED_NODE_TEXT_PX,
+  MIN_PROJECTED_TEXT_PX_BY_DETAIL,
   projectedNodeTextPx,
 } from '../renderers/shared/desktop-readability.mjs';
 
@@ -217,7 +217,7 @@ if (svgMatches.length === 1) {
         detail: desktopReadabilityIssue.detail,
         sourceFontPx: desktopReadabilityIssue.sourceFontPx,
         projectedFontPx: desktopReadabilityIssue.projectedFontPx,
-        minimumProjectedFontPx: MIN_PROJECTED_NODE_TEXT_PX,
+        minimumProjectedFontPx: MIN_PROJECTED_TEXT_PX_BY_DETAIL[desktopReadabilityIssue.detail] ?? null,
       }] : []),
     ],
   };
@@ -629,18 +629,17 @@ function collectDesktopReadability(svgAttrs, fragment) {
     const boundary = /\bdata-boundary-label(?:\s*=|\s|$)/i.test(match[1]);
     const context = /\bdata-detail\s*=\s*"context"/i.test(match[1]);
     if (!primary && !boundary && !context) continue;
+    const detail = primary ? 'primary' : boundary ? 'boundary' : 'context';
     const attrs = parseAttrs(match[1]);
     const fontSize = Number.parseFloat(attrs['font-size'] || '');
     if (!Number.isFinite(fontSize)) continue;
     const projected = projectedNodeTextPx(fontSize, viewBoxWidth);
-    if (projected >= MIN_PROJECTED_NODE_TEXT_PX) continue;
+    if (projected >= MIN_PROJECTED_TEXT_PX_BY_DETAIL[detail]) continue;
     const candidate = {
       viewBoxWidth,
       scale,
       text: stripTags(match[2]).trim(),
-      detail: primary
-        ? 'primary'
-        : boundary ? 'boundary' : 'context',
+      detail,
       sourceFontPx: fontSize,
       projectedFontPx: projected,
     };

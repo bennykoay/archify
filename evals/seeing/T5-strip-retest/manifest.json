@@ -1,0 +1,167 @@
+{
+  "input": "D:\\Onesimus\\tools\\archify\\evals\\runs\\T5_with-skill\\output.html",
+  "viewport": [
+    1600,
+    1000
+  ],
+  "zoneCount": 13,
+  "zones": [
+    {
+      "id": "node-req",
+      "kind": "node-label",
+      "label": "req",
+      "bbox": {
+        "x": 196,
+        "y": 268,
+        "width": 110,
+        "height": 50
+      },
+      "file": "node-req.png"
+    },
+    {
+      "id": "node-gate",
+      "kind": "node-label",
+      "label": "gate",
+      "bbox": {
+        "x": 453,
+        "y": 511,
+        "width": 113,
+        "height": 50
+      },
+      "file": "node-gate.png"
+    },
+    {
+      "id": "node-ship",
+      "kind": "node-label",
+      "label": "ship",
+      "bbox": {
+        "x": 631,
+        "y": 753,
+        "width": 71,
+        "height": 51
+      },
+      "file": "node-ship.png"
+    },
+    {
+      "id": "lane-01-intake",
+      "kind": "lane-header",
+      "label": "01 / Intake",
+      "bbox": {
+        "x": 172,
+        "y": 191,
+        "width": 121,
+        "height": 48
+      },
+      "file": "lane-01-intake.png"
+    },
+    {
+      "id": "lane-02-review",
+      "kind": "lane-header",
+      "label": "02 / Review",
+      "bbox": {
+        "x": 172,
+        "y": 434,
+        "width": 136,
+        "height": 48
+      },
+      "file": "lane-02-review.png"
+    },
+    {
+      "id": "lane-03-release",
+      "kind": "lane-header",
+      "label": "03 / Release",
+      "bbox": {
+        "x": 172,
+        "y": 677,
+        "width": 142,
+        "height": 48
+      },
+      "file": "lane-03-release.png"
+    },
+    {
+      "id": "strip-01-intake",
+      "kind": "strip",
+      "label": "01 / Intake",
+      "bbox": {
+        "x": 157,
+        "y": 191,
+        "width": 1254,
+        "height": 48
+      },
+      "file": "strip-01-intake.png"
+    },
+    {
+      "id": "strip-02-review",
+      "kind": "strip",
+      "label": "02 / Review",
+      "bbox": {
+        "x": 157,
+        "y": 434,
+        "width": 1254,
+        "height": 48
+      },
+      "file": "strip-02-review.png"
+    },
+    {
+      "id": "strip-03-release",
+      "kind": "strip",
+      "label": "03 / Release",
+      "bbox": {
+        "x": 157,
+        "y": 677,
+        "width": 1254,
+        "height": 48
+      },
+      "file": "strip-03-release.png"
+    },
+    {
+      "id": "edge-gate-ship",
+      "kind": "edge-label",
+      "label": "approved",
+      "bbox": {
+        "x": 450,
+        "y": 669,
+        "width": 119,
+        "height": 52
+      },
+      "file": "edge-gate-ship.png"
+    },
+    {
+      "id": "legend-backend",
+      "kind": "legend-chip",
+      "label": "backend",
+      "bbox": {
+        "x": 96,
+        "y": 913,
+        "width": 199,
+        "height": 71
+      },
+      "file": "legend-backend.png"
+    },
+    {
+      "id": "legend-security",
+      "kind": "legend-chip",
+      "label": "security",
+      "bbox": {
+        "x": 288,
+        "y": 913,
+        "width": 161,
+        "height": 71
+      },
+      "file": "legend-security.png"
+    },
+    {
+      "id": "legend-external",
+      "kind": "legend-chip",
+      "label": "external",
+      "bbox": {
+        "x": 439,
+        "y": 913,
+        "width": 231,
+        "height": 71
+      },
+      "file": "legend-external.png"
+    }
+  ],
+  "fullView": "full-view.png"
+}

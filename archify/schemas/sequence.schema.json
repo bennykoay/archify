@@ -46,7 +46,8 @@
             "classic",
             "signal-flow",
             "blueprint",
-            "editorial"
+            "apple-hig",
+            "classic-original"
           ]
         },
         "quality_profile": {

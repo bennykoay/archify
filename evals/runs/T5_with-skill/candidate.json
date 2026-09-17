@@ -1,0 +1,81 @@
+{
+  "cards": [
+    {
+      "dot": "emerald",
+      "items": [
+        "Request enters the lane"
+      ],
+      "title": "Intake"
+    },
+    {
+      "dot": "rose",
+      "items": [
+        "Gate decides ship or stop"
+      ],
+      "title": "Decision"
+    }
+  ],
+  "diagram_type": "workflow",
+  "edges": [
+    {
+      "from": "req",
+      "id": "req-gate",
+      "to": "gate",
+      "variant": "default"
+    },
+    {
+      "from": "gate",
+      "id": "gate-ship",
+      "label": "approved",
+      "to": "ship",
+      "variant": "emphasis"
+    }
+  ],
+  "lanes": [
+    {
+      "id": "intake",
+      "label": "Intake"
+    },
+    {
+      "id": "review",
+      "label": "Review"
+    },
+    {
+      "id": "release",
+      "label": "Release"
+    }
+  ],
+  "mainPath": [
+    "req",
+    "gate",
+    "ship"
+  ],
+  "meta": {
+    "quality_profile": "showcase",
+    "title": "Deploy approvals"
+  },
+  "nodes": [
+    {
+      "col": 0,
+      "id": "req",
+      "label": "Request",
+      "lane": "intake",
+      "type": "external"
+    },
+    {
+      "col": 1,
+      "id": "gate",
+      "label": "Approve",
+      "lane": "review",
+      "type": "security"
+    },
+    {
+      "col": 2,
+      "id": "ship",
+      "label": "Ship",
+      "lane": "release",
+      "type": "backend"
+    }
+  ],
+  "schema_version": 1
+}

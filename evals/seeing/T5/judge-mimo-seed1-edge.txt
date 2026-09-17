@@ -1,0 +1,11 @@
+Working...
+**1) Text legibility:** Y — "approved" is fully rendered, no clipping, no overflow.
+
+**2) Route crossing text:** Y — the vertical blue line terminates cleanly at the pill edge on both sides; it does **not** cut through the letterforms.
+
+**3) Label pill/mask intact:** Y — the pill mask fully erases the route segments in the text zone; text is unmasked and readable.
+
+---
+
+**PASS** — Vertical route line is properly masked out at both pill boundaries; no occlusion of text.
+EXIT:0

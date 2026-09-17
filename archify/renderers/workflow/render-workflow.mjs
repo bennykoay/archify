@@ -4,8 +4,9 @@ import { esc, renderDefinitions, renderSemanticSigil, textUnits } from '../share
 import { animateAttr, focusEdgeAttrs, focusNodeAttrs, focusNodeTitle, loadDiagramWithBrandMarks, writeDiagram, svgAccessibleText, svgRootAttrs } from '../shared/cli.mjs';
 import { throwDiagnosticProblems } from '../shared/diagnostics.mjs';
 import { resolveLegend, renderLegend as renderResolvedLegend } from '../shared/legend.mjs';
-import { availableNodeTextWidth, fittedNodeFontSize, minimumNodeTextWidth } from '../shared/text-fit.mjs';
+import { availableNodeTextWidth, fittedNodeCardWidth, fittedNodeFontSize, minimumNodeTextWidth } from '../shared/text-fit.mjs';
 import { brandLabelFitWidth, brandMetadataFor, brandTopRailProblem, renderBrandMark } from '../shared/brand-marks.mjs';
+import { SYSTEM_TOKENS } from '../shared/system-tokens.mjs';
 import {
   asArray,
   isFinitePoint,
@@ -61,7 +62,6 @@ const autoHeight = layout.laneY
   + ((workflow.lanes?.length || 1) - 1) * layout.laneGap
   + 124;
 const viewBox = workflow.meta?.viewBox || [720, autoHeight];
-
 const laneIndex = new Map(asArray(workflow.lanes).map((lane, index) => [lane.id, index]));
 const laneLabels = new Map(asArray(workflow.lanes).map((lane) => [lane.id, lane.label]));
 
@@ -88,9 +88,70 @@ function legendY() {
 }
 
 function measureNode(node) {
-  const width = node.width || layout.nodeW;
+  // OSM-SEE-013 card-fit: implicit cards grow from their text (preferred
+  // widths via minimumNodeTextWidth) instead of shrinking type first; shrink
+  // is the last resort (only at the ceiling). Floor = start width (pinned
+  // layout.nodeW 92 lane-kind geometry; author-explicit widths win per the
+  // SYS-001 spec-wins rule and are never grown). Ceiling = the room the lane,
+  // the overlapping cross-lane neighbours, and the same-lane siblings leave
+  // (at least the start width; at most the 260 HIG card
+  // `SYSTEM_TOKENS.card.width` v1.2.0, the largest settled card in the
+  // system) — growth never moves edges/columns, never narrows a same-lane
+  // port-to-port span below the 28px edge floor, never touches an overlapping
+  // card, so routed edge lengths and the composition gates cannot regress.
+  const startWidth = node.width || layout.nodeW;
   const height = node.height || (node.tag ? 68 : layout.nodeH);
   const cx = layout.colXs[node.col];
+  const laneRight = layout.laneX + layout.laneW;
+  const laneRoom = Number.isFinite(cx)
+    ? 2 * Math.min(cx - layout.laneX, laneRight - cx)
+    : SYSTEM_TOKENS.card.width;
+  // Overlapping cross-lane neighbour room: the grown card (same centre cx,
+  // same lane/row band) only ever meets cards whose vertical band overlaps
+  // its own. The gate keeps 8px between such cards (rectsOverlap(_, _, 8)).
+  // Author-explicit widths are validated unchanged elsewhere, so they skip
+  // every cap below.
+  let neighbourRoom = SYSTEM_TOKENS.card.width;
+  // Same-lane sibling room: the port-to-port span between two same-lane
+  // cards on adjacent columns must keep the 28px edge floor the renderer
+  // gate enforces (plus the 8px card separation), or a grown card shortens
+  // its own edge into a new fault.
+  let siblingRoom = SYSTEM_TOKENS.card.width;
+  if (node.width == null && Number.isFinite(cx)) {
+    neighbourRoom = SYSTEM_TOKENS.card.width;
+    siblingRoom = SYSTEM_TOKENS.card.width;
+    const bandTop = laneTop(node.lane) + layout.laneTitleH;
+    const bandBottom = bandTop + (layout.laneH - layout.laneTitleH);
+    for (const other of asArray(workflow.nodes)) {
+      if (other === node || other.col === node.col) continue;
+      const ocx = layout.colXs[other.col];
+      if (!Number.isFinite(ocx) || ocx === cx) continue;
+      if (other.lane === node.lane) {
+        // Same centre row: half-widths plus the 28px edge floor plus the 8px
+        // card separation set the room.
+        const room = 2 * (Math.abs(ocx - cx) - ((other.width || layout.nodeW) / 2) - 28 - 8);
+        if (room < siblingRoom) siblingRoom = room;
+        continue;
+      }
+      const oTop = laneTop(other.lane) + layout.laneTitleH;
+      const oBottom = oTop + (layout.laneH - layout.laneTitleH);
+      if (oTop >= bandBottom || bandTop >= oBottom) continue;
+      const oHalf = ((other.width || layout.nodeW) / 2) + 8;
+      const room = 2 * (Math.abs(ocx - cx) - oHalf);
+      if (room < neighbourRoom) neighbourRoom = room;
+    }
+  }
+  const ceiling = node.width
+    || Math.max(startWidth, Math.min(SYSTEM_TOKENS.card.width, laneRoom, neighbourRoom, siblingRoom));
+  const width = fittedNodeCardWidth(
+    [
+      { text: node.label, preferred: nodeTextFit.labelPreferred },
+      { text: node.sublabel, preferred: nodeTextFit.sublabelPreferred },
+      { text: node.tag, preferred: nodeTextFit.tagPreferred },
+    ],
+    startWidth,
+    ceiling,
+  );
   const contentH = layout.laneH - layout.laneTitleH;
   const y = laneTop(node.lane) + layout.laneTitleH + (contentH - height) / 2 + (node.yOffset || 0);
   return {
@@ -106,8 +167,8 @@ function measureNode(node) {
 
 // Font sizes for this renderer's node text; the fitting geometry is shared.
 const nodeTextFit = {
-  labelPreferred: 11,
-  labelMinimum: 9,
+  labelPreferred: 15, // primary floor 15 (desktop-readability.mjs); matches architecture fitted(...,15,8) precedent
+  labelMinimum: 8,
   sublabelPreferred: 8,
   sublabelMinimum: 6,
   tagPreferred: 7,
@@ -671,7 +732,7 @@ function renderEdgeLabel(edge, index) {
   const labelW = Math.max(30, textUnits(edge.label) * 4.8 + 10);
   return `        <g data-detail="context" ${focusEdgeAttrs(edge.from, edge.to, edge.label, index, edge.id)}>
           <rect x="${lx - labelW / 2}" y="${ly - 10}" width="${labelW}" height="14" rx="3" class="c-mask"/>
-          <text x="${lx}" y="${ly}" class="${variantAccent(edge.variant, { dashed: 't-database' })}" font-size="8" text-anchor="middle">${esc(edge.label)}</text>
+          <text x="${lx}" y="${ly}" class="${variantAccent(edge.variant)}" font-size="8" text-anchor="middle">${esc(edge.label)}</text>
         </g>`;
 }
 
@@ -705,7 +766,9 @@ function renderLegend() {
 }
 
 function renderSvg() {
-  return `      <svg viewBox="0 0 ${viewBox[0]} ${viewBox[1]}" ${svgRootAttrs(workflow.meta, 'workflow diagram')}>
+  // SYS-003 Amendment B A11: embed spec edge count for edge-conservation gate (N5).
+  const specEdgeCount = asArray(workflow.edges).length;
+  return `      <svg viewBox="0 0 ${viewBox[0]} ${viewBox[1]}" ${svgRootAttrs(workflow.meta, 'workflow diagram')} data-spec-edge-count="${specEdgeCount}">
 ${svgAccessibleText(workflow.meta, 'workflow diagram')}
 ${renderDefinitions()}
 

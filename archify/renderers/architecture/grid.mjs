@@ -1,13 +1,14 @@
 /** Grid placement for architecture IR (#8). Not auto-layout — fixed cell math only. */
+import { SYSTEM_TOKENS } from '../shared/system-tokens.mjs';
 
 export const DEFAULT_GRID = {
   mode: 'grid',
   origin: [40, 80],
   cols: 4,
-  gapX: 30,
-  gapY: 40,
-  cellW: 130,
-  cellH: 64,
+  gapX: SYSTEM_TOKENS.gutter.empty, // 40: empty column gutter pairs the 260 card
+  gapY: 40, // pinned: row rhythm unchanged
+  cellW: SYSTEM_TOKENS.card.width, // 260: cells fit default cards exactly
+  cellH: 64, // pinned: fits default 60px cards unchanged
 };
 
 export function gridLayout(arch) {

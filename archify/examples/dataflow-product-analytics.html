@@ -34,95 +34,137 @@
   <!-- Async font load: a blackholed network must not block first paint.
        The body font stack falls back to system monospace until it lands. -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   </noscript>
   <style>
+    /* ==========================================================
+       APPLE HIG PRESET FONT — local()-only, no network fetch.
+       San Francisco is not licensed for @font-face url() delivery, so this
+       queries the OS's already-installed copy by name (present on every
+       real Apple device/browser) with an Inter local-install fallback and a
+       final generic-sans-serif tier for platforms with neither. Unlike the
+       page's default 'Inter' stack (loaded from the Google Fonts <link>
+       above), nothing here ever touches the network, so it can't silently
+       degrade offline/air-gapped the way issue #242/#277 describe for a
+       url()-sourced face — src: local() either resolves immediately from
+       what's on disk or the browser moves to the next font in the
+       font-family list, with zero network round trip either way.
+       ========================================================== */
+    @font-face {
+      font-family: 'SF Pro Text Local';
+      src: local('SF Pro Text'), local('.SFNSText-Regular'), local('SFProText-Regular'),
+           local('SF Pro Display'), local('.SFNSDisplay-Regular');
+      font-weight: 400 700;
+    }
+    @font-face {
+      font-family: 'Inter Local';
+      src: local('Inter'), local('Inter-Regular'), local('Inter Variable');
+      font-weight: 400 700;
+    }
+    :root {
+      --apple-hig-font: 'SF Pro Text Local', -apple-system, BlinkMacSystemFont,
+        'Inter Local', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
     /* ==========================================================
        THEME VARIABLES — switch by toggling [data-theme] on <html>
        ========================================================== */
     :root,
     [data-theme="dark"] {
-      --bg: #020617;
-      --grid: #1e293b;
-      --text: #ffffff;
-      --text-muted: #94a3b8;
-      --text-dim: #475569;
+      --bg: #010102;              /* true page background — design.md 3-tier spec: page < card < raised */
+      --bg-surface-primary: #1c1c1e;
+      --grid: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --text-dim: #636366;
       /* UI chrome and menu hints need more contrast than SVG .t-dim accents */
-      --text-faint: #7d8da1;
+      --text-faint: #98989d;
 
-      --panel: rgba(15, 23, 42, 0.5);
-      --panel-border: #1e293b;
-      --lane-fill: rgba(15, 23, 42, 0.22);
-      --lane-stroke: #334155;
+      --panel: #2c2c2e;
+      --panel-border: rgba(84, 84, 88, 0.6);
+      --lane-fill: rgba(44, 44, 46, 0.65);
+      --lane-stroke: rgba(84, 84, 88, 0.6);
 
-      --arrow: #64748b;
-      --arrow-emphasis: #34d399;
+      --arrow: #8e8e93;
+      --arrow-emphasis: #0a84ff;
 
       /* Opaque mask color used behind semi-transparent component fills
          so the arrows drawn underneath are properly hidden. */
-      --mask: #0f172a;
+      --mask: #2c2c2e;
 
-      --frontend-fill:    rgba(8, 51, 68, 0.4);
-      --frontend-stroke:  #22d3ee;
-      --backend-fill:     rgba(6, 78, 59, 0.4);
-      --backend-stroke:   #34d399;
-      --database-fill:    rgba(76, 29, 149, 0.4);
-      --database-stroke:  #a78bfa;
-      --cloud-fill:       rgba(120, 53, 15, 0.3);
-      --cloud-stroke:     #fbbf24;
-      --security-fill:    rgba(136, 19, 55, 0.4);
-      --security-stroke:  #fb7185;
-      --messagebus-fill:  rgba(251, 146, 60, 0.3);
-      --messagebus-stroke:#fb923c;
-      --external-fill:    rgba(30, 41, 59, 0.5);
-      --external-stroke:  #94a3b8;
+      --frontend-fill:    rgba(255, 255, 255, 0.04);
+      --frontend-stroke:  #0a84ff;
+      --backend-fill:     rgba(255, 255, 255, 0.04);
+      --backend-stroke:   #30d158;
+      --database-fill:    rgba(255, 255, 255, 0.04);
+      --database-stroke:  #bf5af2;
+      --cloud-fill:       rgba(255, 255, 255, 0.04);
+      --cloud-stroke:     #ffd60a;
+      --security-fill:    rgba(255, 69, 58, 0.08);
+      --security-stroke:  #ff453a;
+      --messagebus-fill:  rgba(255, 255, 255, 0.04);
+      --messagebus-stroke:#ff9f0a;
+      --external-fill:    rgba(142, 142, 147, 0.10);
+      --external-stroke:  #8e8e93;
 
-      --toolbar-bg:       rgba(15, 23, 42, 0.8);
-      --toolbar-border:   #334155;
-      --toolbar-text:     #e2e8f0;
-      --toolbar-hover:    rgba(15, 23, 42, 0.95);
-      --toolbar-menu-bg:  #0f172a;
+      /* Reference alignment: grey hairline around cards; kind color lives in the left bar */
+      svg .c-frontend, svg .c-backend, svg .c-database, svg .c-cloud,
+      svg .c-security, svg .c-messagebus, svg .c-external { stroke: rgba(84, 84, 88, 0.6); }
+      svg [data-legend-kind="frontend"]   .c-frontend   { stroke: var(--frontend-stroke);   fill: var(--frontend-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="backend"]    .c-backend    { stroke: var(--backend-stroke);    fill: var(--backend-stroke);    fill-opacity: 0.3; }
+      svg [data-legend-kind="database"]   .c-database   { stroke: var(--database-stroke);   fill: var(--database-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="cloud"]      .c-cloud      { stroke: var(--cloud-stroke);      fill: var(--cloud-stroke);      fill-opacity: 0.3; }
+      svg [data-legend-kind="security"]   .c-security   { stroke: var(--security-stroke);   fill: var(--security-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="messagebus"] .c-messagebus { stroke: var(--messagebus-stroke); fill: var(--messagebus-stroke); fill-opacity: 0.3; }
+      svg [data-legend-kind="external"]   .c-external   { stroke: var(--external-stroke);   fill: var(--external-stroke);   fill-opacity: 0.3; }
+
+      --toolbar-bg:       rgba(44, 44, 46, 0.8);
+      --toolbar-border:   rgba(84, 84, 88, 0.6);
+      --toolbar-text:     #f2f2f7;
+      --toolbar-hover:    rgba(44, 44, 46, 0.95);
+      --toolbar-menu-bg:  #2c2c2e;
     }
 
     [data-theme="light"] {
-      --bg: #f8fafc;
-      --grid: #e2e8f0;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --text-dim: #94a3b8;
-      --text-faint: #64748b;
+      --bg: #f5f5f7;
+      --bg-surface-primary: #f5f5f7;
+      --grid: #e5e5ea;
+      --text: #000000;
+      --text-muted: #3c3c43;
+      --text-dim: #8e8e93;
+      --text-faint: #636366;
 
       --panel: #ffffff;
-      --panel-border: #e2e8f0;
-      --lane-fill: rgba(248, 250, 252, 0.65);
-      --lane-stroke: #cbd5e1;
+      --panel-border: rgba(60, 60, 67, 0.12);
+      --lane-fill: rgba(245, 245, 247, 0.65);
+      --lane-stroke: rgba(60, 60, 67, 0.18);
 
-      --arrow: #94a3b8;
-      --arrow-emphasis: #059669;
+      --arrow: #8e8e93;
+      --arrow-emphasis: #007aff;
 
       --mask: #ffffff;
 
-      --frontend-fill:    rgba(34, 211, 238, 0.15);
-      --frontend-stroke:  #0891b2;
-      --backend-fill:     rgba(52, 211, 153, 0.18);
-      --backend-stroke:   #059669;
-      --database-fill:    rgba(167, 139, 250, 0.2);
-      --database-stroke:  #7c3aed;
-      --cloud-fill:       rgba(251, 191, 36, 0.18);
-      --cloud-stroke:     #d97706;
-      --security-fill:    rgba(251, 113, 133, 0.15);
-      --security-stroke:  #e11d48;
-      --messagebus-fill:  rgba(251, 146, 60, 0.15);
-      --messagebus-stroke:#ea580c;
-      --external-fill:    rgba(148, 163, 184, 0.18);
-      --external-stroke:  #64748b;
+      --frontend-fill:    rgba(255, 255, 255, 0.04);
+      --frontend-stroke:  #007aff;
+      --backend-fill:     rgba(255, 255, 255, 0.04);
+      --backend-stroke:   #34c759;
+      --database-fill:    rgba(255, 255, 255, 0.04);
+      --database-stroke:  #af52de;
+      --cloud-fill:       rgba(255, 255, 255, 0.04);
+      --cloud-stroke:     #ffcc02;
+      --security-fill:    rgba(255, 255, 255, 0.04);
+      --security-stroke:  #ff3b30;
+      --messagebus-fill:  rgba(255, 255, 255, 0.04);
+      --messagebus-stroke:#ff9500;
+      --external-fill:    rgba(142, 142, 147, 0.10);
+      --external-stroke:  #8e8e93;
 
-      --toolbar-bg:       rgba(255, 255, 255, 0.92);
-      --toolbar-border:   #cbd5e1;
-      --toolbar-text:     #334155;
+      --toolbar-bg:       rgba(255, 255, 255, 0.88);
+      --toolbar-border:   rgba(60, 60, 67, 0.12);
+      --toolbar-text:     #000000;
       --toolbar-hover:    #ffffff;
       --toolbar-menu-bg:  #ffffff;
     }
@@ -133,66 +175,85 @@
        root carries data-preset and data-theme directly.
        ========================================================== */
     [data-preset="signal-flow"][data-theme="dark"] {
-      --bg: #030711;
-      --grid: #15233a;
-      --panel: rgba(6, 14, 28, 0.78);
-      --panel-border: #1d3350;
-      --lane-fill: rgba(9, 22, 40, 0.5);
-      --lane-stroke: #2c4564;
-      --text: #f5fbff;
-      --text-muted: #9eb0c7;
-      --text-dim: #52667f;
-      --text-faint: #7890ad;
-      --mask: #07101e;
-      --frontend-fill: rgba(6, 182, 212, 0.14);
-      --frontend-stroke: #67e8f9;
-      --backend-fill: rgba(16, 185, 129, 0.14);
-      --backend-stroke: #5eead4;
-      --database-fill: rgba(139, 92, 246, 0.16);
-      --database-stroke: #c4b5fd;
-      --cloud-fill: rgba(245, 158, 11, 0.13);
-      --cloud-stroke: #fcd34d;
-      --security-fill: rgba(244, 63, 94, 0.13);
-      --security-stroke: #fda4af;
-      --messagebus-fill: rgba(249, 115, 22, 0.13);
-      --messagebus-stroke: #fdba74;
-      --external-fill: rgba(71, 85, 105, 0.24);
-      --external-stroke: #a5b4c7;
-      --arrow: #7890ad;
-      --arrow-emphasis: #2dd4bf;
-      --toolbar-bg: rgba(7, 16, 30, 0.86);
-      --toolbar-border: #29415f;
-      --toolbar-menu-bg: #07101e;
+      --bg: #010102;
+      --bg-surface-primary: #1c1c1e;
+      --grid: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --text-dim: #636366;
+      --text-faint: #98989d;
+
+      --panel: #2c2c2e;
+      --panel-border: rgba(84, 84, 88, 0.6);
+      --lane-fill: rgba(44, 44, 46, 0.65);
+      --lane-stroke: rgba(84, 84, 88, 0.6);
+      --arrow: #8e8e93;
+      --arrow-emphasis: #0a84ff;
+
+      --mask: #2c2c2e;
+
+      --frontend-fill:    rgba(255, 255, 255, 0.04);
+      --frontend-stroke:  #0a84ff;
+      --backend-fill:     rgba(255, 255, 255, 0.04);
+      --backend-stroke:   #30d158;
+      --database-fill:    rgba(255, 255, 255, 0.04);
+      --database-stroke:  #bf5af2;
+      --cloud-fill:       rgba(255, 255, 255, 0.04);
+      --cloud-stroke:     #ffd60a;
+      --security-fill:    rgba(255, 69, 58, 0.08);
+      --security-stroke:  #ff453a;
+      --messagebus-fill:  rgba(255, 255, 255, 0.04);
+      --messagebus-stroke:#ff9f0a;
+      --external-fill:    rgba(142, 142, 147, 0.10);
+      --external-stroke:  #8e8e93;
+
+      /* Reference alignment: grey hairline around cards; kind color lives in the left bar */
+      svg .c-frontend, svg .c-backend, svg .c-database, svg .c-cloud,
+      svg .c-security, svg .c-messagebus, svg .c-external { stroke: rgba(84, 84, 88, 0.6); }
+      svg [data-legend-kind="frontend"]   .c-frontend   { stroke: var(--frontend-stroke);   fill: var(--frontend-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="backend"]    .c-backend    { stroke: var(--backend-stroke);    fill: var(--backend-stroke);    fill-opacity: 0.3; }
+      svg [data-legend-kind="database"]   .c-database   { stroke: var(--database-stroke);   fill: var(--database-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="cloud"]      .c-cloud      { stroke: var(--cloud-stroke);      fill: var(--cloud-stroke);      fill-opacity: 0.3; }
+      svg [data-legend-kind="security"]   .c-security   { stroke: var(--security-stroke);   fill: var(--security-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="messagebus"] .c-messagebus { stroke: var(--messagebus-stroke); fill: var(--messagebus-stroke); fill-opacity: 0.3; }
+      svg [data-legend-kind="external"]   .c-external   { stroke: var(--external-stroke);   fill: var(--external-stroke);   fill-opacity: 0.3; }
+
+      --toolbar-bg:       rgba(44, 44, 46, 0.8);
+      --toolbar-border:   rgba(84, 84, 88, 0.6);
+      --toolbar-text:     #f2f2f7;
+      --toolbar-hover:    rgba(44, 44, 46, 0.95);
+      --toolbar-menu-bg:  #2c2c2e;
     }
 
     [data-preset="signal-flow"][data-theme="light"] {
-      --bg: #f4f9fc;
-      --grid: #d4e5ee;
-      --panel: rgba(255, 255, 255, 0.82);
-      --panel-border: #bfd5e2;
-      --lane-fill: rgba(232, 243, 248, 0.62);
-      --lane-stroke: #a9c5d5;
-      --text: #102638;
-      --text-muted: #587287;
-      --text-dim: #8aa2b4;
-      --text-faint: #668397;
+      --bg: #f5f5f7;
+      --bg-surface-primary: #f5f5f7;
+      --grid: #e5e5ea;
+      --panel: #ffffff;
+      --panel-border: rgba(60, 60, 67, 0.12);
+      --lane-fill: rgba(245, 245, 247, 0.65);
+      --lane-stroke: rgba(60, 60, 67, 0.18);
+      --text: #000000;
+      --text-muted: #3c3c43;
+      --text-dim: #8e8e93;
+      --text-faint: #636366;
       --mask: #ffffff;
-      --frontend-fill: rgba(6, 182, 212, 0.09);
-      --frontend-stroke: #0789a1;
-      --backend-fill: rgba(5, 150, 105, 0.09);
-      --backend-stroke: #087f69;
-      --database-fill: rgba(124, 58, 237, 0.09);
-      --database-stroke: #7254c7;
-      --cloud-fill: rgba(217, 119, 6, 0.08);
-      --cloud-stroke: #b9670b;
-      --security-fill: rgba(225, 29, 72, 0.08);
-      --security-stroke: #c53a59;
-      --messagebus-fill: rgba(234, 88, 12, 0.08);
-      --messagebus-stroke: #c65f27;
-      --external-fill: rgba(100, 116, 139, 0.1);
-      --external-stroke: #607a8c;
-      --arrow: #7b97aa;
-      --arrow-emphasis: #0d9488;
+      --frontend-fill: rgba(255, 255, 255, 0.04);
+      --frontend-stroke: #007aff;
+      --backend-fill: rgba(255, 255, 255, 0.04);
+      --backend-stroke: #34c759;
+      --database-fill: rgba(255, 255, 255, 0.04);
+      --database-stroke: #af52de;
+      --cloud-fill: rgba(255, 255, 255, 0.04);
+      --cloud-stroke: #ffcc02;
+      --security-fill:    rgba(255, 255, 255, 0.04);
+      --security-stroke: #ff3b30;
+      --messagebus-fill: rgba(255, 255, 255, 0.04);
+      --messagebus-stroke: #ff9500;
+      --external-fill: rgba(142, 142, 147, 0.10);
+      --external-stroke: #8e8e93;
+      --arrow: #8e8e93;
+      --arrow-emphasis: #007aff;
     }
 
     /* ==========================================================
@@ -202,73 +263,96 @@
        precise grid contrast, squared materials, and drafting marks.
        ========================================================== */
     [data-preset="blueprint"][data-theme="dark"] {
-      --bg: #06131f;
-      --grid: #17425a;
-      --panel: rgba(7, 27, 43, 0.9);
-      --panel-border: #27627f;
-      --lane-fill: rgba(10, 43, 66, 0.36);
-      --lane-stroke: #34799a;
-      --text: #e3f6ff;
-      --text-muted: #91b8ca;
-      --text-dim: #557e92;
-      --text-faint: #739caf;
-      --mask: #0a2031;
-      --frontend-fill: rgba(26, 157, 193, 0.14);
-      --frontend-stroke: #66d9ef;
-      --backend-fill: rgba(31, 155, 124, 0.13);
-      --backend-stroke: #69dfbd;
-      --database-fill: rgba(120, 105, 196, 0.14);
-      --database-stroke: #b4a8ff;
-      --cloud-fill: rgba(197, 145, 43, 0.13);
-      --cloud-stroke: #ffd166;
-      --security-fill: rgba(199, 76, 104, 0.13);
-      --security-stroke: #ff8da1;
-      --messagebus-fill: rgba(207, 112, 49, 0.13);
-      --messagebus-stroke: #ffad66;
-      --external-fill: rgba(84, 119, 139, 0.18);
-      --external-stroke: #a7cad9;
-      --arrow: #78a3b7;
-      --arrow-emphasis: #64dfc1;
-      --toolbar-bg: rgba(7, 28, 45, 0.92);
-      --toolbar-border: #34799a;
-      --toolbar-text: #d8f3ff;
-      --toolbar-hover: rgba(18, 58, 83, 0.95);
-      --toolbar-menu-bg: #0a2031;
+      --bg: #010102;
+      --grid: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --text-dim: #636366;
+      --text-faint: #98989d;
+
+      --panel: #2c2c2e;
+      --bg-surface-primary: #1c1c1e;
+      --panel-border: rgba(84, 84, 88, 0.6);
+      --lane-fill: rgba(44, 44, 46, 0.65);
+      --lane-stroke: rgba(84, 84, 88, 0.6);
+
+      --arrow: #8e8e93;
+      --arrow-emphasis: #0a84ff;
+
+      --mask: #2c2c2e;
+
+      --frontend-fill:    rgba(255, 255, 255, 0.04);
+      --frontend-stroke:  #0a84ff;
+      --backend-fill:     rgba(255, 255, 255, 0.04);
+      --backend-stroke:   #30d158;
+      --database-fill:    rgba(255, 255, 255, 0.04);
+      --database-stroke:  #bf5af2;
+      --cloud-fill:       rgba(255, 255, 255, 0.04);
+      --cloud-stroke:     #ffd60a;
+      --security-fill:    rgba(255, 69, 58, 0.08);
+      --security-stroke:  #ff453a;
+      --messagebus-fill:  rgba(255, 255, 255, 0.04);
+      --messagebus-stroke:#ff9f0a;
+      --external-fill:    rgba(142, 142, 147, 0.10);
+      --external-stroke:  #8e8e93;
+
+      /* Reference alignment: grey hairline around cards; kind color lives in the left bar */
+      svg .c-frontend, svg .c-backend, svg .c-database, svg .c-cloud,
+      svg .c-security, svg .c-messagebus, svg .c-external { stroke: rgba(84, 84, 88, 0.6); }
+      svg [data-legend-kind="frontend"]   .c-frontend   { stroke: var(--frontend-stroke);   fill: var(--frontend-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="backend"]    .c-backend    { stroke: var(--backend-stroke);    fill: var(--backend-stroke);    fill-opacity: 0.3; }
+      svg [data-legend-kind="database"]   .c-database   { stroke: var(--database-stroke);   fill: var(--database-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="cloud"]      .c-cloud      { stroke: var(--cloud-stroke);      fill: var(--cloud-stroke);      fill-opacity: 0.3; }
+      svg [data-legend-kind="security"]   .c-security   { stroke: var(--security-stroke);   fill: var(--security-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="messagebus"] .c-messagebus { stroke: var(--messagebus-stroke); fill: var(--messagebus-stroke); fill-opacity: 0.3; }
+      svg [data-legend-kind="external"]   .c-external   { stroke: var(--external-stroke);   fill: var(--external-stroke);   fill-opacity: 0.3; }
+
+      --toolbar-bg:       rgba(44, 44, 46, 0.8);
+      --toolbar-border:   rgba(84, 84, 88, 0.6);
+      --toolbar-text:     #f2f2f7;
+      --toolbar-hover:    rgba(44, 44, 46, 0.95);
+      --toolbar-menu-bg:  #2c2c2e;
     }
 
     [data-preset="blueprint"][data-theme="light"] {
-      --bg: #edf7fa;
-      --grid: #b5d5e1;
-      --panel: rgba(249, 253, 255, 0.94);
-      --panel-border: #78aabd;
-      --lane-fill: rgba(210, 232, 240, 0.42);
-      --lane-stroke: #83b2c4;
-      --text: #123344;
-      --text-muted: #4e7486;
-      --text-dim: #86a6b4;
-      --text-faint: #668c9d;
-      --mask: #f9fdff;
-      --frontend-fill: rgba(8, 145, 178, 0.08);
-      --frontend-stroke: #087f9c;
-      --backend-fill: rgba(5, 128, 101, 0.08);
-      --backend-stroke: #08755f;
-      --database-fill: rgba(100, 75, 180, 0.08);
-      --database-stroke: #6757a8;
-      --cloud-fill: rgba(181, 120, 15, 0.08);
-      --cloud-stroke: #a86609;
-      --security-fill: rgba(190, 48, 80, 0.07);
-      --security-stroke: #b32f50;
-      --messagebus-fill: rgba(196, 81, 22, 0.07);
-      --messagebus-stroke: #b65120;
-      --external-fill: rgba(79, 112, 128, 0.08);
-      --external-stroke: #506f7e;
-      --arrow: #6d93a5;
-      --arrow-emphasis: #087f69;
-      --toolbar-bg: rgba(247, 252, 254, 0.94);
-      --toolbar-border: #8ab5c5;
-      --toolbar-text: #294f61;
-      --toolbar-hover: #ffffff;
-      --toolbar-menu-bg: #f9fdff;
+      --bg: #f5f5f7;
+      --bg-surface-primary: #f5f5f7;
+      --grid: #e5e5ea;
+      --text: #000000;
+      --text-muted: #3c3c43;
+      --text-dim: #8e8e93;
+      --text-faint: #636366;
+
+      --panel: #ffffff;
+      --panel-border: rgba(60, 60, 67, 0.12);
+      --lane-fill: rgba(245, 245, 247, 0.65);
+      --lane-stroke: rgba(60, 60, 67, 0.18);
+
+      --arrow: #8e8e93;
+      --arrow-emphasis: #007aff;
+
+      --mask: #ffffff;
+
+      --frontend-fill:    rgba(255, 255, 255, 0.04);
+      --frontend-stroke:  #007aff;
+      --backend-fill:     rgba(255, 255, 255, 0.04);
+      --backend-stroke:   #34c759;
+      --database-fill:    rgba(255, 255, 255, 0.04);
+      --database-stroke:  #af52de;
+      --cloud-fill:       rgba(255, 255, 255, 0.04);
+      --cloud-stroke:     #ffcc02;
+      --security-fill:    rgba(255, 255, 255, 0.04);
+      --security-stroke:  #ff3b30;
+      --messagebus-fill:  rgba(255, 255, 255, 0.04);
+      --messagebus-stroke:#ff9500;
+      --external-fill:    rgba(142, 142, 147, 0.10);
+      --external-stroke:  #8e8e93;
+
+      --toolbar-bg:       rgba(255, 255, 255, 0.88);
+      --toolbar-border:   rgba(60, 60, 67, 0.12);
+      --toolbar-text:     #000000;
+      --toolbar-hover:    #ffffff;
+      --toolbar-menu-bg:  #ffffff;
     }
 
     /* ==========================================================
@@ -279,79 +363,212 @@
        restrained vermilion accent.
        ========================================================== */
     [data-preset="editorial"][data-theme="dark"] {
-      --bg: #181611;
-      --grid: #39342a;
-      --panel: rgba(35, 31, 24, 0.96);
-      --panel-border: #625a4a;
-      --lane-fill: rgba(52, 46, 35, 0.46);
-      --lane-stroke: #726957;
-      --text: #f4eddf;
-      --text-muted: #b9ae9b;
-      --text-dim: #776e60;
-      --text-faint: #9d917e;
-      --mask: #231f18;
-      --frontend-fill: rgba(43, 133, 142, 0.16);
-      --frontend-stroke: #7fc6c7;
-      --backend-fill: rgba(63, 132, 92, 0.16);
-      --backend-stroke: #8fc29e;
-      --database-fill: rgba(117, 91, 141, 0.17);
-      --database-stroke: #c0a4d0;
-      --cloud-fill: rgba(170, 119, 49, 0.16);
-      --cloud-stroke: #d8ad68;
-      --security-fill: rgba(157, 69, 65, 0.17);
-      --security-stroke: #df9085;
-      --messagebus-fill: rgba(174, 79, 42, 0.16);
-      --messagebus-stroke: #df946f;
-      --external-fill: rgba(126, 115, 96, 0.18);
-      --external-stroke: #b8ad99;
-      --arrow: #948978;
-      --arrow-emphasis: #dd6b3d;
-      --toolbar-bg: rgba(35, 31, 24, 0.92);
-      --toolbar-border: #625a4a;
-      --toolbar-text: #eee5d5;
-      --toolbar-hover: #302a20;
-      --toolbar-menu-bg: #231f18;
+      --bg: #010102;
+      --grid: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --text-dim: #636366;
+      --text-faint: #98989d;
+
+      --panel: #2c2c2e;
+      --bg-surface-primary: #1c1c1e;
+      --panel-border: rgba(84, 84, 88, 0.6);
+      --lane-fill: rgba(44, 44, 46, 0.65);
+      --lane-stroke: rgba(84, 84, 88, 0.6);
+
+      --arrow: #8e8e93;
+      --arrow-emphasis: #0a84ff;
+
+      --mask: #2c2c2e;
+
+      --frontend-fill:    rgba(255, 255, 255, 0.04);
+      --frontend-stroke:  #0a84ff;
+      --backend-fill:     rgba(255, 255, 255, 0.04);
+      --backend-stroke:   #30d158;
+      --database-fill:    rgba(255, 255, 255, 0.04);
+      --database-stroke:  #bf5af2;
+      --cloud-fill:       rgba(255, 255, 255, 0.04);
+      --cloud-stroke:     #ffd60a;
+      --security-fill:    rgba(255, 69, 58, 0.08);
+      --security-stroke:  #ff453a;
+      --messagebus-fill:  rgba(255, 255, 255, 0.04);
+      --messagebus-stroke:#ff9f0a;
+      --external-fill:    rgba(142, 142, 147, 0.10);
+      --external-stroke:  #8e8e93;
+
+      /* Reference alignment: grey hairline around cards; kind color lives in the left bar */
+      svg .c-frontend, svg .c-backend, svg .c-database, svg .c-cloud,
+      svg .c-security, svg .c-messagebus, svg .c-external { stroke: rgba(84, 84, 88, 0.6); }
+      svg [data-legend-kind="frontend"]   .c-frontend   { stroke: var(--frontend-stroke);   fill: var(--frontend-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="backend"]    .c-backend    { stroke: var(--backend-stroke);    fill: var(--backend-stroke);    fill-opacity: 0.3; }
+      svg [data-legend-kind="database"]   .c-database   { stroke: var(--database-stroke);   fill: var(--database-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="cloud"]      .c-cloud      { stroke: var(--cloud-stroke);      fill: var(--cloud-stroke);      fill-opacity: 0.3; }
+      svg [data-legend-kind="security"]   .c-security   { stroke: var(--security-stroke);   fill: var(--security-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="messagebus"] .c-messagebus { stroke: var(--messagebus-stroke); fill: var(--messagebus-stroke); fill-opacity: 0.3; }
+      svg [data-legend-kind="external"]   .c-external   { stroke: var(--external-stroke);   fill: var(--external-stroke);   fill-opacity: 0.3; }
+
+      --toolbar-bg:       rgba(44, 44, 46, 0.8);
+      --toolbar-border:   rgba(84, 84, 88, 0.6);
+      --toolbar-text:     #f2f2f7;
+      --toolbar-hover:    rgba(44, 44, 46, 0.95);
+      --toolbar-menu-bg:  #2c2c2e;
     }
 
     [data-preset="editorial"][data-theme="light"] {
-      --bg: #f2eee5;
-      --grid: #d8d0c2;
-      --panel: rgba(251, 248, 241, 0.97);
-      --panel-border: #c4b9a6;
-      --lane-fill: rgba(229, 221, 207, 0.42);
-      --lane-stroke: #b8aa94;
-      --text: #242018;
-      --text-muted: #6f6658;
-      --text-dim: #a09788;
-      --text-faint: #817767;
-      --mask: #fbf8f1;
-      --frontend-fill: rgba(31, 117, 126, 0.09);
-      --frontend-stroke: #287e84;
-      --backend-fill: rgba(42, 119, 75, 0.09);
-      --backend-stroke: #397b53;
-      --database-fill: rgba(105, 75, 130, 0.09);
-      --database-stroke: #765d86;
-      --cloud-fill: rgba(157, 103, 31, 0.1);
-      --cloud-stroke: #9a671f;
-      --security-fill: rgba(153, 58, 52, 0.09);
-      --security-stroke: #9e463f;
-      --messagebus-fill: rgba(182, 70, 27, 0.09);
-      --messagebus-stroke: #ad4b25;
-      --external-fill: rgba(101, 91, 75, 0.09);
-      --external-stroke: #746b5e;
-      --arrow: #8a806f;
-      --arrow-emphasis: #bb4c23;
-      --toolbar-bg: rgba(251, 248, 241, 0.94);
-      --toolbar-border: #c4b9a6;
-      --toolbar-text: #40392f;
-      --toolbar-hover: #fffdf8;
-      --toolbar-menu-bg: #fbf8f1;
+      --bg: #f5f5f7;
+      --bg-surface-primary: #f5f5f7;
+      --grid: #e5e5ea;
+      --text: #000000;
+      --text-muted: #3c3c43;
+      --text-dim: #8e8e93;
+      --text-faint: #636366;
+
+      --panel: #ffffff;
+      --panel-border: rgba(60, 60, 67, 0.12);
+      --lane-fill: rgba(245, 245, 247, 0.65);
+      --lane-stroke: rgba(60, 60, 67, 0.18);
+
+      --arrow: #8e8e93;
+      --arrow-emphasis: #007aff;
+
+      --mask: #ffffff;
+
+      --frontend-fill:    rgba(255, 255, 255, 0.04);
+      --frontend-stroke:  #007aff;
+      --backend-fill:     rgba(255, 255, 255, 0.04);
+      --backend-stroke:   #34c759;
+      --database-fill:    rgba(255, 255, 255, 0.04);
+      --database-stroke:  #af52de;
+      --cloud-fill:       rgba(255, 255, 255, 0.04);
+      --cloud-stroke:     #ffcc02;
+      --security-fill:    rgba(255, 255, 255, 0.04);
+      --security-stroke:  #ff3b30;
+      --messagebus-fill:  rgba(255, 255, 255, 0.04);
+      --messagebus-stroke:#ff9500;
+      --external-fill:    rgba(142, 142, 147, 0.10);
+      --external-stroke:  #8e8e93;
+
+      --toolbar-bg:       rgba(255, 255, 255, 0.88);
+      --toolbar-border:   rgba(60, 60, 67, 0.12);
+      --toolbar-text:     #000000;
+      --toolbar-hover:    #ffffff;
+      --toolbar-menu-bg:  #ffffff;
+    }
+
+    /* ==========================================================
+       APPLE HIG — native macOS/iOS system typography and materials.
+       Color ramp is the same documented Apple system-color values already
+       verified and reused across Classic/Blueprint (systemBlue/Green/Red/
+       Orange/Purple/Yellow/Gray, light+dark variants) — this preset does
+       not introduce a new palette, it delivers the real system font
+       (see the APPLE HIG PRESET FONT block above) on top of that same
+       verified-correct ramp, with plain flat system materials instead of
+       Classic's card chrome, Blueprint's grid, or Editorial's paper.
+       ========================================================== */
+    [data-preset="apple-hig"][data-theme="dark"] {
+      --bg: #000000;
+      --bg-surface-primary: #1c1c1e;
+      --grid: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --text-dim: #636366;
+      --text-faint: #98989d;
+
+      --panel: #1c1c1e;
+      --panel-border: rgba(84, 84, 88, 0.6);
+      --lane-fill: rgba(28, 28, 30, 0.65);
+      --lane-stroke: rgba(84, 84, 88, 0.6);
+
+      --arrow: #8e8e93;
+      --arrow-emphasis: #0a84ff;
+
+      --mask: #1c1c1e;
+
+      --frontend-fill:    rgba(255, 255, 255, 0.04);
+      --frontend-stroke:  #0a84ff;
+      --backend-fill:     rgba(255, 255, 255, 0.04);
+      --backend-stroke:   #30d158;
+      --database-fill:    rgba(255, 255, 255, 0.04);
+      --database-stroke:  #bf5af2;
+      --cloud-fill:       rgba(255, 255, 255, 0.04);
+      --cloud-stroke:     #ffd60a;
+      --security-fill:    rgba(255, 69, 58, 0.08);
+      --security-stroke:  #ff453a;
+      --messagebus-fill:  rgba(255, 255, 255, 0.04);
+      --messagebus-stroke:#ff9f0a;
+      --external-fill:    rgba(142, 142, 147, 0.10);
+      --external-stroke:  #8e8e93;
+
+      svg .c-frontend, svg .c-backend, svg .c-database, svg .c-cloud,
+      svg .c-security, svg .c-messagebus, svg .c-external { stroke: rgba(84, 84, 88, 0.6); }
+      svg [data-legend-kind="frontend"]   .c-frontend   { stroke: var(--frontend-stroke);   fill: var(--frontend-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="backend"]    .c-backend    { stroke: var(--backend-stroke);    fill: var(--backend-stroke);    fill-opacity: 0.3; }
+      svg [data-legend-kind="database"]   .c-database   { stroke: var(--database-stroke);   fill: var(--database-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="cloud"]      .c-cloud      { stroke: var(--cloud-stroke);      fill: var(--cloud-stroke);      fill-opacity: 0.3; }
+      svg [data-legend-kind="security"]   .c-security   { stroke: var(--security-stroke);   fill: var(--security-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="messagebus"] .c-messagebus { stroke: var(--messagebus-stroke); fill: var(--messagebus-stroke); fill-opacity: 0.3; }
+      svg [data-legend-kind="external"]   .c-external   { stroke: var(--external-stroke);   fill: var(--external-stroke);   fill-opacity: 0.3; }
+
+      --toolbar-bg:       rgba(28, 28, 30, 0.72);
+      --toolbar-border:   rgba(84, 84, 88, 0.6);
+      --toolbar-text:     #f2f2f7;
+      --toolbar-hover:    rgba(44, 44, 46, 0.9);
+      --toolbar-menu-bg:  #2c2c2e;
+    }
+
+    [data-preset="apple-hig"][data-theme="light"] {
+      --bg: #f2f2f7;
+      --bg-surface-primary: #f2f2f7;
+      --grid: #e5e5ea;
+      --text: #000000;
+      --text-muted: #3c3c43;
+      --text-dim: #8e8e93;
+      --text-faint: #636366;
+
+      --panel: #ffffff;
+      --panel-border: rgba(60, 60, 67, 0.12);
+      --lane-fill: rgba(242, 242, 247, 0.65);
+      --lane-stroke: rgba(60, 60, 67, 0.18);
+
+      --arrow: #8e8e93;
+      --arrow-emphasis: #007aff;
+
+      --mask: #ffffff;
+
+      --frontend-fill:    rgba(255, 255, 255, 0.04);
+      --frontend-stroke:  #007aff;
+      --backend-fill:     rgba(255, 255, 255, 0.04);
+      --backend-stroke:   #34c759;
+      --database-fill:    rgba(255, 255, 255, 0.04);
+      --database-stroke:  #af52de;
+      --cloud-fill:       rgba(255, 255, 255, 0.04);
+      --cloud-stroke:     #ffcc02;
+      --security-fill:    rgba(255, 255, 255, 0.04);
+      --security-stroke:  #ff3b30;
+      --messagebus-fill:  rgba(255, 255, 255, 0.04);
+      --messagebus-stroke:#ff9500;
+      --external-fill:    rgba(142, 142, 147, 0.10);
+      --external-stroke:  #8e8e93;
+
+      svg [data-legend-kind="frontend"]   .c-frontend   { stroke: var(--frontend-stroke);   fill: var(--frontend-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="backend"]    .c-backend    { stroke: var(--backend-stroke);    fill: var(--backend-stroke);    fill-opacity: 0.3; }
+      svg [data-legend-kind="database"]   .c-database   { stroke: var(--database-stroke);   fill: var(--database-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="cloud"]      .c-cloud      { stroke: var(--cloud-stroke);      fill: var(--cloud-stroke);      fill-opacity: 0.3; }
+      svg [data-legend-kind="security"]   .c-security   { stroke: var(--security-stroke);   fill: var(--security-stroke);   fill-opacity: 0.3; }
+      svg [data-legend-kind="messagebus"] .c-messagebus { stroke: var(--messagebus-stroke); fill: var(--messagebus-stroke); fill-opacity: 0.3; }
+      svg [data-legend-kind="external"]   .c-external   { stroke: var(--external-stroke);   fill: var(--external-stroke);   fill-opacity: 0.3; }
+
+      --toolbar-bg:       rgba(255, 255, 255, 0.72);
+      --toolbar-border:   rgba(60, 60, 67, 0.12);
+      --toolbar-text:     #000000;
+      --toolbar-hover:    #ffffff;
+      --toolbar-menu-bg:  #ffffff;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
       background: var(--bg);
       min-height: 100vh;
       padding: 2rem;
@@ -383,6 +600,9 @@
         linear-gradient(90deg, transparent 0, transparent 5.4rem, color-mix(in srgb, var(--security-stroke) 18%, transparent) 5.4rem, color-mix(in srgb, var(--security-stroke) 18%, transparent) calc(5.4rem + 1px), transparent calc(5.4rem + 1px)),
         repeating-linear-gradient(0deg, transparent 0, transparent 31px, color-mix(in srgb, var(--grid) 36%, transparent) 31px, color-mix(in srgb, var(--grid) 36%, transparent) 32px);
       background-attachment: fixed;
+    }
+    html[data-preset="apple-hig"] body {
+      font-family: var(--apple-hig-font);
     }
 
     /* Gallery/embed mode keeps the generated artifact as the source of truth
@@ -608,6 +828,10 @@
       max-width: var(--archify-reader-width, 1440px);
       margin: 0 auto;
     }
+    .header { margin-bottom: 2rem; padding-right: 29.5rem; background: var(--bg-surface-primary, var(--bg)); }
+    .guided-views { background: var(--bg-surface-primary, var(--bg)); margin-top: 1rem; }
+    .diagram-container { background: var(--bg-surface-primary, var(--bg)); }
+    .cards .card { background: var(--bg-surface-primary, var(--bg)); }
     @media (min-width: 768px) and (max-height: 920px) {
       .header { margin-bottom: 1rem; }
       .diagram-container { padding: 1rem; }
@@ -619,7 +843,8 @@
 
     html[data-preset="signal-flow"] .header,
     html[data-preset="blueprint"] .header,
-    html[data-preset="editorial"] .header { padding-right: 29.5rem; }
+    html[data-preset="editorial"] .header,
+    html[data-preset="apple-hig"] .header { padding-right: 29.5rem; }
 
     .header-row {
       display: flex;
@@ -719,6 +944,29 @@
       font-style: italic;
       font-weight: 600;
       letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    html[data-preset="apple-hig"] .header,
+    html[data-preset="apple-hig"] .card h3 { font-family: var(--apple-hig-font); }
+    html[data-preset="apple-hig"] .pulse-dot {
+      width: 11px;
+      height: 11px;
+      background: var(--backend-stroke);
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--backend-stroke) 16%, transparent);
+      animation: none;
+    }
+    html[data-preset="apple-hig"] .header-row::after {
+      content: "APPLE HIG";
+      margin-left: auto;
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--arrow-emphasis) 12%, transparent);
+      color: var(--arrow-emphasis);
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
       white-space: nowrap;
     }
 
@@ -3171,6 +3419,13 @@
       box-shadow: 0 0 0 2px color-mix(in srgb, var(--arrow-emphasis) 14%, transparent);
       transform: rotate(45deg) scale(0.72);
     }
+    #btn-preset[data-preset-option="apple-hig"] .preset-control-mark {
+      border-color: var(--backend-stroke);
+      border-radius: 50%;
+      background: var(--backend-stroke);
+      box-shadow: none;
+      transform: none;
+    }
     .toolbar .preset-menu {
       position: absolute;
       top: calc(100% + 0.375rem);
@@ -3309,6 +3564,27 @@
       height: 0.38rem;
       background: #c9502d;
       transform: rotate(45deg);
+    }
+    .preset-option-swatch.apple-hig {
+      border-color: rgba(60, 60, 67, 0.29);
+      background: linear-gradient(180deg, #f2f2f7 0%, #e5e5ea 100%);
+    }
+    .preset-option-swatch.apple-hig::before {
+      top: 0.4rem;
+      right: 0.35rem;
+      bottom: 0.4rem;
+      left: 0.35rem;
+      border-radius: 0.42rem;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+    }
+    .preset-option-swatch.apple-hig::after {
+      top: calc(50% - 0.15rem);
+      left: calc(50% - 0.15rem);
+      width: 0.3rem;
+      height: 0.3rem;
+      border-radius: 50%;
+      background: #007aff;
     }
     .preset-option-copy { min-width: 0; }
     .preset-option-copy strong,
@@ -3938,11 +4214,40 @@
     .c-security   { fill: var(--security-fill);   stroke: var(--security-stroke); }
     .c-messagebus { fill: var(--messagebus-fill); stroke: var(--messagebus-stroke); }
     .c-external   { fill: var(--external-fill);   stroke: var(--external-stroke); }
+    /* Dark: background #1c1c1e vs box #2c2c2e are close (Δ16). Make hairline slightly bolder like light's 0 1px shadow — keep grey hairline but 1.8px vs 1.5px + subtle drop-shadow so card pops from page. */
+    [data-theme="dark"] svg .c-frontend,
+    [data-theme="dark"] svg .c-backend,
+    [data-theme="dark"] svg .c-database,
+    [data-theme="dark"] svg .c-cloud,
+    [data-theme="dark"] svg .c-security,
+    [data-theme="dark"] svg .c-messagebus,
+    [data-theme="dark"] svg .c-external { stroke-width: 2; }
+    [data-theme="light"] svg .c-frontend,
+    [data-theme="light"] svg .c-backend,
+    [data-theme="light"] svg .c-database,
+    [data-theme="light"] svg .c-cloud,
+    [data-theme="light"] svg .c-security,
+    [data-theme="light"] svg .c-messagebus,
+    [data-theme="light"] svg .c-external { stroke: rgba(60, 60, 67, 0.12); }
+    [data-theme="dark"] svg [data-node-id] { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.45)); }
+    [data-theme="dark"] svg [data-node-id]:focus-visible { filter: drop-shadow(0 0 3px color-mix(in srgb, var(--frontend-stroke) 22%, transparent)); }
+    .c-accent[data-accent-kind="frontend"]   { fill: var(--frontend-stroke); }
+    .c-accent[data-accent-kind="backend"]    { fill: var(--backend-stroke); }
+    .c-accent[data-accent-kind="database"]   { fill: var(--database-stroke); }
+    .c-accent[data-accent-kind="cloud"]      { fill: var(--cloud-stroke); }
+    .c-accent[data-accent-kind="security"]   { fill: var(--security-stroke); }
+    .c-accent[data-accent-kind="messagebus"] { fill: var(--messagebus-stroke); }
+    .c-accent[data-accent-kind="external"]   { fill: var(--external-stroke); }
+    text[data-boundary-label] { fill: var(--text-muted); }
 
     /* Text helpers */
     .t-primary { fill: var(--text); }
     .t-muted   { fill: var(--text-muted); }
     .t-dim     { fill: var(--text-dim); }
+    /* Arrow-role text: matches the line-role classes (.a-default/.a-emphasis)
+       by CSS variable, not by coincidence. See variantAccent() in geometry.mjs. */
+    .t-arrow          { fill: var(--arrow); }
+    .t-arrow-emphasis { fill: var(--arrow-emphasis); }
     .t-frontend   { fill: var(--frontend-stroke); }
     .t-backend    { fill: var(--backend-stroke); }
     .t-database   { fill: var(--database-stroke); }
@@ -4051,13 +4356,13 @@
     .a-default   { stroke: var(--arrow); fill: none; }
     .a-emphasis  { stroke: var(--arrow-emphasis); fill: none; }
     .a-security  { stroke: var(--security-stroke); fill: none; stroke-dasharray: 5,5; }
-    .a-dashed    { stroke: var(--database-stroke); fill: none; stroke-dasharray: 4,4; }
+    .a-dashed    { stroke: var(--arrow); fill: none; stroke-dasharray: 4,4; }
 
     /* Arrowhead markers reference these */
     .m-default   { fill: var(--arrow); }
     .m-emphasis  { fill: var(--arrow-emphasis); }
     .m-security  { fill: var(--security-stroke); }
-    .m-dashed    { fill: var(--database-stroke); }
+    .m-dashed    { fill: var(--arrow); }
 
     /* Stable semantic exploration hooks emitted by every renderer. */
     svg [data-node-id] {
@@ -4067,7 +4372,7 @@
     svg [data-edge-from] { transition: opacity 0.18s ease, filter 0.18s ease; }
     svg [data-node-id]:hover,
     svg [data-node-id]:focus-visible {
-      filter: drop-shadow(0 0 7px var(--frontend-stroke));
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--frontend-stroke) 22%, transparent));
       outline: none;
     }
     /* Verified Source Beacons are installed at runtime only for nodes whose
@@ -4216,8 +4521,33 @@
     svg[data-focus-active] [data-node-id],
     svg[data-focus-active] [data-edge-from] { opacity: 0.13; }
     svg[data-focus-active] [data-focus-match] { opacity: 1; }
+    /* Focus glow must match the selected node's OWN kind, not a hardcoded
+       color — a node's data-node-kind attribute (already emitted per node
+       for legend/stroke binding elsewhere) drives which --<kind>-stroke
+       token the glow uses. */
     svg[data-focus-active] [data-focus-selected] {
-      filter: drop-shadow(0 0 10px var(--frontend-stroke));
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--external-stroke) 22%, transparent));
+    }
+    svg[data-focus-active] [data-focus-selected][data-node-kind="frontend"] {
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--frontend-stroke) 22%, transparent));
+    }
+    svg[data-focus-active] [data-focus-selected][data-node-kind="backend"] {
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--backend-stroke) 22%, transparent));
+    }
+    svg[data-focus-active] [data-focus-selected][data-node-kind="database"] {
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--database-stroke) 22%, transparent));
+    }
+    svg[data-focus-active] [data-focus-selected][data-node-kind="cloud"] {
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--cloud-stroke) 22%, transparent));
+    }
+    svg[data-focus-active] [data-focus-selected][data-node-kind="security"] {
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--security-stroke) 22%, transparent));
+    }
+    svg[data-focus-active] [data-focus-selected][data-node-kind="messagebus"] {
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--messagebus-stroke) 22%, transparent));
+    }
+    svg[data-focus-active] [data-focus-selected][data-node-kind="external"] {
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--external-stroke) 22%, transparent));
     }
 
     /* Authored Reachability is a bounded graph query over the relationships
@@ -4395,8 +4725,31 @@
     svg[data-intent-trace-active] [data-node-id],
     svg[data-intent-trace-active] [data-edge-from] { opacity: 0.2; }
     svg[data-intent-trace-active] [data-intent-trace-match] { opacity: 1; }
+    /* Hover glow must match the hovered node's OWN kind — see the
+       data-focus-selected fix above for the same root cause. */
     svg[data-intent-trace-active] [data-intent-trace-selected] {
+      filter: drop-shadow(0 0 10px var(--external-stroke));
+    }
+    svg[data-intent-trace-active] [data-intent-trace-selected][data-node-kind="frontend"] {
       filter: drop-shadow(0 0 10px var(--frontend-stroke));
+    }
+    svg[data-intent-trace-active] [data-intent-trace-selected][data-node-kind="backend"] {
+      filter: drop-shadow(0 0 10px var(--backend-stroke));
+    }
+    svg[data-intent-trace-active] [data-intent-trace-selected][data-node-kind="database"] {
+      filter: drop-shadow(0 0 10px var(--database-stroke));
+    }
+    svg[data-intent-trace-active] [data-intent-trace-selected][data-node-kind="cloud"] {
+      filter: drop-shadow(0 0 10px var(--cloud-stroke));
+    }
+    svg[data-intent-trace-active] [data-intent-trace-selected][data-node-kind="security"] {
+      filter: drop-shadow(0 0 10px var(--security-stroke));
+    }
+    svg[data-intent-trace-active] [data-intent-trace-selected][data-node-kind="messagebus"] {
+      filter: drop-shadow(0 0 10px var(--messagebus-stroke));
+    }
+    svg[data-intent-trace-active] [data-intent-trace-selected][data-node-kind="external"] {
+      filter: drop-shadow(0 0 10px var(--external-stroke));
     }
     .intent-trace-overlay { pointer-events: none; }
     .intent-trace-flow {
@@ -4546,11 +4899,39 @@
     svg[data-preset="blueprint"] .c-security-group,
     svg[data-preset="blueprint"] .c-lane { stroke-dasharray: 7 3; }
     svg[data-preset="blueprint"] [data-node-id]:hover,
-    svg[data-preset="blueprint"] [data-node-id]:focus-visible {
+    svg[data-preset="blueprint"] [data-node-id]:focus-visible,
+    svg[data-preset="blueprint"][data-focus-active] [data-focus-selected] {
+      filter: drop-shadow(0 0 3px var(--external-stroke));
+    }
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="frontend"]:hover,
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="frontend"]:focus-visible,
+    svg[data-preset="blueprint"][data-focus-active] [data-focus-selected][data-node-kind="frontend"] {
       filter: drop-shadow(0 0 3px var(--frontend-stroke));
     }
-    svg[data-preset="blueprint"][data-focus-active] [data-focus-selected] {
-      filter: drop-shadow(0 0 3px var(--frontend-stroke));
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="backend"]:hover,
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="backend"]:focus-visible,
+    svg[data-preset="blueprint"][data-focus-active] [data-focus-selected][data-node-kind="backend"] {
+      filter: drop-shadow(0 0 3px var(--backend-stroke));
+    }
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="database"]:hover,
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="database"]:focus-visible,
+    svg[data-preset="blueprint"][data-focus-active] [data-focus-selected][data-node-kind="database"] {
+      filter: drop-shadow(0 0 3px var(--database-stroke));
+    }
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="cloud"]:hover,
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="cloud"]:focus-visible,
+    svg[data-preset="blueprint"][data-focus-active] [data-focus-selected][data-node-kind="cloud"] {
+      filter: drop-shadow(0 0 3px var(--cloud-stroke));
+    }
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="security"]:hover,
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="security"]:focus-visible,
+    svg[data-preset="blueprint"][data-focus-active] [data-focus-selected][data-node-kind="security"] {
+      filter: drop-shadow(0 0 3px var(--security-stroke));
+    }
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="messagebus"]:hover,
+    svg[data-preset="blueprint"] [data-node-id][data-node-kind="messagebus"]:focus-visible,
+    svg[data-preset="blueprint"][data-focus-active] [data-focus-selected][data-node-kind="messagebus"] {
+      filter: drop-shadow(0 0 3px var(--messagebus-stroke));
     }
     svg[data-preset="blueprint"][data-focus-active][data-reach-active] [data-focus-selected][data-reach-origin] {
       filter: none;
@@ -4650,8 +5031,9 @@
 
     /* Dashed boundary variants */
     .c-security-group { fill: transparent; stroke: var(--security-stroke); stroke-dasharray: 4,4; }
-    .c-region         { fill: rgba(251, 191, 36, 0.05); stroke: var(--cloud-stroke); stroke-dasharray: 8,4; }
+    .c-region         { fill: transparent; stroke: var(--panel-border); }
     .c-lane           { fill: var(--lane-fill); stroke: var(--lane-stroke); stroke-dasharray: 6,6; }
+    rect[data-graph-role="structural-frame-label-mask"] { fill: var(--bg); }
 
     /* Optional trace animation, enabled only by meta.animation = "trace".
        The ordinary viewer performs one ambient pass and then restores the
@@ -4885,6 +5267,11 @@
         <button class="preset-option" data-preset-value="editorial" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
           <span class="preset-option-swatch editorial" aria-hidden="true"></span>
           <span class="preset-option-copy"><strong>Editorial</strong><small>Publication and launch notes</small></span>
+          <span class="preset-option-check" aria-hidden="true"></span>
+        </button>
+        <button class="preset-option" data-preset-value="apple-hig" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+          <span class="preset-option-swatch apple-hig" aria-hidden="true"></span>
+          <span class="preset-option-copy"><strong>Apple HIG</strong><small>Native system typography and materials</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
         </button>
       </div>
@@ -5182,12 +5569,12 @@
         <!-- Flow labels -->
         <g data-detail="context" data-edge-from="web" data-edge-to="edge" data-edge-label="clickstream" data-edge-key="0" data-edge-id="web-clickstream">
           <rect x="171.05" y="179" width="65.9" height="27" rx="4" class="c-mask"/>
-          <text x="204" y="190" class="t-backend" font-size="8" text-anchor="middle">clickstream</text>
+          <text x="204" y="190" class="t-arrow-emphasis" font-size="8" text-anchor="middle">clickstream</text>
         <text data-detail="fine" x="204" y="201" class="t-dim" font-size="7" text-anchor="middle">user events</text>
         </g>
         <g data-detail="context" data-edge-from="mobile" data-edge-to="edge" data-edge-label="app events" data-edge-key="1" data-edge-id="mobile-events">
           <rect x="182.15" y="331" width="75.7" height="27" rx="4" class="c-mask"/>
-          <text x="220" y="342" class="t-muted" font-size="8" text-anchor="middle">app events</text>
+          <text x="220" y="342" class="t-arrow" font-size="8" text-anchor="middle">app events</text>
         <text data-detail="fine" x="220" y="353" class="t-dim" font-size="7" text-anchor="middle">device events</text>
         </g>
         <g data-detail="context" data-edge-from="edge" data-edge-to="consent" data-edge-label="identity + consent" data-edge-key="2" data-edge-id="consent-enrichment">
@@ -5197,7 +5584,7 @@
         </g>
         <g data-detail="context" data-edge-from="edge" data-edge-to="stream" data-edge-label="accepted events" data-edge-key="3" data-edge-id="accepted-events">
           <rect x="395.25" y="313" width="85.5" height="27" rx="4" class="c-mask"/>
-          <text x="438" y="324" class="t-backend" font-size="8" text-anchor="middle">accepted events</text>
+          <text x="438" y="324" class="t-arrow-emphasis" font-size="8" text-anchor="middle">accepted events</text>
         <text data-detail="fine" x="438" y="335" class="t-dim" font-size="7" text-anchor="middle">append-only</text>
         </g>
         <g data-detail="context" data-edge-from="consent" data-edge-to="pii" data-edge-label="identity map" data-edge-key="4" data-edge-id="identity-map">
@@ -5207,22 +5594,22 @@
         </g>
         <g data-detail="context" data-edge-from="stream" data-edge-to="warehouse" data-edge-label="normalized facts" data-edge-key="5" data-edge-id="normalized-facts">
           <rect x="592.8" y="361" width="90.4" height="27" rx="4" class="c-mask"/>
-          <text x="638" y="372" class="t-backend" font-size="8" text-anchor="middle">normalized facts</text>
+          <text x="638" y="372" class="t-arrow-emphasis" font-size="8" text-anchor="middle">normalized facts</text>
         <text data-detail="fine" x="638" y="383" class="t-dim" font-size="7" text-anchor="middle">non-PII</text>
         </g>
         <g data-detail="context" data-edge-from="warehouse" data-edge-to="features" data-edge-label="daily aggregates" data-edge-key="6" data-edge-id="daily-aggregates">
           <rect x="699.8" y="485" width="90.4" height="27" rx="4" class="c-mask"/>
-          <text x="745" y="496" class="t-messagebus" font-size="8" text-anchor="middle">daily aggregates</text>
+          <text x="745" y="496" class="t-arrow" font-size="8" text-anchor="middle">daily aggregates</text>
         <text data-detail="fine" x="745" y="507" class="t-dim" font-size="7" text-anchor="middle">batch</text>
         </g>
         <g data-detail="context" data-edge-from="warehouse" data-edge-to="dashboard" data-edge-label="metrics SQL" data-edge-key="7" data-edge-id="metrics-query">
           <rect x="797.05" y="315" width="65.9" height="27" rx="4" class="c-mask"/>
-          <text x="830" y="326" class="t-muted" font-size="8" text-anchor="middle">metrics SQL</text>
+          <text x="830" y="326" class="t-arrow" font-size="8" text-anchor="middle">metrics SQL</text>
         <text data-detail="fine" x="830" y="337" class="t-dim" font-size="7" text-anchor="middle">read-only</text>
         </g>
         <g data-detail="context" data-edge-from="features" data-edge-to="model" data-edge-label="feature vectors" data-edge-key="8" data-edge-id="feature-vectors">
           <rect x="809.25" y="587" width="85.5" height="27" rx="4" class="c-mask"/>
-          <text x="852" y="598" class="t-messagebus" font-size="8" text-anchor="middle">feature vectors</text>
+          <text x="852" y="598" class="t-arrow" font-size="8" text-anchor="middle">feature vectors</text>
         <text data-detail="fine" x="852" y="609" class="t-dim" font-size="7" text-anchor="middle">derived</text>
         </g>
         <g data-detail="context" data-edge-from="pii" data-edge-to="dashboard" data-edge-label="restricted join" data-edge-key="9" data-edge-id="restricted-join">
@@ -5505,14 +5892,14 @@
     }
 
     /* ============================================================
-       Visual style try-on — one topology, four bundled presets.
+       Visual style try-on — one topology, five bundled presets.
        The reader's choice is intentionally session-only: it updates the
        live page and canonical SVG together, but never rewrites the source,
        URL, or a later diagram's authored default.
        ============================================================ */
     Archify.preset = (function () {
-      var PRESETS = ['classic', 'signal-flow', 'blueprint', 'editorial'];
-      var LABELS = { classic: 'Classic', 'signal-flow': 'Flow', blueprint: 'Blueprint', editorial: 'Editorial' };
+      var PRESETS = ['classic', 'signal-flow', 'blueprint', 'editorial', 'apple-hig'];
+      var LABELS = { classic: 'Classic', 'signal-flow': 'Flow', blueprint: 'Blueprint', editorial: 'Editorial', 'apple-hig': 'Apple HIG' };
       var html = document.documentElement;
       var svg = document.querySelector('.diagram-container svg');
       var btn = document.getElementById('btn-preset');
@@ -6384,7 +6771,7 @@
                   : subtitleNode ? subtitleNode.textContent : '';
               var preset = document.documentElement.getAttribute('data-preset') || 'classic';
               var theme = document.documentElement.getAttribute('data-theme') || 'dark';
-              var presetLabel = preset === 'signal-flow' ? 'FLOW' : preset.toUpperCase();
+              var presetLabel = preset === 'signal-flow' ? 'FLOW' : preset === 'apple-hig' ? 'APPLE HIG' : preset.toUpperCase();
               var cardLabel = routeSnapshot
                 ? 'ARCHIFY · ROUTE · ' + routeSnapshot.hops + ' HOPS'
                 : reachSnapshot

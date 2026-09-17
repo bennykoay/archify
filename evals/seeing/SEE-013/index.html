@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEE-013 card-fit gallery — before / after</title>
+<style>
+  :root { --bg:#f5f5f7; --card:#fff; --ink:#1c1c1e; --mut:#6e6e73; --line:#e5e5ea; --ok:#1a7f37; }
+  body { font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); margin:0; }
+  main { max-width:1280px; margin:0 auto; padding:24px 20px 64px; }
+  h1 { font-size:24px; margin:8px 0 4px; }
+  .sub { color:var(--mut); margin:0 0 16px; }
+  .facts { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin:0 0 20px; font-size:14px; }
+  .facts li { margin:4px 0; }
+  section.chart { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin:0 0 20px; }
+  section.chart h2 { font-size:17px; margin:0 0 2px; }
+  .one-liner { color:var(--mut); font-size:14px; margin:0 0 10px; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .pair figure { margin:0; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .pair figcaption { font-size:13px; padding:6px 10px; background:var(--bg); }
+  .pair figcaption a { float:right; }
+  iframe { width:100%; height:520px; border:0; background:#fff; }
+  .closeup pre { font-size:12.5px; background:#1c1c1e; color:#e8e8ed; padding:12px 14px; border-radius:8px; overflow-x:auto; }
+  .tag { display:inline-block; font-size:12px; border:1px solid var(--line); border-radius:20px; padding:1px 10px; margin-right:6px; color:var(--mut); }
+  .tag.changed { color:var(--ok); border-color:var(--ok); }
+</style>
+</head>
+<body>
+<main>
+  <h1>SEE-013 — let the card fit the words: before / after</h1>
+  <p class="sub">Session OSM-SEE-013 · one page, every touched chart, same theme + size both sides · viewBox byte-identical per pair</p>
+
+  <ul class="facts">
+    <li><b>What changed:</b> workflow <code>measureNode</code> sizes implicit cards from text via <code>minimumNodeTextWidth</code> (preferred sizes) instead of shrinking type first. Floor = start width (pinned <code>layout.nodeW 92</code>, author-explicit widths win). Ceiling = room from lane + overlapping cross-lane neighbours + same-lane siblings (28px edge floor + 8px separation), at most <code>SYSTEM_TOKENS.card.width 260</code>.</li>
+    <li><b>Shrink counts:</b> gallery set 23 shrunk nodes before → 12 after (of 27 workflow nodes in set: watchdog 10→4 of 12, v2 13→8 of 15); full workflow corpus 43 → 27 of 87. Shrink is now the last resort (only at ceiling).</li>
+    <li><b>Census:</b> 8/8 rows verdict-identical before/after (DELTAS: none) — zero regressions. O1a worst-context px 6.3→6.6 (watchdog), 6.3→6.5 (v2), still FAIL (floors bind). A15 worst gap 1.87 unchanged both charts.</li>
+    <li><b>Untouched renderers</b> (architecture / dataflow / sequence / lifecycle): svg-identical, sha8 match both sides — no collateral change. Cross-cover: agent-tool-call faults with-fit == baseline (5 pre-existing faults, no new); 5 authored-geometry specs + lifecycle refuse identically before/after.</li>
+  </ul>
+
+  <section class="chart" id="watchdog">
+    <h2>1 · watchdog-local-cloud-flow <span class="tag changed">CHANGED</span> <span class="tag">workflow 720×1024</span></h2>
+    <p class="one-liner">Wider cards on 6 of 12 nodes (92→95–114); Cond-close 92→109 with its sublabel back at full 8px; page size unchanged.</p>
+    <div class="pair">
+      <figure><figcaption><b>Before</b> dd1fc95b · 719566 B <a href="watchdog-local-cloud-flow-before.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="watchdog before" src="watchdog-local-cloud-flow-before.html"></iframe></figure>
+      <figure><figcaption><b>After</b> da8b4fc5 · 719586 B <a href="watchdog-local-cloud-flow-after.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="watchdog after" src="watchdog-local-cloud-flow-after.html"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="chart" id="watchdog-v2">
+    <h2>2 · watchdog-local-cloud-flow-v2 <span class="tag changed">CHANGED</span> <span class="tag">workflow 720×1148</span></h2>
+    <p class="one-liner">Wider cards on 5 of 15 nodes (92→95–114); Cond-close 92→109, sublabel 6.6→8px; page size unchanged.</p>
+    <div class="pair">
+      <figure><figcaption><b>Before</b> 61558555 · 725391 B <a href="watchdog-local-cloud-flow-v2-before.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="watchdog v2 before" src="watchdog-local-cloud-flow-v2-before.html"></iframe></figure>
+      <figure><figcaption><b>After</b> c75e291a · 725411 B <a href="watchdog-local-cloud-flow-v2-after.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="watchdog v2 after" src="watchdog-local-cloud-flow-v2-after.html"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="chart closeup" id="cond-close">
+    <h2>3 · Cond-close close-up (the card the Commander pointed at)</h2>
+    <p class="one-liner">Before: 92px card, sublabel squeezed to 6.6px edge-to-edge. After: 109px card, sublabel at the full preferred 8px.</p>
+<pre>BEFORE — &lt;rect x="384" y="341" width="92" height="52" … class="c-security"/&gt;
+         … font-size="11" …&gt;Cond-close&lt;/text&gt;
+         … font-size="6.6" …&gt;RAM&amp;lt;2GB, budget 2/day&lt;/text&gt;
+AFTER  — &lt;rect x="375.5" y="341" width="109" height="52" … class="c-security"/&gt;
+         … font-size="11" …&gt;Cond-close&lt;/text&gt;
+         … font-size="8" …&gt;RAM&amp;lt;2GB, budget 2/day&lt;/text&gt;</pre>
+    <div class="pair">
+      <figure><figcaption><b>Before file</b> <a href="watchdog-local-cloud-flow-before.html#node-cond_close" target="_blank" rel="noopener">open at card ↗</a></figcaption><iframe loading="lazy" title="cond-close before" src="watchdog-local-cloud-flow-before.html#node-cond_close"></iframe></figure>
+      <figure><figcaption><b>After file</b> <a href="watchdog-local-cloud-flow-after.html#node-cond_close" target="_blank" rel="noopener">open at card ↗</a></figcaption><iframe loading="lazy" title="cond-close after" src="watchdog-local-cloud-flow-after.html#node-cond_close"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="chart" id="sys003-einvoice">
+    <h2>4 · sys003-einvoice-structure <span class="tag">NO CHANGE</span> <span class="tag">architecture</span></h2>
+    <p class="one-liner">No visible change — architecture renderer untouched, svg-identical (sha8 cd6d0e3c both sides).</p>
+    <div class="pair">
+      <figure><figcaption><b>Before</b> cd6d0e3c <a href="sys003-einvoice-structure.architecture-before.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="einvoice before" src="sys003-einvoice-structure.architecture-before.html"></iframe></figure>
+      <figure><figcaption><b>After</b> cd6d0e3c <a href="sys003-einvoice-structure.architecture-after.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="einvoice after" src="sys003-einvoice-structure.architecture-after.html"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="chart" id="sys003-org">
+    <h2>5 · sys003-org-structure <span class="tag">NO CHANGE</span> <span class="tag">architecture</span></h2>
+    <p class="one-liner">No visible change — svg-identical (sha8 17f4415a both sides).</p>
+    <div class="pair">
+      <figure><figcaption><b>Before</b> 17f4415a <a href="sys003-org-structure.architecture-before.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="org before" src="sys003-org-structure.architecture-before.html"></iframe></figure>
+      <figure><figcaption><b>After</b> 17f4415a <a href="sys003-org-structure.architecture-after.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="org after" src="sys003-org-structure.architecture-after.html"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="chart" id="product-analytics">
+    <h2>6 · product-analytics <span class="tag">NO CHANGE</span> <span class="tag">dataflow</span></h2>
+    <p class="one-liner">No visible change — dataflow renderer untouched, svg-identical (sha8 3d20f2a4 both sides).</p>
+    <div class="pair">
+      <figure><figcaption><b>Before</b> 3d20f2a4 <a href="product-analytics.dataflow-before.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="analytics before" src="product-analytics.dataflow-before.html"></iframe></figure>
+      <figure><figcaption><b>After</b> 3d20f2a4 <a href="product-analytics.dataflow-after.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="analytics after" src="product-analytics.dataflow-after.html"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="chart" id="cache-miss">
+    <h2>7 · cache-miss-request <span class="tag">NO CHANGE</span> <span class="tag">sequence</span></h2>
+    <p class="one-liner">No visible change — sequence renderer untouched, svg-identical (sha8 28edc604 both sides).</p>
+    <div class="pair">
+      <figure><figcaption><b>Before</b> 28edc604 <a href="cache-miss-request.sequence-before.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="cache-miss before" src="cache-miss-request.sequence-before.html"></iframe></figure>
+      <figure><figcaption><b>After</b> 28edc604 <a href="cache-miss-request.sequence-after.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="cache-miss after" src="cache-miss-request.sequence-after.html"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="chart" id="async-job">
+    <h2>8 · async-job-roundtrip <span class="tag">NO CHANGE</span> <span class="tag">sequence</span></h2>
+    <p class="one-liner">No visible change — svg-identical (sha8 a380eb65 both sides).</p>
+    <div class="pair">
+      <figure><figcaption><b>Before</b> a380eb65 <a href="async-job-roundtrip.sequence-before.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="async before" src="async-job-roundtrip.sequence-before.html"></iframe></figure>
+      <figure><figcaption><b>After</b> a380eb65 <a href="async-job-roundtrip.sequence-after.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="async after" src="async-job-roundtrip.sequence-after.html"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="chart" id="web-app">
+    <h2>9 · web-app <span class="tag">NO CHANGE</span> <span class="tag">architecture</span></h2>
+    <p class="one-liner">No visible change — svg-identical (sha8 db683c7d both sides).</p>
+    <div class="pair">
+      <figure><figcaption><b>Before</b> db683c7d <a href="web-app.architecture-before.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="web-app before" src="web-app.architecture-before.html"></iframe></figure>
+      <figure><figcaption><b>After</b> db683c7d <a href="web-app.architecture-after.html" target="_blank" rel="noopener">open full ↗</a></figcaption><iframe loading="lazy" title="web-app after" src="web-app.architecture-after.html"></iframe></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

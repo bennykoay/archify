@@ -1281,16 +1281,20 @@ export const arrowClassMap = {
   dashed: ['a-dashed', 'arrowhead-dashed']
 };
 
-// Label accent per edge variant. Workflow colors dashed (async trace) labels
-// like the trace store it points at; the other renderers use the bus color.
-export function variantAccent(variant, { dashed = 't-messagebus' } = {}) {
+// Label accent per edge/phase variant. Always returns the text class that
+// shares the SAME CSS variable as arrowClassMap's line class for that variant
+// (t-security<->a-security use --security-stroke, t-arrow-emphasis<->a-emphasis
+// use --arrow-emphasis, t-arrow<->a-default/a-dashed use --arrow), so label and
+// line are guaranteed to match by construction in every preset -- not by
+// coincidence of a preset's particular hex values. No per-call override: a
+// caller that wants a different label color should be a real variant, not an
+// options override (upstream issue #142).
+export function variantAccent(variant) {
   return variant === 'security'
     ? 't-security'
     : variant === 'emphasis'
-      ? 't-backend'
-      : variant === 'dashed'
-        ? dashed
-        : 't-muted';
+      ? 't-arrow-emphasis'
+      : 't-arrow';
 }
 
 export function formatRect(r) {

@@ -506,7 +506,9 @@ export async function startPreview(options) {
         return;
       }
     }
-    const args = [options.deliveryCli || cliPath, 'deliver', type, snapshotPath, candidatePath, '--json'];
+    // OSM-SYS-001 O2A: the authoring loop stages candidates without the geometry
+    // gate (stamped gated:false on the staging receipt); deliver gates acceptance.
+    const args = [options.deliveryCli || cliPath, 'deliver', type, snapshotPath, candidatePath, '--json', '--no-gate'];
     if (options.quality) args.push('--quality', options.quality);
     if (options.repoRoot) args.push('--repo-root', path.resolve(options.repoRoot));
     let stdout = '';

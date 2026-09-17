@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Deploy approvals",
+    "subtitle": "A fast modern approval flow"
+  },
+  "nodes": [
+    {
+      "id": "req",
+      "label": "Request",
+      "lane": "main",
+      "col": 0,
+      "type": "backend"
+    },
+    {
+      "id": "gate",
+      "label": "Approve",
+      "lane": "main",
+      "col": 1,
+      "type": "backend"
+    },
+    {
+      "id": "ship",
+      "label": "Ship",
+      "lane": "main",
+      "col": 3,
+      "type": "backend"
+    }
+  ],
+  "edges": [
+    {
+      "from": "req",
+      "to": "gate"
+    },
+    {
+      "from": "gate",
+      "to": "ship"
+    }
+  ],
+  "lanes": [
+    {
+      "id": "main",
+      "label": "Main"
+    }
+  ]
+}

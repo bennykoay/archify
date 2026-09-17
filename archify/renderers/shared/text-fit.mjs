@@ -47,3 +47,22 @@ export function minimumNodeTextWidth(text, minimum) {
 export function availableNodeTextWidth(width) {
   return width - nodeTextFit.horizontalPadding;
 }
+// Card-fit (OSM-SEE-013): width a node wants at its preferred sizes.
+// Sizing uses minimumNodeTextWidth(text, preferred) + padding per field, so a
+// card grown to this width renders every field at preferred with no shrink;
+// fittedNodeFontSize then only shrinks when the card has hit its ceiling
+// (shrink is the last resort, not the first). Floor = startWidth (the pinned
+// default or author-explicit width — cards never shrink below what geometry
+// or the author set); ceiling is caller-supplied (lane/token bound — cards
+// never run away). Returns startWidth exactly when nothing wants more, so
+// unaffected renderers stay byte-identical.
+export function fittedNodeCardWidth(fields, startWidth, ceiling) {
+  let need = 0;
+  for (const { text, preferred } of fields) {
+    if (text == null || text === '') continue;
+    need = Math.max(need, minimumNodeTextWidth(text, preferred) + nodeTextFit.horizontalPadding);
+  }
+  const floor = Math.max(1, startWidth);
+  const cap = Math.max(floor, ceiling);
+  return Math.min(cap, Math.max(floor, Math.ceil(need)));
+}

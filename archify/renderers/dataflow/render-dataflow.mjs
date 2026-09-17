@@ -440,7 +440,9 @@ function renderLegend() {
 }
 
 function renderSvg() {
-  return `      <svg viewBox="0 0 ${viewBox[0]} ${viewBox[1]}" ${svgRootAttrs(dataflow.meta, 'data-flow diagram')}>
+  // SYS-003 Amendment B A11: embed spec edge count for edge-conservation gate (N5).
+  const specEdgeCount = asArray(dataflow.flows).length;
+  return `      <svg viewBox="0 0 ${viewBox[0]} ${viewBox[1]}" ${svgRootAttrs(dataflow.meta, 'data-flow diagram')} data-spec-edge-count="${specEdgeCount}">
 ${svgAccessibleText(dataflow.meta, 'data-flow diagram')}
 ${renderDefinitions()}
 

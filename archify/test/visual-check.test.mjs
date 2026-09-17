@@ -53,7 +53,7 @@ function fakeBrowser({ overflowAt, unreadableAt, chromeCollisionAt, screenshotFa
         readerWidth: 960,
         diagramWidth: 930,
         viewBoxWidth: 1300,
-        minimumProjectedNodeTextPx: unreadable ? 5.72 : 6.44,
+        minimumProjectedNodeTextPx: unreadable ? 6.44 : 12,
         minimumProjectedNodeText: unreadable ? 'Compact node' : 'Readable node',
         minimumProjectedNodeTextDetail: unreadable ? 'primary' : 'context',
         hasLegend: true,
@@ -217,7 +217,7 @@ test('visual-check returns 1 and preserves evidence when any viewport overflows'
   assert.equal(fs.existsSync(sidecarPaths(input).contactSheet), true);
 });
 
-test('visual-check returns 1 when the real reader projects node text below 6px', async () => {
+test('visual-check returns 1 when the real reader projects node text below its per-detail floor', async () => {
   const input = artifact('unreadable.html');
   const result = await runVisualCheck({
     artifactPath: input,
@@ -298,6 +298,35 @@ test('visual-check returns 2 with a truthful skipped receipt when Chrome is unav
   assert.equal(result.receipt.captures.status, 'skipped');
   assert.equal(result.receipt.visualReview, 'pending');
   assert.equal(fs.existsSync(sidecarPaths(input).receipt), true);
+});
+
+test('visual-check derives every summary field from per-viewport data, never hand-set (OSM-SYS-001 O2B)', async () => {
+  const input = artifact('derived-summary.html');
+  // Only the largest light viewport degrades: its 6.44px primary floor (15px)
+  // must drag the summary minimum AND flip the summary status, while the
+  // other three 12px-context viewports stay green.
+  const result = await runVisualCheck({
+    artifactPath: input,
+    chromePath: '/fake/chrome',
+    browserFactory: async () => fakeBrowser({
+      unreadableAt: ({ width, theme }) => theme === 'light' && width === 2048,
+    }),
+  });
+
+  const viewports = result.receipt.readability.viewports;
+  assert.equal(viewports.length, 4);
+  const minima = viewports.map((entry) => entry.minimumProjectedNodeTextPx);
+  assert.deepEqual(minima, [12, 12, 12, 6.44]);
+  // Summary minimum is the min over per-viewport data (not first, not max).
+  assert.equal(result.receipt.readability.minimumProjectedNodeTextPx, Math.min(...minima));
+  // Summary statuses are ANDs over per-viewport verdicts.
+  assert.equal(viewports.filter((entry) => entry.readabilityOk).length, 3);
+  assert.equal(result.receipt.readability.status, 'fail');
+  assert.equal(result.receipt.containment.status, 'pass');
+  assert.equal(result.receipt.viewerChrome.status, 'pass');
+  assert.equal(result.receipt.ok, false);
+  assert.equal(result.receipt.status, 'fail');
+  assert.equal(result.exitCode, 1);
 });
 
 process.on('exit', () => fs.rmSync(tmp, { recursive: true, force: true }));

@@ -8,7 +8,7 @@ import {
   DESKTOP_READER_DIAGRAM_WIDTH,
   DESKTOP_READER_HORIZONTAL_CHROME,
   DESKTOP_READER_MIN_WIDTH,
-  MIN_PROJECTED_NODE_TEXT_PX,
+  MIN_PROJECTED_TEXT_PX_BY_DETAIL,
   minimumReadableSourceTextPx,
   projectedNodeTextPx,
 } from '../renderers/shared/desktop-readability.mjs';
@@ -45,12 +45,13 @@ test('desktop readability budget matches the minimum adaptive reader at 1440 by 
 });
 
 test('desktop readability source floor is the inverse of the projected-size gate', () => {
-  const sourceFloor = minimumReadableSourceTextPx(1376);
-  assert.ok(Math.abs(sourceFloor - 8.87741935483871) < 1e-12);
-  assert.ok(Math.abs(projectedNodeTextPx(sourceFloor, 1376) - MIN_PROJECTED_NODE_TEXT_PX) < 1e-12);
-  assert.equal(minimumReadableSourceTextPx(DESKTOP_READER_DIAGRAM_WIDTH), MIN_PROJECTED_NODE_TEXT_PX);
-  assert.equal(minimumReadableSourceTextPx(700), MIN_PROJECTED_NODE_TEXT_PX);
-  assert.ok(Number.isNaN(minimumReadableSourceTextPx(0)));
+  const sourceFloor = minimumReadableSourceTextPx(1376, DESKTOP_READER_DIAGRAM_WIDTH, MIN_PROJECTED_TEXT_PX_BY_DETAIL.boundary);
+  assert.ok(Math.abs(sourceFloor - (13 * 1376) / 930) < 1e-12);
+  assert.ok(Math.abs(projectedNodeTextPx(sourceFloor, 1376) - MIN_PROJECTED_TEXT_PX_BY_DETAIL.boundary) < 1e-12);
+  assert.equal(minimumReadableSourceTextPx(DESKTOP_READER_DIAGRAM_WIDTH, DESKTOP_READER_DIAGRAM_WIDTH, MIN_PROJECTED_TEXT_PX_BY_DETAIL.context), MIN_PROJECTED_TEXT_PX_BY_DETAIL.context);
+  assert.equal(minimumReadableSourceTextPx(700, DESKTOP_READER_DIAGRAM_WIDTH, MIN_PROJECTED_TEXT_PX_BY_DETAIL.primary), MIN_PROJECTED_TEXT_PX_BY_DETAIL.primary);
+  assert.ok(Number.isNaN(minimumReadableSourceTextPx(0, DESKTOP_READER_DIAGRAM_WIDTH, MIN_PROJECTED_TEXT_PX_BY_DETAIL.boundary)));
+  assert.ok(Number.isNaN(minimumReadableSourceTextPx(1376)));
 });
 
 test('adaptive width preserves canonical SVG geometry and yields to specialized viewer modes', () => {

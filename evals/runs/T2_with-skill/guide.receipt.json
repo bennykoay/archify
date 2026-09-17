@@ -1,0 +1,31 @@
+{
+  "ok": true,
+  "mode": "recommendation",
+  "lang": "en",
+  "query": "key derivation pipeline with fan-in joins from multiple hardware measurements to a volume key",
+  "confidence": "low",
+  "matchedSignals": [],
+  "recommendation": {
+    "id": "system-overview",
+    "type": "architecture",
+    "proof": "web-app",
+    "presentation": {
+      "preset": "classic",
+      "motion": "static",
+      "views": "optional"
+    },
+    "title": "System overview",
+    "question": "What exists, who owns it, and how is it connected?",
+    "summary": "A bounded map of core components, external dependencies, primary paths, and trust boundaries.",
+    "useWhen": "Onboarding, design reviews, repository orientation, or explaining a service landscape.",
+    "avoidWhen": "The audience needs exact call order, state transitions, or row-level data lineage.",
+    "include": [
+      "8–12 core components",
+      "one primary path",
+      "external dependencies",
+      "trust boundaries"
+    ],
+    "prompt": "Analyze this repository, then use Archify to create a high-level architecture diagram. Show 8–12 core runtime components, one primary request or data path, external dependencies, ownership or trust boundaries, and put supporting detail in cards instead of adding more edges."
+  },
+  "alternatives": []
+}

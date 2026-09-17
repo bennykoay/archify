@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "validate",
+  "stage": "render",
+  "type": "workflow",
+  "input": "D:\\Onesimus\\tools\\archify\\evals\\runs\\T5_with-skill\\candidate.json",
+  "error": "Workflow layout validation failed:\n- Nodes \"gate\" and \"ship\" are less than 8px apart in lane \"review\" — move one to another col, adjust yOffset, or reduce width/height.\n- Edge \"gate\" -> \"ship\" is too short (12px; minimum 28px) — drop its label or route it through a channel.\n- [clean-flow/endpoint-side-direction] workflow edges[1] id \"gate-ship\" \"gate\" -> \"ship\" first segment 0 [266, 243] -> [254, 243] does not honor inferred fromSide \"right\" — it must run horizontal rightward; keep automatic routing, or choose fromSide/toSide and via points whose first and final segments cross node borders perpendicularly.\n- [clean-flow/endpoint-side-direction] workflow edges[1] id \"gate-ship\" \"gate\" -> \"ship\" final segment 0 [266, 243] -> [254, 243] does not honor inferred toSide \"left\" — it must run horizontal rightward from the left; keep automatic routing, or choose fromSide/toSide and via points whose first and final segments cross node borders perpendicularly.\n- Label \"approved\" overlaps node \"gate\" — adjust labelDx/labelDy/labelSegment or set labelAt.\n  label rect: [236, 223, 48, 14]\n  node \"gate\" rect: [174, 217, 92, 52]\n  Suggested fix: labelAt [260, 283] or labelDy +50 (below); or labelAt [260, 213] or labelDy -20 (above)\n- Label \"approved\" overlaps node \"ship\" — adjust labelDx/labelDy/labelSegment or set labelAt.\n  label rect: [236, 223, 48, 14]\n  node \"ship\" rect: [254, 217, 92, 52]\n  Suggested fix: labelAt [260, 283] or labelDy +50 (below); or labelAt [260, 213] or labelDy -20 (above)",
+  "diagnostics": [
+    {
+      "code": "clean-flow/endpoint-side-direction",
+      "severity": "error",
+      "message": "[clean-flow/endpoint-side-direction] workflow edges[1] id \"gate-ship\" \"gate\" -> \"ship\" first segment 0 [266, 243] -> [254, 243] does not honor inferred fromSide \"right\" — it must run horizontal rightward; keep automatic routing, or choose fromSide/toSide and via points whose first and final segments cross node borders perpendicularly.",
+      "subject": {
+        "diagramType": "workflow",
+        "collection": "edges",
+        "index": 1,
+        "id": "gate-ship",
+        "from": "gate",
+        "to": "ship"
+      },
+      "evidence": {
+        "endpoint": "source",
+        "authoredField": "fromSide",
+        "sideOrigin": "inferred",
+        "side": "right",
+        "segmentIndex": 0,
+        "from": [
+          266,
+          243
+        ],
+        "to": [
+          254,
+          243
+        ],
+        "expectedAxis": "horizontal",
+        "expectedDirection": "rightward"
+      },
+      "supportedFixes": [
+        "keep automatic routing, or choose fromSide/toSide and via points whose first and final segments cross node borders perpendicularly"
+      ]
+    },
+    {
+      "code": "clean-flow/endpoint-side-direction",
+      "severity": "error",
+      "message": "[clean-flow/endpoint-side-direction] workflow edges[1] id \"gate-ship\" \"gate\" -> \"ship\" final segment 0 [266, 243] -> [254, 243] does not honor inferred toSide \"left\" — it must run horizontal rightward from the left; keep automatic routing, or choose fromSide/toSide and via points whose first and final segments cross node borders perpendicularly.",
+      "subject": {
+        "diagramType": "workflow",
+        "collection": "edges",
+        "index": 1,
+        "id": "gate-ship",
+        "from": "gate",
+        "to": "ship"
+      },
+      "evidence": {
+        "endpoint": "target",
+        "authoredField": "toSide",
+        "sideOrigin": "inferred",
+        "side": "left",
+        "segmentIndex": 0,
+        "from": [
+          266,
+          243
+        ],
+        "to": [
+          254,
+          243
+        ],
+        "expectedAxis": "horizontal",
+        "expectedDirection": "rightward from the left"
+      },
+      "supportedFixes": [
+        "keep automatic routing, or choose fromSide/toSide and via points whose first and final segments cross node borders perpendicularly"
+      ]
+    },
+    {
+      "code": "layout/constraint",
+      "severity": "error",
+      "message": "Nodes \"gate\" and \"ship\" are less than 8px apart in lane \"review\" — move one to another col, adjust yOffset, or reduce width/height.",
+      "subject": {
+        "diagramType": "workflow"
+      },
+      "evidence": {},
+      "supportedFixes": []
+    },
+    {
+      "code": "layout/constraint",
+      "severity": "error",
+      "message": "Edge \"gate\" -> \"ship\" is too short (12px; minimum 28px) — drop its label or route it through a channel.",
+      "subject": {
+        "diagramType": "workflow"
+      },
+      "evidence": {},
+      "supportedFixes": []
+    },
+    {
+      "code": "layout/constraint",
+      "severity": "error",
+      "message": "Label \"approved\" overlaps node \"gate\" — adjust labelDx/labelDy/labelSegment or set labelAt.\n  label rect: [236, 223, 48, 14]\n  node \"gate\" rect: [174, 217, 92, 52]\n  Suggested fix: labelAt [260, 283] or labelDy +50 (below); or labelAt [260, 213] or labelDy -20 (above)",
+      "subject": {
+        "diagramType": "workflow"
+      },
+      "evidence": {},
+      "supportedFixes": []
+    },
+    {
+      "code": "layout/constraint",
+      "severity": "error",
+      "message": "Label \"approved\" overlaps node \"ship\" — adjust labelDx/labelDy/labelSegment or set labelAt.\n  label rect: [236, 223, 48, 14]\n  node \"ship\" rect: [254, 217, 92, 52]\n  Suggested fix: labelAt [260, 283] or labelDy +50 (below); or labelAt [260, 213] or labelDy -20 (above)",
+      "subject": {
+        "diagramType": "workflow"
+      },
+      "evidence": {},
+      "supportedFixes": []
+    }
+  ]
+}

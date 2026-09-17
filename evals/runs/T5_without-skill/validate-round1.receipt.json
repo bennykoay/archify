@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "validate",
+  "stage": "render",
+  "type": "workflow",
+  "input": "D:\\tmp\\t5-nearmiss.json",
+  "error": "workflow schema validation failed:\n  / must have required property 'lanes' {\"missingProperty\":\"lanes\"}\n  /nodes/0 (id/label: \"req\") must have required property 'lane' {\"missingProperty\":\"lane\"}\n  /nodes/0 (id/label: \"req\") must have required property 'col' {\"missingProperty\":\"col\"}\n  /nodes/0 (id/label: \"req\") must have required property 'type' {\"missingProperty\":\"type\"}\n  /nodes/1 (id/label: \"gate\") must have required property 'lane' {\"missingProperty\":\"lane\"}\n  /nodes/1 (id/label: \"gate\") must have required property 'col' {\"missingProperty\":\"col\"}\n  /nodes/1 (id/label: \"gate\") must have required property 'type' {\"missingProperty\":\"type\"}\n  /nodes/2 (id/label: \"ship\") must have required property 'lane' {\"missingProperty\":\"lane\"}\n  /nodes/2 (id/label: \"ship\") must have required property 'col' {\"missingProperty\":\"col\"}\n  /nodes/2 (id/label: \"ship\") must have required property 'type' {\"missingProperty\":\"type\"}",
+  "diagnostics": [
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/ must have required property 'lanes' {\"missingProperty\":\"lanes\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "lanes"
+      },
+      "supportedFixes": [
+        "add required property \"lanes\""
+      ]
+    },
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/nodes/0 (id/label: \"req\") must have required property 'lane' {\"missingProperty\":\"lane\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/nodes/0",
+        "identity": "req"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "lane"
+      },
+      "supportedFixes": [
+        "add required property \"lane\""
+      ]
+    },
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/nodes/0 (id/label: \"req\") must have required property 'col' {\"missingProperty\":\"col\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/nodes/0",
+        "identity": "req"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "col"
+      },
+      "supportedFixes": [
+        "add required property \"col\""
+      ]
+    },
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/nodes/0 (id/label: \"req\") must have required property 'type' {\"missingProperty\":\"type\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/nodes/0",
+        "identity": "req"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "type"
+      },
+      "supportedFixes": [
+        "add required property \"type\""
+      ]
+    },
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/nodes/1 (id/label: \"gate\") must have required property 'lane' {\"missingProperty\":\"lane\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/nodes/1",
+        "identity": "gate"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "lane"
+      },
+      "supportedFixes": [
+        "add required property \"lane\""
+      ]
+    },
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/nodes/1 (id/label: \"gate\") must have required property 'col' {\"missingProperty\":\"col\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/nodes/1",
+        "identity": "gate"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "col"
+      },
+      "supportedFixes": [
+        "add required property \"col\""
+      ]
+    },
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/nodes/1 (id/label: \"gate\") must have required property 'type' {\"missingProperty\":\"type\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/nodes/1",
+        "identity": "gate"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "type"
+      },
+      "supportedFixes": [
+        "add required property \"type\""
+      ]
+    },
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/nodes/2 (id/label: \"ship\") must have required property 'lane' {\"missingProperty\":\"lane\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/nodes/2",
+        "identity": "ship"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "lane"
+      },
+      "supportedFixes": [
+        "add required property \"lane\""
+      ]
+    },
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/nodes/2 (id/label: \"ship\") must have required property 'col' {\"missingProperty\":\"col\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/nodes/2",
+        "identity": "ship"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "col"
+      },
+      "supportedFixes": [
+        "add required property \"col\""
+      ]
+    },
+    {
+      "code": "schema/required",
+      "severity": "error",
+      "message": "/nodes/2 (id/label: \"ship\") must have required property 'type' {\"missingProperty\":\"type\"}",
+      "subject": {
+        "diagramType": "workflow",
+        "path": "/nodes/2",
+        "identity": "ship"
+      },
+      "evidence": {
+        "keyword": "required",
+        "missingProperty": "type"
+      },
+      "supportedFixes": [
+        "add required property \"type\""
+      ]
+    }
+  ]
+}

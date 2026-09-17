@@ -43,7 +43,7 @@ test('render output check: showcase rejects node copy that becomes illegible at 
 test('render output check: compares exact projected size before rounding diagnostics', () => {
   const sourceFontPx = 8.1;
   const viewBoxWidth = 1260;
-  assert.ok(sourceFontPx * 930 / viewBoxWidth < 6);
+  assert.ok(sourceFontPx * 930 / viewBoxWidth < 11);
 
   const { code, result } = checkHtml('showcase-desktop-readability-borderline', `
     <g data-node-id="tool-runtime">

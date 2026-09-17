@@ -294,6 +294,14 @@ console.log(JSON.stringify({
   }
 }));
 `);
+  // OSM-SYS-001 O2A: deliver now depends on bin/geometry-gate.mjs. Mock
+  // skills stub it (pass) like the renderer/checker — the race under test is
+  // at commit, not geometry.
+  fs.writeFileSync(path.join(installedBin, 'geometry-gate.mjs'), `
+export function runGeometryGate() {
+  return { ok: true, transport: false, error: null, failures: [], sha8: 'mock', kind: 'mock', verdicts: [] };
+}
+`);
 
   const inputDirectory = path.join(cwd, 'input');
   const initialOutputDirectory = path.join(cwd, 'safe-output');
