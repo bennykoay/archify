@@ -1,245 +1,371 @@
----
-name: Archify
-description: A precise, vivid technical instrument for trustworthy interactive architecture maps.
-colors:
-  canvas: "#020617"
-  mask: "#0F172A"
-  ink: "#FFFFFF"
-  muted: "#94A3B8"
-  dim: "#475569"
-  border: "#1E293B"
-  frontend: "#22D3EE"
-  backend: "#34D399"
-  database: "#A78BFA"
-  cloud: "#FBBF24"
-  security: "#FB7185"
-  messagebus: "#FB923C"
-  external: "#94A3B8"
-typography:
-  headline:
-    fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
-    fontSize: "1.5rem"
-    fontWeight: 700
-    lineHeight: 1.2
-    letterSpacing: "-0.025em"
-  title:
-    fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
-    fontSize: "0.875rem"
-    fontWeight: 600
-    lineHeight: 1.4
-    letterSpacing: "normal"
-  body:
-    fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
-    fontSize: "0.75rem"
-    fontWeight: 400
-    lineHeight: 1.55
-    letterSpacing: "normal"
-  label:
-    fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
-    fontSize: "0.625rem"
-    fontWeight: 700
-    lineHeight: 1.35
-    letterSpacing: "0.12em"
-rounded:
-  precise: "0.2rem"
-  control: "0.5rem"
-  panel: "1rem"
-  pill: "999px"
-spacing:
-  xs: "0.25rem"
-  sm: "0.5rem"
-  md: "0.75rem"
-  lg: "1rem"
-  xl: "1.5rem"
-  page: "2rem"
-components:
-  toolbar-button:
-    backgroundColor: "{colors.mask}"
-    textColor: "{colors.ink}"
-    typography: "{typography.body}"
-    rounded: "{rounded.control}"
-    padding: "0.5rem 0.875rem"
-    height: "2.75rem"
-  diagram-panel:
-    backgroundColor: "{colors.mask}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.panel}"
-    padding: "1.5rem"
-  search-field:
-    backgroundColor: "{colors.mask}"
-    textColor: "{colors.ink}"
-    typography: "{typography.body}"
-    rounded: "{rounded.control}"
-    padding: "0.58rem 0.65rem"
-  evidence-beacon:
-    backgroundColor: "{colors.mask}"
-    textColor: "{colors.backend}"
-    typography: "{typography.label}"
-    rounded: "{rounded.pill}"
-    size: "30px × 12px"
----
+# DESIGN.md — Archify chart design system
 
-# Design System: Archify
+**For whom:** any agent or person drawing an Archify chart, and Commander Ben.
+**Author:** Benji (read-only consultant). **Date:** 2026-09-17. **Version:** 0.1.0.
+**Token source:** `archify/renderers/shared/system-tokens.mjs` v1.2.0.
 
-## Overview
+**Bottom line:** This file is the law for how an Archify chart looks. It names
+every colour, size and element, and it says what each one is for. Read it before
+you draw. The audit of how far we are from it lives in `docs/design-audit.md`.
 
-**Creative North Star: "The Evidence Console"**
+## 🎯 Goal
 
-Archify is a composed technical instrument, not a drawing suite. The canvas carries one spatial narrative; restrained controls and progressive disclosure let a reader move from the primary path to exact authored relationships, metadata, and verified code evidence without losing orientation.
+State the design system so a chart can be drawn correctly without asking anyone.
 
-The visual system is precise, dark-first, and vivid only where semantics earn it. Light mode and Blueprint preserve the same vocabulary rather than becoming separate products. Motion has one bounded owner, finishes, and never carries meaning that disappears in a still frame. Desktop is the primary surface; narrow screens receive containment, not a second interface.
+## 🖼️ 1. Visual theme and atmosphere
 
-**Key Characteristics:**
+Archify draws **engineering diagrams, not posters**. The mood is a quiet
+instrument panel: dark by default, calm surfaces, one bright thing at a time.
 
-- One dominant technical canvas with compact, low-interference chrome.
-- A fixed semantic color vocabulary shared by nodes, edges, legends, focus, and evidence.
-- Mono-forward typography, small labels, and deliberate density for engineering review.
-- Viewer state stays outside canonical exports; proof remains portable and deterministic.
-- State transitions are 140–200ms; authored story motion may be longer but finite and reader-controlled.
+- **Calm ground, loud signal.** Surfaces are near-neutral. Colour is spent on
+  wires, node kinds and warnings, never on decoration.
+- **Flat, not glossy.** Depth comes from surface lightness, never from shadow.
+- **Dense but never cramped.** Every shape keeps its stated clearance.
+- **Apple HIG is the parent system.** Card width, gutters and type sizes are
+  HIG-derived and already shipped. Do not invent a new ramp.
 
-## Colors
+## 🎨 2. Colour palette and roles — the preset catalog
 
-The palette is a midnight console with seven semantic signals; color identifies meaning, never decoration.
+Every value is a token. **Never write a raw hex in a renderer.**
 
-### Primary
+### A preset is a design trial
 
-- **Verified Cyan** (`frontend`): the main focus, navigation, and frontend signal. Its scarcity establishes hierarchy.
+Archify offers a chart several looks. **Each one is a trial at answering how an
+Archify chart should look.** Apple HIG is trial one, chosen by the Commander on
+2026-09-17. It is the reference until a later trial beats it.
 
-### Secondary
+**A trial that changes nothing is not a trial.** A preset must differ from the
+default, or it is only a name.
 
-- **Proof Green** (`backend`): backend semantics, verified evidence, and successful state.
-- **Repository Violet** (`database`): persisted state, stores, and inward relationships.
+### There are two looks, wearing six names
 
-### Tertiary
+The schema offers six names. Only two of them draw differently.
 
-- **Boundary Rose** (`security`): policy, security, and guarded paths.
-- **Cloud Amber** (`cloud`), **Transit Orange** (`messagebus`), and **External Slate** (`external`): stable semantic categories, never interchangeable accents.
+| Name | Has its own styling | Differs from default | Specs using it | Ruling |
+|---|---|---|---|---|
+| `classic` | **No block at all.** | It *is* the default | 1 + every undeclared chart | **Keep. Document it as the default.** |
+| `signal-flow` | Yes | **0 tokens** | 8 | **Alias. Delete the duplicate block.** |
+| `blueprint` | Yes | **0 tokens** | 2 | **Alias. Delete the duplicate block.** |
+| `editorial` | Yes | **0 tokens** | **0** | **Delete outright. Nothing uses it.** |
+| **`apple-hig`** | Yes | **13 tokens** | 8 | **Trial one. The reference.** |
+| `classic-original` | Yes | 34 tokens | 1 | Keep. The original look. |
 
-### Neutral
+`[Certain]` — verified by parsing all twelve theme blocks, diffing every token
+set against default, and counting `visual_preset` across every spec file.
 
-- **Midnight Canvas** (`canvas`) and **Ink Mask** (`mask`): the dark workspace and opaque geometry mask.
-- **Instrument Ink** (`ink`), **Quiet Copy** (`muted`), **Dim Annotation** (`dim`), and **Structural Border** (`border`): the text and containment ladder.
+**`classic` is the default and has no styling of its own.** `cli.mjs:64` reads
+`meta.visual_preset || 'classic'`, so every chart that names no preset is
+stamped `classic`. No rule matches that name, so it falls through to the plain
+theme block. It works by accident, not by design.
 
-### Named Rules
+**Deleting a name would break charts.** Eight specs ask for `signal-flow` and two
+for `blueprint`. So the duplicate styling goes, and the name stays pointing at
+the default. Only `editorial` can be removed whole, because nothing asks for it.
 
-**The Semantic Color Rule.** Every saturated color maps to a node or relationship meaning; never add an accent merely to make a surface lively.
+### The catalog, per element, per preset
 
-**The Theme Parity Rule.** Light, dark, Signal Flow, and Blueprint may change material and contrast, but must preserve category identity and information priority.
+**Apple HIG is the reference.** Where a preset differs from it, that difference
+is listed. Dark values shown; light follows in the next table.
 
-## Typography
+| Element | Token | **apple-hig** | default and its three twins | classic-original |
+|---|---|---|---|---|
+| Page | `--bg` | **`#000000`** | `#010102` | `#020617`. |
+| Frame | `--region-fill` | **`#2c2c2e`** | `#2c2c2e` | *absent*. |
+| Card | `--mask` | **`#1c1c1e`** | `#2c2c2e` | `#0f172a`. |
+| Node kind fill | `--<kind>-fill` | **`var(--mask)`** | `rgba(255,255,255,0.04)` | tinted per kind. |
+| Lane | `--lane-fill` | **`rgba(28,28,30,0.65)`** | `rgba(44,44,46,0.65)` | `rgba(15,23,42,0.22)`. |
+| Title text | `--text` | `#f2f2f7` | `#f2f2f7` | `#ffffff`. |
+| Muted text | `--text-muted` | `#aeaeb2` | `#aeaeb2` | `#94a3b8`. |
+| Plain wire | `--arrow` | `#8e8e93` | `#8e8e93` | `#64748b`. |
+| Main wire | `--arrow-emphasis` | `#0a84ff` | `#0a84ff` | `#34d399`. |
+| Guarded wire | `--security-stroke` | `#ff453a` | `#ff453a` | `#fb7185`. |
 
-**Display Font:** JetBrains Mono (with system monospace fallbacks)<br>
-**Body Font:** JetBrains Mono (with system monospace fallbacks)<br>
-**Label/Mono Font:** JetBrains Mono
+Light theme, where the presets agree except on the page:
 
-**Character:** A single mono family makes the artifact feel authored by an engineering instrument. Hierarchy comes from weight, scale, spacing, and case rather than a decorative display face.
+| Element | Token | apple-hig | default twins | classic-original |
+|---|---|---|---|---|
+| Page | `--bg` | `#f2f2f7` | `#f5f5f7` | `#f8fafc`. |
+| Card | `--mask` | `#ffffff` | `#ffffff` | `#ffffff`. |
+| Title text | `--text` | `#000000` | `#000000` | `#0f172a`. |
+| Main wire | `--arrow-emphasis` | `#007aff` | `#007aff` | `#059669`. |
 
-### Hierarchy
+### Why apple-hig is the reference
 
-- **Headline** (700, `1.5rem`, 1.2): artifact title only.
-- **Title** (600, `0.875rem`, 1.4): panels, cards, and selected semantic objects.
-- **Body** (400, `0.75rem`, 1.55): explanatory copy and relationship details.
-- **Label** (700, `0.625rem`, `0.12em`, uppercase): state, modes, metadata, and compact proof markers.
+It is the only preset that keeps **three separate surface tiers**.
 
-### Named Rules
+| | Page | Frame | Card | Three tiers? |
+|---|---|---|---|---|
+| **apple-hig** | `#000000` | `#2c2c2e` | `#1c1c1e` | **Yes.** |
+| default and twins | `#010102` | `#2c2c2e` | `#2c2c2e` | **No. Frame and card are the same.** |
 
-**The One Voice Rule.** UI and diagram chrome remain mono-forward; never introduce a display font inside the generated artifact.
+In the default preset a card does not read as a thing sitting on a group,
+because it is painted the same colour as the group.
 
-**The Legibility Floor Rule.** Tiny labels are metadata, not prose. If a reader must parse a sentence, promote it to body size or disclose it on focus.
+Its second move is the node-kind fills. Apple HIG sets every kind fill to
+`var(--mask)`, so a card is its true surface. The other presets wash 4% white
+over it, which drifts the delivered colour away from the declared token. That
+drift was measured and fixed in SEE-008, **for apple-hig only**.
 
-## Elevation
+### Node kinds
 
-Archify is flat and tonal by default. Borders and surface contrast establish structure; shadows appear only on floating controls, temporary panels, active focus, or the Signal Flow atmosphere. Blueprint removes glow and squares materials to keep the review surface exact.
+Each kind owns a stroke. These are the same in apple-hig and the default twins.
 
-### Shadow Vocabulary
+| Kind | Stroke |
+|---|---|
+| Frontend | `#0a84ff` |
+| Backend | `#30d158` |
+| Database | `#bf5af2` |
+| Cloud | `#ffd60a` |
+| Security | `#ff453a` |
+| Message bus | `#ff9f0a` |
+| External | `#8e8e93` |
 
-- **Canvas Lift** (`0 28px 80px rgba(0,0,0,0.34)`): Signal Flow diagram surface only.
-- **Floating Panel** (`0 18px 48px rgba(0,0,0,0.30)`): temporary discovery panels and the Semantic Passport.
-- **Action Feedback** (`0 0 7px var(--frontend-stroke)`): active SVG focus only, never an idle decoration.
+**One token, one job.** A token used for two kinds of shape has no correct
+value. This is broken by `--mask`, which fills both node cards and edge label
+backings. See `docs/design-audit.md`, rule R2.
 
-### Named Rules
+## 🔠 3. Typography rules
 
-**The Flat-at-Rest Rule.** A static card or control uses border and tone; a shadow must explain layering or state.
+Four roles. Each has a size floor and a contrast floor, measured at 1440x900
+against the pixels actually behind the text.
 
-**The Canonical Clean Rule.** Viewer glow, overlays, focus, and temporary marks are removed from visual exports unless the export explicitly owns that narrative.
+| Role | Size | Contrast | Used for |
+|---|---|---|---|
+| `primary` | 15px | 7.0 : 1 | Node titles |
+| `boundary` | 13px | 4.5 : 1 | Frame titles |
+| `context` | 11px | 4.5 : 1 | Node sublabels |
+| `edge` | 11px | 4.5 : 1 | Wire labels |
 
-## Components
+- **These are floors, not targets.** Nothing may render below them.
+- **Never shrink type to make words fit.** Grow the card instead. Shrinking is
+  the last resort, and only once a card has hit its ceiling.
+- Floors live in `archify/renderers/shared/desktop-readability.mjs`.
 
-### Buttons
+## 🧩 4. Element stylings
 
-- **Shape:** compact rounded rectangle (`0.5rem`), or precise corners (`0.2rem`) in Blueprint.
-- **Primary:** translucent toolbar material, one-pixel structural border, and mono body label. Desktop viewer chrome may use compact 32px controls; touch and narrow-screen targets stay at least `2.75rem` high.
-- **Hover / Focus:** 150ms border/background response; `2px` cyan focus ring with `2px` offset.
-- **Secondary / Ghost:** transparent within menus; never add a second saturated fill hierarchy.
+Archify draws eighteen elements. Each is listed with what it is and its rule.
 
-### Chips
+### Surfaces
 
-- **Style:** quiet bordered capsules for semantic metadata; selected state uses the owning semantic color.
-- **State:** a chip may summarize focus, mode, count, or evidence, but must not become an unlabeled icon-only control.
+| # | Element | Rule |
+|---|---|---|
+| E1 | **Frame** | Four rules. See below. A frame is the hardest element in the system. |
+| E2 | **Frame title** | One per frame. Sits on the rail above its members. Never stacked with a neighbour. |
+| E3 | **Frame title backing** | Fills with `--region-fill`. Must leave its own title readable. |
+| E4 | **Lane box** | A swimlane. May carry a dashed border. Must read without it. |
+| E5 | **Lane header** | Names its lane. Must be distinct from the lane body. |
+| E6 | **Node card** | 260 by 60 by default. Grows to fit its words. Fills with `--mask`. |
+| E7 | **Node stripe** | A 4px bar on the card's left edge, coloured by node kind. |
+| E8 | **Security group** | Marks a guarded cluster. Defined but not currently drawn. |
+| E9 | **Grid** | An alignment aid. Must never be visible in a delivered chart. |
 
-### Cards / Containers
+### E1 in full — a frame has four rules, not one
 
-- **Corner Style:** composed panel corners (`1rem`), reduced to `0.35rem` in Blueprint.
-- **Background:** tonal panel over the canvas, with a one-pixel border.
-- **Shadow Strategy:** flat by default; floating or Signal Flow surfaces use the elevation vocabulary.
-- **Internal Padding:** `1.25rem`–`1.5rem` for panels; compact proof blocks may use `0.5rem`–`0.75rem`.
+A frame is a claim that these things belong together. All four must hold.
 
-### Inputs / Fields
+1. **It wraps its members.** Padding 18px each side. This one passes today.
+2. **It does not overlap another frame.** Two frames may nest, one fully inside
+   the other. They may never partly cross. A crossing says two groups own the
+   same card, which is not a thing.
+3. **Its members fill it.** A frame more than half empty is not a group, it is a
+   box with things loose in it. Aim for half or better.
+4. **It leaves room for its own title.** The title rail above the members is
+   34px. Nothing may be placed there.
 
-- **Style:** one continuous bordered field, `0.5rem` corners, muted placeholder, and compact mono body text.
-- **Focus:** no browser outline; shift the border to Verified Cyan and add a restrained two-pixel halo.
-- **Error / Disabled:** preserve readable text and add a non-color cue; never rely on opacity alone for failure.
+**Three of the four fail today.** Measured on
+`sys003-einvoice-structure.architecture-after.html`:
 
-### Navigation
+| Frame | Size | Filled by members |
+|---|---|---|
+| Accounting | 1251 x 505 | 29.6% |
+| Sales | 940 x 420 | 35.6% |
+| BUM | 296 x 138 | 38.2% |
+| CS Team | 618 x 251 | 40.2% |
+| Client and Supplier | 336 x 332 | 42.0% |
+| MD | 296 x 219 | 48.1% |
 
-- **Style:** the diagram remains dominant. Toolbar, guided views, map, search, and passport appear only when relevant and reuse familiar labels.
-- **Default / Hover / Active:** 140–200ms state response; active state combines text, border, shape, or marker—not color alone.
-- **Narrow screens:** contain and stack existing controls safely; do not create a dedicated mobile product surface.
+**Four of the fifteen frame pairs cross**, counting only pairs where neither
+frame is fully inside the other. Nesting is legal and is not counted. Eleven
+pairs overlap in total; seven of those are proper nesting.
 
-### Semantic Passport
+**The hand-placed chart is worse, not better.** `einvoice-order-flow-v3`, the
+chart both the Commander and Benji called clean by eye, crosses **six of fifteen**
+and fills 42.5% to 59.2%.
 
-One focused node opens one compact proof surface containing stable ID, authored metadata, relationships, and optional revision-pinned sources. It is the single destination for details; new capabilities should route here before proposing another panel.
+`[Certain]` — measured by parsing every `structural-frame` rect from both
+delivered files and testing each pair for full containment.
 
-### Verified Source Beacon
+**So crossing is not caused by automatic placement.** A human placed every card
+in the clean chart and it still crosses six ways. This is a frame fault in its
+own right.
 
-An evidence-backed node receives one viewer-only `SRC n` capsule in its upper-right corner. It inherits node state, adds no tab stop, and is stripped from every canonical visual export.
+**Rule 1 passing is why this looked healthy.** A frame is built from the smallest
+and largest edges of its own members, so it wraps them by construction and can
+never fail rule 1. The rule it cannot fail was the only rule written down.
 
-### Brand Mark
+### Labels
 
-An authored `brand` adds one compact identity badge to the upper-right of the
-node. Built-in vectors and explicitly captured, digest-pinned site icons sit on a neutral plate;
-their color stays inside that plate and never recolors the semantic node, edge,
-legend, focus, or evidence vocabulary. The semantic sigil remains visible. A
-Verified Source Beacon shifts left when both facts are present. Brand marks are
-canonical authored SVG content and therefore survive visual export.
+| # | Element | Rule |
+|---|---|---|
+| E10 | **Edge label backing** | Tinted from its own wire, and bordered in that wire's colour. |
+| E11 | **Edge label text** | Stands 24px clear of every card and every sublabel. |
+| E12 | **Message label backing** | Same rule as E10, on a sequence message. |
+| E13 | **Activation bar** | 10px wide. Shows how long a participant is busy. |
+| E14 | **Node sublabel** | One supporting line under the title. Must fit inside the card. |
 
-### Authored Reachability
+### Wires
 
-Semantic Passport offers two native, count-bearing actions: `Upstream` follows authored incoming relationships and `Downstream` follows authored outgoing relationships. The canvas keeps the focused origin plus the complete reachable subgraph strong while unrelated topology recedes. Upstream uses Repository Violet, downstream uses Proof Green, and Blueprint removes glow. The receipt says nodes, links, and maximum hops; it never says blast radius or breakage.
+| # | Element | Rule |
+|---|---|---|
+| E15 | **Plain wire** | `--arrow`, 1.5px. Head matches the line. |
+| E16 | **Strong wire** | `--arrow-emphasis`, 1.8px. Head matches the line. |
+| E17 | **Dashed wire** | Must differ from E15 by more than its dashes. |
+| E18 | **Arrowhead** | 10 by 7. Points within 30 degrees of the way the wire travels. |
 
-### Reach Share Card
+**Corner radius carries meaning.** A card takes 6. A label takes 3. Solid
+against floating. **One radius per element, everywhere.**
 
-An active reach query may expose one contextual **Export → Reach Share Card** item. The 1200×630 card keeps the full diagram as quiet context, preserves the selected origin and every matched authored node and link, and writes direction, origin, node count, link count, and maximum hops into the card header. Upstream retains Repository Violet; downstream retains Proof Green; Blueprint stays filter-free. The card is an explicit non-canonical reading variant, not runtime impact, causality, or breakage evidence. No animated state, live focus glow, camera transform, or unrelated viewer chrome enters the clone.
+## 📐 5. Layout principles
 
-## Do's and Don'ts
+Every number here is a token. None of them is a guess.
 
-### Do:
+| Value | Size | Why |
+|---|---|---|
+| Card | 260 x 60 | HIG six-column grid card width |
+| Empty gutter | 40 | HIG pairing with a 260 card |
+| Corridor | 16 | Room for a wire to pass |
+| Through-route gutter | 56 | Empty gutter plus corridor |
+| Frame padding | 18 each side | Shipped value |
+| Frame title above members | 34 | Grouping rail |
+| Frame title below frame top | 14 | Ownership rail, 34 to 14 is about 2.4 to 1 |
+| Wire to frame edge | 16 | Target, above the 12 floor |
+| Arrowhead tip to card | 8 | Target, above the 6 floor, or 5x stroke if larger |
+| Label to any shape | 24 | Nearness floor |
 
-- **Do** make the primary path legible before adding secondary relationships or detail.
-- **Do** derive every focus, reachability query, route, story, source link, receipt, and count from authored or locally verified evidence.
-- **Do** keep ordinary artifacts source-free and make repository evidence explicitly opt-in.
-- **Do** use 140–200ms transitions for control state and honor `prefers-reduced-motion`.
-- **Do** preserve keyboard access, visible focus, semantic labels, dark/light parity, and non-color state cues.
-- **Do** keep runtime exploration outside canonical SVG, raster, Share Card, and WebM backgrounds.
-- **Do** name an intentionally scoped Route or Reach Share Card in its header and machine-readable receipt.
+- **A frame asks for its own room.** It never accepts leftovers.
+- **Frames nest or separate. They never cross.**
+- **A frame is at least half filled by its members.**
+- **The page fits the drawing.** A page bigger than what it holds is a fault.
+- **Left and right page margins match** to within 5% of the page width.
 
-### Don't:
+## 🪜 6. Depth and elevation
 
-- **Don't** build generic Mermaid beautifiers that change themes without improving information architecture.
-- **Don't** turn Archify into WYSIWYG drawing suites whose editing chrome becomes the product.
-- **Don't** ship motion-first graph demos that imply relationships or activity not present in the authored source.
-- **Don't** use dense dashboard shells, endless identical card grids, decorative glass, gradient text, and other AI-generated interface clichés.
-- **Don't** infer identity from arbitrary label text, add an unbounded icon marketplace, or let a brand badge replace the portable semantic vocabulary.
-- **Don't** create another permanent panel when the Semantic Passport, Node Finder, or existing canvas can carry the capability.
-- **Don't** call graph reachability runtime impact, blast radius, or breakage without independent code-analysis evidence.
-- **Don't** change the README Hero as a side effect of artifact or viewer iteration.
+**There are no shadows.** Depth is surface lightness only, in three tiers:
+page, then frame, then card.
+
+- Touching surfaces must differ by a colour distance of at least 1.0.
+- Surfaces apart from each other must still differ by at least 1.0, measured
+  10px in from any edge, **ignoring the border**.
+- **A border may separate. It may never be the thing carrying the meaning.**
+  Take the border away and the chart must still read.
+
+## ✅ 7. Do's and don'ts
+
+**Do**
+
+- Grow a card to fit its words.
+- Give every backing the colour of what it belongs to.
+- Keep one job per token.
+- Draw one element with one helper, so it has one place to fix.
+- Let a frame ask for its room before the cards are packed.
+
+**Don't**
+
+- **Don't shrink type to make words fit.** Grow the card.
+- **Don't erase a wire to make room for its own label.** The label sits on the
+  wire; it does not delete it.
+- **Don't use one token for two kinds of shape.**
+- **Don't make meaning rest on a single signal.** A dashed wire that differs
+  from a plain wire only by its dashes is not distinct.
+- **Don't rely on a border to separate surfaces.**
+- **Don't write a rule an element cannot fail.** A clause that is true by
+  construction is not a standard, it is decoration. Every rule here must be
+  able to come out false.
+- **Don't hand-place cards to make a chart look right.** A chart that only works
+  when a human positions every card is not generated.
+- Don't write a raw hex, size or gap in a renderer. Use a token.
+
+## 📱 8. Responsive behaviour
+
+A chart must hold up in **two themes and two sizes**. All four are tested.
+
+| | |
+|---|---|
+| Themes | dark and light |
+| Reference size | 1440 x 900 |
+| Large size | 2048 x 1320 |
+| Reader minimum | 960 wide, 930 of it diagram |
+
+- Type floors are measured **as projected at the reader minimum**, not as
+  authored. A 15px title in a wide chart can land under the floor once scaled.
+- Both themes carry the same three-tier surface order. Light inverts the
+  lightness, never the order.
+
+## 🤖 9. Agent prompt guide
+
+Paste this when asking an agent to draw or fix an Archify chart.
+
+```
+Follow DESIGN.md at the archify root.
+
+Surfaces, three tiers, dark: page #010102, frame #2c2c2e, card #2c2c2e.
+Light: page #f2f2f7, frame #f5f5f7, card #ffffff.
+Wires: plain #8e8e93, main #0a84ff, guarded #ff453a.
+Type floors at 1440x900: title 15px at 7:1, frame title 13px at 4.5:1,
+sublabel and wire label 11px at 4.5:1.
+Card 260x60, gutter 40, corridor 16, frame padding 18, label clearance 24.
+Card radius 6, label radius 3.
+
+Never shrink type to fit — grow the card.
+Never erase a wire to seat its own label.
+One token, one job.
+A border may separate; it may never carry the meaning.
+Never hand-place cards.
+```
+
+## 🔬 10. Conformance — which check enforces which clause
+
+This is the part most design systems cannot offer. **Nineteen checks already
+run against every chart.** A clause with a check is enforced. A clause without
+one is only a wish.
+
+| Clause | Enforced by |
+|---|---|
+| Frame holds its members | A7. |
+| Frames do not cross each other | **Nothing.** |
+| A frame is at least half filled | **Nothing.** |
+| A frame title is not stacked on a neighbour | **Nothing.** |
+| Wire keeps clear of a frame edge | A9. |
+| Gaps inside a frame are balanced | A14. |
+| Page margins match left to right | A13. |
+| Page is filled by its drawing | A6. |
+| Node title fits its card | A2. |
+| Label stands clear of every shape | A15. |
+| Label does not overlap a shape | A3. |
+| Label stays on its own wire | A4. |
+| Head points the way of travel | A12. |
+| Head seats on its target | A5, A10. |
+| Every wire drawn once | A11. |
+| Type floors hold | O1a. |
+| Touching surfaces separate | P1. |
+| Surfaces separate without a border | P2. |
+| Painted colour matches its token | P3. |
+
+**Three of the frame clauses above have no check.** That is why eleven crossing
+frames and six half-empty frames have never been reported by the gate table.
+
+**Seven elements have no check at all:** E5, E7, E9, E10, E12, E13, and telling
+E17 from E15. Those clauses are wishes until someone builds the check.
+
+## 📚 Companion files
+
+| File | What it is |
+|---|---|
+| `docs/design-audit.md` | How far today's charts are from this law |
+| `docs/design.html` | The audit with every element photographed |
+| `docs/preview.html` | This system rendered, light |
+| `docs/preview-dark.html` | This system rendered, dark |
+
+**This is a draft.** Clauses drawn from outside standards are unverified until
+someone fetches the source. Clauses that are one person's taste are marked in
+the audit and need the Commander's ruling.

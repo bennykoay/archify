@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archify Design Review v0.1.0 — edge label treatment</title>
+<style>
+  :root {
+    --bg: #101012; --panel: #1c1c1e; --line: #2c2c2e;
+    --text: #f2f2f7; --muted: #a1a1a6; --accent: #ff453a; --ok: #30d158;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px 20px 64px;
+    background: var(--bg); color: var(--text);
+    font: 15px/1.6 -apple-system, "Segoe UI", system-ui, sans-serif;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  h1 { font-size: 24px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 0 0 28px; font-size: 14px; }
+  h2 { font-size: 17px; margin: 36px 0 12px; }
+  .ask {
+    background: var(--panel); border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px; padding: 14px 16px; margin: 0 0 28px;
+  }
+  .ask b { color: var(--accent); }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 14px; min-width: 0;
+  }
+  .card.pick { border-color: var(--ok); }
+  .card h3 { margin: 0 0 2px; font-size: 15px; }
+  .card p { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+  .card img {
+    width: 100%; max-width: 100%; display: block; border-radius: 6px;
+    background: #000; image-rendering: pixelated;
+  }
+  .tag {
+    display: inline-block; font-size: 11px; padding: 2px 7px; border-radius: 99px;
+    background: var(--ok); color: #05320f; font-weight: 700; margin-left: 6px;
+    vertical-align: 2px;
+  }
+  a { color: #64d2ff; }
+  .open { margin-top: 10px; font-size: 13px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; margin-top: 8px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .full { width: 100%; border-radius: 10px; border: 1px solid var(--line); margin-top: 8px; }
+  footer { margin-top: 44px; color: var(--muted); font-size: 13px; }
+  code { background: #000; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Archify Design Review — v0.1.0</h1>
+  <p class="sub">Rule R3: a label box should be tinted from the wire it belongs to. Commander Ben's rule, 2026-09-16.</p>
+
+  <div class="ask">
+    <b>One decision.</b> Same chart, same label, four treatments. Look at
+    <code>mismatch retry cap 2</code> on the red security wire.
+    Pick the one that reads best. Benji recommends <b>V1</b>.
+  </div>
+
+  <h2>The four treatments, magnified 4&times;</h2>
+  <div class="grid">
+
+    <div class="card">
+      <h3>V0 &mdash; today</h3>
+      <p>Flat fill, no border, wire erased underneath.</p>
+      <img src="crop-v0-current.png" alt="Current: flat grey label box with no border">
+      <p class="open"><a href="v0-current.html">Open full chart &rarr;</a></p>
+    </div>
+
+    <div class="card pick">
+      <h3>V1 &mdash; tint + border <span class="tag">RECOMMENDED</span></h3>
+      <p>22% tint from the wire, 1px border in the wire's colour. Best text contrast.</p>
+      <img src="crop-v1-tint-stroke.png" alt="Tinted label box with a one pixel coloured border">
+      <p class="open"><a href="v1-tint-stroke.html">Open full chart &rarr;</a></p>
+    </div>
+
+    <div class="card">
+      <h3>V2 &mdash; more tint, translucent</h3>
+      <p>30% tint, 82% opacity. Warmer, slightly less contrast on the text.</p>
+      <img src="crop-v2-tint-translucent.png" alt="More heavily tinted translucent label box">
+      <p class="open"><a href="v2-tint-translucent.html">Open full chart &rarr;</a></p>
+    </div>
+
+    <div class="card">
+      <h3>V3 &mdash; border only</h3>
+      <p>Loudest border, 55% fill. Border pops most, text reads least.</p>
+      <img src="crop-v3-outline-only.png" alt="Label box with a strong border and mostly transparent fill">
+      <p class="open"><a href="v3-outline-only.html">Open full chart &rarr;</a></p>
+    </div>
+
+  </div>
+
+  <h2>All four in one strip</h2>
+  <img class="full" src="compare-4x.png" alt="All four treatments stacked and magnified four times">
+
+  <h2>What to compare</h2>
+  <table>
+    <tr><th>Flip between</th><th>The question you are answering</th></tr>
+    <tr><td>V0 &rarr; V1</td><td>Does a coloured border make the label belong to its wire?</td></tr>
+    <tr><td>V1 &rarr; V2</td><td>Is more tint better, or does it hurt the text?</td></tr>
+    <tr><td>V1 &rarr; V3</td><td>Is a louder border with a lighter fill better, or worse to read?</td></tr>
+  </table>
+
+  <h2>Two honest limits</h2>
+  <table>
+    <tr>
+      <td><b>R4 is not proven here.</b></td>
+      <td>In this crop the label sits beside its route, not on it. The
+      &ldquo;box cutting the line&rdquo; fault needs an edge where the label
+      truly overlaps its own wire. That mock-up is still owed.</td>
+    </tr>
+    <tr>
+      <td><b>This will break a check.</b></td>
+      <td>P3 <code>DECLARED_VS_DELIVERED</code> compares painted colour against
+      the declared token. Tinting the box fails P3 until its declaration is
+      updated to say &ldquo;label box equals its wire&rdquo;. That is the check
+      doing its job, not a reason to stop.</td>
+    </tr>
+  </table>
+
+  <footer>
+    Source chart: <code>sys003-einvoice-structure.architecture-after.html</code>.
+    Only the edge-label styling differs between the four.<br>
+    Full rules and the review split:
+    <a href="../../design-reference.md">design-reference.md</a> &mdash; v0.1.0 draft.
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archify Design Checklist</title><style>
+
+:root{--bg:#101012;--panel:#1c1c1e;--line:#2c2c2e;--text:#f2f2f7;--muted:#a1a1a6;
+--ok:#30d158;--bad:#ff453a;--warn:#ffd60a;--link:#64d2ff}
+*{box-sizing:border-box}
+body{margin:0;padding:24px 18px 72px;background:var(--bg);color:var(--text);
+font:15px/1.6 -apple-system,"Segoe UI",system-ui,sans-serif}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 20px;font-size:14px}
+h2{font-size:19px;margin:38px 0 12px;padding-top:10px;border-top:1px solid var(--line)}
+h3{font-size:15px;margin:22px 0 8px}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:0 0 24px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-size:26px;line-height:1.2}
+.stat span{color:var(--muted);font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0 4px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:13px}
+.b{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px}
+.b.ok{background:var(--ok);color:#04310f}.b.bad{background:var(--bad);color:#3d0600}
+.b.warn{background:var(--warn);color:#3a3000}.b.mute{background:#48484a;color:#e5e5ea}
+code{background:#000;padding:1px 5px;border-radius:4px;font-size:12.5px;color:#d8d8dd}
+.el{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+padding:14px 16px;margin:0 0 12px}
+.el.bad{border-left:3px solid var(--bad)}.el.ok{border-left:3px solid var(--ok)}
+.el.warn{border-left:3px solid var(--warn)}.el.mute{border-left:3px solid #48484a}
+.el h4{margin:0 0 8px;font-size:15px}
+.el dl{margin:0;display:grid;grid-template-columns:110px 1fr;gap:4px 12px;font-size:14px}
+.el dt{color:var(--muted);font-size:13px}
+.el dd{margin:0}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+figure{margin:0 0 22px;background:var(--panel);border:1px solid var(--line);
+border-radius:10px;padding:12px}
+figure img{width:100%;max-width:100%;display:block;border-radius:6px}
+figcaption{margin-top:8px;color:var(--muted);font-size:13px}
+a{color:var(--link)}
+ol{padding-left:22px}ol li{margin:6px 0}
+.note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--warn);
+border-radius:8px;padding:12px 14px;margin:16px 0;font-size:14px}
+
+</style></head><body><div class="wrap">
+<h1>Archify Design Audit</h1>
+<p class="sub">v0.2.0 draft &middot; 2026-09-17 &middot; Benji, read-only consultant. Every element below was found in a real chart and photographed.</p>
+<div class="stats">
+<div class="stat"><b>18</b><span>elements drawn</span></div>
+<div class="stat"><b>4</b><span>carry a name</span></div>
+<div class="stat"><b>7</b><span>nothing watches them</span></div>
+<div class="stat"><b>6/12</b><span>rules passing</span></div>
+</div>
+<h2>How a verdict is decided</h2>
+<div class="note"><b>Two rules, both added after the Commander challenged E1 on 2026-09-17.</b><br><br><b>1. A clause that cannot come out false is not a clause.</b> E1 was marked passing because its only written rule was that a frame wraps its members. A frame is built from its members, so it wraps them by construction and can never fail. The rule it could not fail was the only rule written down.<br><br><b>2. A verdict is inherited.</b> A part cannot pass while the thing it serves fails. E3 has the right colour and backs a title that stacks into an unreadable pile, so E3 is not passing.</div>
+<h2>The element checklist</h2>
+<div class="scroll"><table><tr><th>#</th><th>Element</th><th>Name</th><th>Named?</th><th>Owned by</th><th>Verdict</th></tr>
+<tr><td>E1</td><td>Frame</td><td><code>structural-frame</code></td><td>yes</td><td>A7, A9, A14, P1, P2</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>E2</td><td>Frame title</td><td><code>structural-frame-label</code></td><td>yes</td><td>A2</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>E3</td><td>Frame title backing</td><td><code>structural-frame-label-mask</code></td><td>yes</td><td>P3</td><td><span class="b warn">GAP</span></td></tr>
+<tr><td>E4</td><td>Lane box</td><td><code>c-lane</code></td><td><b>no</b></td><td>A3</td><td><span class="b ok">PASS</span></td></tr>
+<tr><td>E5</td><td>Lane header</td><td><code>lane-header-mask</code></td><td><b>no</b></td><td>nothing</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>E6</td><td>Node card</td><td><code>node-card-mask</code></td><td><b>no</b></td><td>A2, A8, P1</td><td><span class="b ok">PASS</span></td></tr>
+<tr><td>E7</td><td>Node stripe</td><td><code>node-accent-bar</code></td><td><b>no</b></td><td>nothing</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>E8</td><td>Security group</td><td><code>security-group</code></td><td><b>no</b></td><td>P1</td><td><span class="b mute">UNUSED</span></td></tr>
+<tr><td>E9</td><td>Grid</td><td><code>grid</code></td><td><b>no</b></td><td>nothing</td><td><span class="b mute">UNUSED</span></td></tr>
+<tr><td>E10</td><td>Edge label backing</td><td><code>edge-label-mask</code></td><td><b>no</b></td><td>nothing</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>E11</td><td>Edge label text</td><td><code>segment-label</code></td><td>yes</td><td>A3, A4, A15</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>E12</td><td>Message label backing</td><td><code>message-label-mask</code></td><td><b>no</b></td><td>nothing</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>E13</td><td>Activation bar</td><td><code>activation-bar</code></td><td><b>no</b></td><td>nothing</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>E14</td><td>Node sublabel</td><td><code>node-sublabel</code></td><td><b>no</b></td><td>A3, A15</td><td><span class="b warn">GAP</span></td></tr>
+<tr><td>E15</td><td>Plain wire</td><td><code>a-default</code></td><td><b>no</b></td><td>A9, A11, A12</td><td><span class="b ok">PASS</span></td></tr>
+<tr><td>E16</td><td>Strong wire</td><td><code>a-emphasis</code></td><td><b>no</b></td><td>A9, A11, A12</td><td><span class="b ok">PASS</span></td></tr>
+<tr><td>E17</td><td>Dashed wire</td><td><code>a-dashed</code></td><td><b>no</b></td><td>nothing tells it from E15</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>E18</td><td>Arrowhead</td><td><code>m-default and three twins</code></td><td><b>no</b></td><td>A5, A10, A12</td><td><span class="b ok">PASS</span></td></tr>
+</table></div>
+<h2>What each element looks like now</h2>
+<div class="note">Each picture is the element zoomed <b>in its own chart</b>, not a drawing of it. The chart's own SVG is re-aimed at the element, so the context around it is real.</div>
+<figure><img src="sheets/arch.png" alt="Architecture elements">
+<figcaption><b>Architecture</b> &mdash; <code>sys003-einvoice-structure</code>. <a href="sheets/arch.html">Open the live sheet</a> to zoom any element.</figcaption></figure>
+<figure><img src="sheets/flow.png" alt="Workflow elements">
+<figcaption><b>Workflow</b> &mdash; <code>watchdog-local-cloud-flow-v2</code>. <a href="sheets/flow.html">Open the live sheet</a> to zoom any element.</figcaption></figure>
+<figure><img src="sheets/seq.png" alt="Sequence elements">
+<figcaption><b>Sequence</b> &mdash; <code>cache-miss-request</code>. <a href="sheets/seq.html">Open the live sheet</a> to zoom any element.</figcaption></figure>
+<figure><img src="sheets/data.png" alt="Dataflow elements">
+<figcaption><b>Dataflow</b> &mdash; <code>product-analytics</code>. <a href="sheets/data.html">Open the live sheet</a> to zoom any element.</figcaption></figure>
+<figure><img src="sheets/life.png" alt="Lifecycle elements">
+<figcaption><b>Lifecycle</b> &mdash; <code>agent-run</code>. <a href="sheets/life.html">Open the live sheet</a> to zoom any element.</figcaption></figure>
+<h2>Each element in full</h2>
+<div class="el bad"><h4>E1 Frame &nbsp;<code>structural-frame</code> &nbsp;<span class="b bad">FAIL</span></h4><dl>
+<dt>Good (T2)</dt><dd>Four clauses: wraps its members, never crosses another frame, is at least half filled, leaves its title rail clear.</dd>
+<dt>Ours</dt><dd>Wraps its members (passes by construction). <b>4 of 15 frame pairs cross</b>, counting only pairs where neither is fully inside the other. <b>Fill 29.6% to 48.1%.</b> The hand-placed chart einvoice-order-flow-v3 is worse: <b>6 of 15 crossing</b>, fill 42.5% to 59.2% — so crossing is not caused by automatic placement. Three clauses of four fail, and no check watches any of the three.</dd>
+<dt>Drawn at</dt><dd><code>render-architecture.mjs:1033</code></dd>
+<dt>Owned by</dt><dd>A7, A9, A14, P1, P2</dd>
+<dt>Seen in</dt><dd>Architecture, Workflow, Sequence, Dataflow</dd>
+</dl></div>
+<div class="el bad"><h4>E2 Frame title &nbsp;<code>structural-frame-label</code> &nbsp;<span class="b bad">FAIL</span></h4><dl>
+<dt>Good (T4)</dt><dd>One title per frame, placed clear of the frame's own cards.</dd>
+<dt>Ours</dt><dd>Stacks into a pile when cards are auto-placed. Visible in the sheet.</dd>
+<dt>Drawn at</dt><dd><code>render-architecture.mjs:1038</code></dd>
+<dt>Owned by</dt><dd>A2</dd>
+<dt>Seen in</dt><dd>Architecture</dd>
+</dl></div>
+<div class="el warn"><h4>E3 Frame title backing &nbsp;<code>structural-frame-label-mask</code> &nbsp;<span class="b warn">GAP</span></h4><dl>
+<dt>Good (T2)</dt><dd>Matches its frame, and leaves its own title readable.</dd>
+<dt>Ours</dt><dd>Colour is correct: var(--region-fill), dark 0.00, light 0.00, fixed in SEE-008. But it backs a title that stacks on its neighbours, so the element it serves does not work. A backing behind an unreadable label is not passing.</dd>
+<dt>Drawn at</dt><dd><code>render-architecture.mjs:1039</code></dd>
+<dt>Owned by</dt><dd>P3</dd>
+<dt>Seen in</dt><dd>Architecture</dd>
+</dl></div>
+<div class="el ok"><h4>E4 Lane box &nbsp;<code>c-lane</code> &nbsp;<span class="b ok">PASS</span></h4><dl>
+<dt>Good (T2)</dt><dd>Reads as a lane. May carry a border; may not depend on one.</dd>
+<dt>Ours</dt><dd>The only element in eighteen that has a border. Dashed, lane-stroke.</dd>
+<dt>Drawn at</dt><dd><code>template.html:5171</code></dd>
+<dt>Owned by</dt><dd>A3</dd>
+<dt>Seen in</dt><dd>Workflow, Sequence, Dataflow</dd>
+</dl></div>
+<div class="el bad"><h4>E5 Lane header &nbsp;<code>lane-header-mask</code> &nbsp;<span class="b bad">FAIL</span></h4><dl>
+<dt>Good (T4)</dt><dd>Names its lane. Distinct from the lane body.</dd>
+<dt>Ours</dt><dd>Flat var(--mask), no border, no name. No check measures it.</dd>
+<dt>Drawn at</dt><dd><code>render-workflow.mjs:682</code></dd>
+<dt>Owned by</dt><dd>nothing</dd>
+<dt>Seen in</dt><dd>Sequence</dd>
+</dl></div>
+<div class="el ok"><h4>E6 Node card &nbsp;<code>node-card-mask</code> &nbsp;<span class="b ok">PASS</span></h4><dl>
+<dt>Good (T2)</dt><dd>Stands apart from its frame. Colour distance of at least one.</dd>
+<dt>Ours</dt><dd>var(--mask). Dark card on a lighter frame. Passes P1.</dd>
+<dt>Drawn at</dt><dd><code>all five renderers</code></dd>
+<dt>Owned by</dt><dd>A2, A8, P1</dd>
+<dt>Seen in</dt><dd>Architecture, Workflow, Sequence, Dataflow, Lifecycle</dd>
+</dl></div>
+<div class="el bad"><h4>E7 Node stripe &nbsp;<code>node-accent-bar</code> &nbsp;<span class="b bad">FAIL</span></h4><dl>
+<dt>Good (T4)</dt><dd>Carries the node's kind as colour. Never the only signal of kind.</dd>
+<dt>Ours</dt><dd>Drawn in architecture only. No check measures it.</dd>
+<dt>Drawn at</dt><dd><code>render-architecture.mjs:1080</code></dd>
+<dt>Owned by</dt><dd>nothing</dd>
+<dt>Seen in</dt><dd>Architecture</dd>
+</dl></div>
+<div class="el mute"><h4>E8 Security group &nbsp;<code>security-group</code> &nbsp;<span class="b mute">UNUSED</span></h4><dl>
+<dt>Good (T4)</dt><dd>Marks a guarded cluster.</dd>
+<dt>Ours</dt><dd>Defined in the template but not drawn in any of the five sampled charts.</dd>
+<dt>Drawn at</dt><dd><code>template.html CSS</code></dd>
+<dt>Owned by</dt><dd>P1</dd>
+<dt>Seen in</dt><dd><b>none of the five sampled charts</b></dd>
+</dl></div>
+<div class="el mute"><h4>E9 Grid &nbsp;<code>grid</code> &nbsp;<span class="b mute">UNUSED</span></h4><dl>
+<dt>Good (T4)</dt><dd>Alignment aid. Should not be visible in a delivered chart.</dd>
+<dt>Ours</dt><dd>Matches an element that renders completely empty. Sheet shows a blank cell.</dd>
+<dt>Drawn at</dt><dd><code>template.html CSS</code></dd>
+<dt>Owned by</dt><dd>nothing</dd>
+<dt>Seen in</dt><dd>Architecture, Sequence</dd>
+</dl></div>
+<div class="el bad"><h4>E10 Edge label backing &nbsp;<code>edge-label-mask</code> &nbsp;<span class="b bad">FAIL</span></h4><dl>
+<dt>Good (T4)</dt><dd>Tinted from the wire it belongs to. Carries a border in that colour.</dd>
+<dt>Ours</dt><dd>Flat var(--mask), identical to a node card, no tie to its wire, no border.</dd>
+<dt>Drawn at</dt><dd><code>all five renderers</code></dd>
+<dt>Owned by</dt><dd>nothing</dd>
+<dt>Seen in</dt><dd>Architecture, Workflow, Dataflow, Lifecycle</dd>
+</dl></div>
+<div class="el bad"><h4>E11 Edge label text &nbsp;<code>segment-label</code> &nbsp;<span class="b bad">FAIL</span></h4><dl>
+<dt>Good (T2)</dt><dd>Stands clear of every card and sublabel by 24px.</dd>
+<dt>Ours</dt><dd>Measured by three checks. Seventeen clearance failures still booked.</dd>
+<dt>Drawn at</dt><dd><code>all five renderers</code></dd>
+<dt>Owned by</dt><dd>A3, A4, A15</dd>
+<dt>Seen in</dt><dd>Architecture, Workflow, Dataflow, Lifecycle</dd>
+</dl></div>
+<div class="el bad"><h4>E12 Message label backing &nbsp;<code>message-label-mask</code> &nbsp;<span class="b bad">FAIL</span></h4><dl>
+<dt>Good (T4)</dt><dd>Same rule as E10, on a sequence message.</dd>
+<dt>Ours</dt><dd>Sequence draws messages differently. E10's rule does not reach it.</dd>
+<dt>Drawn at</dt><dd><code>render-sequence.mjs:344</code></dd>
+<dt>Owned by</dt><dd>nothing</dd>
+<dt>Seen in</dt><dd><b>none of the five sampled charts</b></dd>
+</dl></div>
+<div class="el bad"><h4>E13 Activation bar &nbsp;<code>activation-bar</code> &nbsp;<span class="b bad">FAIL</span></h4><dl>
+<dt>Good (T4)</dt><dd>Shows how long a participant is busy.</dd>
+<dt>Ours</dt><dd>Drawn with the same c-mask class as a label box. No check measures it.</dd>
+<dt>Drawn at</dt><dd><code>render-sequence.mjs:354</code></dd>
+<dt>Owned by</dt><dd>nothing</dd>
+<dt>Seen in</dt><dd>Sequence, Lifecycle</dd>
+</dl></div>
+<div class="el warn"><h4>E14 Node sublabel &nbsp;<code>node-sublabel</code> &nbsp;<span class="b warn">GAP</span></h4><dl>
+<dt>Good (T2)</dt><dd>Fits inside its card with the title. Never overflows.</dd>
+<dt>Ours</dt><dd>A2 measures the title only, never the sublabel. Booked as OPEN-18.</dd>
+<dt>Drawn at</dt><dd><code>all five renderers</code></dd>
+<dt>Owned by</dt><dd>A3, A15</dd>
+<dt>Seen in</dt><dd>Workflow, Sequence, Dataflow, Lifecycle</dd>
+</dl></div>
+<div class="el ok"><h4>E15 Plain wire &nbsp;<code>a-default</code> &nbsp;<span class="b ok">PASS</span></h4><dl>
+<dt>Good (T2)</dt><dd>One colour, one head, head within thirty degrees of travel.</dd>
+<dt>Ours</dt><dd>Passes A12 on fresh renders since SEE-008.</dd>
+<dt>Drawn at</dt><dd><code>all five renderers</code></dd>
+<dt>Owned by</dt><dd>A9, A11, A12</dd>
+<dt>Seen in</dt><dd>Architecture, Workflow, Sequence, Dataflow, Lifecycle</dd>
+</dl></div>
+<div class="el ok"><h4>E16 Strong wire &nbsp;<code>a-emphasis</code> &nbsp;<span class="b ok">PASS</span></h4><dl>
+<dt>Good (T2)</dt><dd>As E15, with its own colour and matching head.</dd>
+<dt>Ours</dt><dd>arrow-emphasis with arrowhead-emphasis. Correctly paired.</dd>
+<dt>Drawn at</dt><dd><code>all five renderers</code></dd>
+<dt>Owned by</dt><dd>A9, A11, A12</dd>
+<dt>Seen in</dt><dd>Architecture, Workflow, Sequence, Dataflow, Lifecycle</dd>
+</dl></div>
+<div class="el bad"><h4>E17 Dashed wire &nbsp;<code>a-dashed</code> &nbsp;<span class="b bad">FAIL</span></h4><dl>
+<dt>Good (T1)</dt><dd>Meaning never rests on one visual signal alone.</dd>
+<dt>Ours</dt><dd>Shares --arrow and the same head shape as E15. Dashes are the only difference.</dd>
+<dt>Drawn at</dt><dd><code>all five renderers</code></dd>
+<dt>Owned by</dt><dd>nothing tells it from E15</dd>
+<dt>Seen in</dt><dd>Workflow, Sequence, Dataflow</dd>
+</dl></div>
+<div class="el ok"><h4>E18 Arrowhead &nbsp;<code>m-default and three twins</code> &nbsp;<span class="b ok">PASS</span></h4><dl>
+<dt>Good (T4)</dt><dd>Matches its wire's colour and points the way of travel.</dd>
+<dt>Ours</dt><dd>All four pair correctly with their wire. A12 passes.</dd>
+<dt>Drawn at</dt><dd><code>template.html:5528</code></dd>
+<dt>Owned by</dt><dd>A5, A10, A12</dd>
+<dt>Seen in</dt><dd>Architecture, Workflow, Sequence, Dataflow, Lifecycle</dd>
+</dl></div>
+<h2>The rules</h2>
+<div class="scroll"><table><tr><th>#</th><th>Rule</th><th>Tier</th><th>Good</th><th>Ours</th><th>Verdict</th></tr>
+<tr><td>R1</td><td><b>Every element has a name</b></td><td>T4</td><td>A rule cannot be written, and a check cannot be built, for a shape with no name.</td><td>Four names out of eighteen.</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>R2</td><td><b>One colour token does one job</b></td><td>T4</td><td>Two jobs on one token means no value can be correct.</td><td>--mask fills E6 node cards and E10 edge label backings. SEE-008 booked the trap.</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>R3</td><td><b>A backing that belongs to a line is tinted from that line</b></td><td>T4</td><td>A backing on a wire is tinted from that wire, so the eye reads the two as one.</td><td>E10 is flat --mask with no tie to its wire. Four variants mocked; V1 recommended.</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>R4</td><td><b>A backing on a line must not erase the line</b></td><td>T4</td><td>The wire stays continuous. The backing sits on it.</td><td>The backing exists to erase it. template.html:5551 says so.</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>R5</td><td><b>A border may separate, but may never carry the meaning</b></td><td>T2</td><td>P2 samples ten pixels from any edge and ignores the hairline on purpose.</td><td>One element in eighteen has a border. We depend on none.</td><td><span class="b ok">PASS</span></td></tr>
+<tr><td>R6</td><td><b>Painted colour matches the declared token</b></td><td>T2</td><td>Colour distance of two or less. P3.</td><td>Passing since SEE-008 on fresh renders.</td><td><span class="b ok">PASS</span></td></tr>
+<tr><td>R7</td><td><b>Touching surfaces tell apart</b></td><td>T2</td><td>Colour distance of at least one. P1.</td><td>Passing except four known nested same-fill rings.</td><td><span class="b ok">PASS</span></td></tr>
+<tr><td>R8</td><td><b>The same element is drawn the same way everywhere</b></td><td>T4</td><td>Five drawings of one shape share one corner radius and one height source.</td><td>E10 radius 3,4,4,3,3. E6 radius 6,6,7,6,6. Lifecycle is the odd one.</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>R9</td><td><b>Corner radius says what a shape is</b></td><td>T3</td><td>Cards get a bigger radius than labels. Solid against floating.</td><td>Cards 6 or 7, labels 3 or 4. The habit exists but is unwritten.</td><td><span class="b ok">PASS</span></td></tr>
+<tr><td>R10</td><td><b>A wire is told apart by more than one trick</b></td><td>T1</td><td>Meaning never rests on a single visual signal.</td><td>E17 and E15 share one colour and one head shape.</td><td><span class="b bad">FAIL</span></td></tr>
+<tr><td>R11</td><td><b>Every head points the way its wire travels</b></td><td>T2</td><td>Within thirty degrees of the last real piece of route. A12.</td><td>Passing on fresh renders since SEE-008.</td><td><span class="b ok">PASS</span></td></tr>
+<tr><td>R12</td><td><b>Text is big enough to read at desk size</b></td><td>T2</td><td>The readability floors. O1a.</td><td>Passing. Card text fit repaired in SEE-013.</td><td><span class="b ok">PASS</span></td></tr>
+</table></div>
+<h2>Which chart kind draws which element</h2>
+<div class="scroll"><table><tr><th>Element</th><th>Architecture</th><th>Workflow</th><th>Sequence</th><th>Dataflow</th><th>Lifecycle</th></tr>
+<tr><td>E1 Frame</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td>&mdash;</td></tr>
+<tr><td>E2 Frame title</td><td><span class="b ok">yes</span></td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>E3 Frame title backing</td><td><span class="b ok">yes</span></td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>E4 Lane box</td><td>&mdash;</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td>&mdash;</td></tr>
+<tr><td>E5 Lane header</td><td>&mdash;</td><td>&mdash;</td><td><span class="b ok">yes</span></td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>E6 Node card</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td></tr>
+<tr><td>E7 Node stripe</td><td><span class="b ok">yes</span></td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>E8 Security group</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>E9 Grid</td><td><span class="b ok">yes</span></td><td>&mdash;</td><td><span class="b ok">yes</span></td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>E10 Edge label backing</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td>&mdash;</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td></tr>
+<tr><td>E11 Edge label text</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td>&mdash;</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td></tr>
+<tr><td>E12 Message label backing</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>E13 Activation bar</td><td>&mdash;</td><td>&mdash;</td><td><span class="b ok">yes</span></td><td>&mdash;</td><td><span class="b ok">yes</span></td></tr>
+<tr><td>E14 Node sublabel</td><td>&mdash;</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td></tr>
+<tr><td>E15 Plain wire</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td></tr>
+<tr><td>E16 Strong wire</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td></tr>
+<tr><td>E17 Dashed wire</td><td>&mdash;</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td>&mdash;</td></tr>
+<tr><td>E18 Arrowhead</td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td><td><span class="b ok">yes</span></td></tr>
+</table></div>
+<h2>What to fix, in order</h2><ol>
+<li><b>R1.</b> Name the fourteen unnamed elements. Everything else waits on this.</li>
+<li><b>R2.</b> Split <code>--mask</code> into a card token and a label token.</li>
+<li><b>R3 and R4 together.</b> Tint the edge backing and stop erasing the wire.</li>
+<li><b>R8.</b> One drawing helper per element, so a box has one place to fix.</li>
+<li><b>R10.</b> Make the dashed wire differ by more than dashes.</li>
+<li>Build checks for the elements nothing measures. <b>E10 first.</b></li>
+<li>Rule on <b>E8</b> and <b>E9</b>. Both are defined and neither is drawn.</li>
+</ol>
+<div class="note"><b>What this page is not.</b> It does not cover where shapes are <b>placed</b>. Empty pages, stacked labels and crowding are placement faults, and placement is the work in SEE-015. It is a draft: T1 rows need their sources fetched, and T4 rows are one person's opinion until the Commander rules on them.</div>
+<p class="sub">Companion files: <a href="design-audit.md">design-audit.md</a> (same content, text) &middot; <a href="design-review/v0.1.0/index.html">the R3 decision page</a>.</p>
+</div></body></html>

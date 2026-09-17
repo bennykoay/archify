@@ -1,0 +1,109 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archify Design Preview &mdash; dark</title><style>
+
+*{box-sizing:border-box}
+body{margin:0;padding:26px 18px 70px;background:#000000;color:#f2f2f7;
+font:15px/1.6 -apple-system,"Segoe UI",system-ui,sans-serif}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font-size:25px;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:#a1a1a6;margin:0 0 26px;font-size:14px}
+h2{font-size:18px;margin:36px 0 14px;padding-top:12px;border-top:1px solid #2c2c2e}
+.row{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.tile{background:#1c1c1e;border:1px solid #2c2c2e;border-radius:10px;padding:0;overflow:hidden}
+.chip{height:76px}
+.tile .meta{padding:10px 12px}
+.tile b{display:block;font-size:14px}
+.tile code{font-size:11.5px;color:#a1a1a6;display:block;margin-top:2px;word-break:break-all}
+.tile span{display:block;font-size:12.5px;color:#aeaeb2;margin-top:4px}
+.stack{background:#2c2c2e;border:1px solid #2c2c2e;border-radius:12px;padding:20px}
+.stack .inner{background:#1c1c1e;border-radius:8px;padding:16px;margin-top:10px}
+.stack em{font-style:normal;color:#a1a1a6;font-size:12.5px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid #2c2c2e}
+th{color:#a1a1a6;font-weight:600;font-size:13px}
+.wire{display:flex;align-items:center;gap:12px;padding:10px 0}
+.wire .ln{flex:1;height:0;border-top-style:solid}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;
+border:1px solid;background:transparent}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card-box{background:#1c1c1e;border:1px solid #2c2c2e;border-radius:10px;padding:14px}
+.card-box h3{margin:0 0 8px;font-size:14px}
+.card-box ul{margin:0;padding-left:18px;font-size:14px}
+.card-box li{margin:5px 0}
+.do h3{color:#30d158}.dont h3{color:#ff453a}
+.swatchbar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid #2c2c2e}
+.swatchbar div{flex:1}
+a{color:#0a84ff}
+
+</style></head><body><div class="wrap">
+<h1>Archify Design Preview</h1>
+<p class="sub">Dark theme &middot; generated from <code>DESIGN.md</code> v0.1.0 and <code>system-tokens.mjs</code> v1.2.0. Companion: <a href="preview.html">the light preview</a>.</p>
+<h2>Surfaces &mdash; three tiers</h2>
+<div class="stack"><em>Page</em><div class="stack" style="margin-top:10px"><em>Frame</em><div class="inner"><b>Card</b><br><span style="color:#aeaeb2;font-size:13px">Depth is lightness. There are no shadows.</span></div></div></div>
+<div class="row" style="margin-top:14px">
+<div class="tile"><div class="chip" style="background:#000000"></div><div class="meta"><b>Page</b><code>--bg &nbsp;#000000</code><span>Behind everything.</span></div></div>
+<div class="tile"><div class="chip" style="background:#2c2c2e"></div><div class="meta"><b>Frame</b><code>--region-fill &nbsp;#2c2c2e</code><span>A group of cards.</span></div></div>
+<div class="tile"><div class="chip" style="background:#1c1c1e"></div><div class="meta"><b>Card</b><code>--mask &nbsp;#1c1c1e</code><span>A single thing.</span></div></div>
+</div>
+<h2>Wires</h2>
+<div class="wire"><span style="width:120px;font-size:13px">Plain flow</span><span class="ln" style="border-top-color:#8e8e93;border-top-width:1.5px"></span><code style="font-size:11.5px;color:#a1a1a6">--arrow #8e8e93</code></div>
+<div class="wire"><span style="width:120px;font-size:13px">Main flow</span><span class="ln" style="border-top-color:#0a84ff;border-top-width:1.8px"></span><code style="font-size:11.5px;color:#a1a1a6">--arrow-emphasis #0a84ff</code></div>
+<div class="wire"><span style="width:120px;font-size:13px">Guarded flow</span><span class="ln" style="border-top-color:#ff453a;border-top-width:1.5px"></span><code style="font-size:11.5px;color:#a1a1a6">--security-stroke #ff453a</code></div>
+<p class="sub" style="margin:6px 0 0">A dashed wire must differ from a plain wire by more than its dashes.</p>
+<h2>Node kinds</h2><div class="row">
+<div class="tile"><div class="chip" style="background:#0a84ff;opacity:.92"></div><div class="meta"><b>Frontend</b><code>#0a84ff</code></div></div>
+<div class="tile"><div class="chip" style="background:#30d158;opacity:.92"></div><div class="meta"><b>Backend</b><code>#30d158</code></div></div>
+<div class="tile"><div class="chip" style="background:#bf5af2;opacity:.92"></div><div class="meta"><b>Database</b><code>#bf5af2</code></div></div>
+<div class="tile"><div class="chip" style="background:#ffd60a;opacity:.92"></div><div class="meta"><b>Cloud</b><code>#ffd60a</code></div></div>
+<div class="tile"><div class="chip" style="background:#ff453a;opacity:.92"></div><div class="meta"><b>Security</b><code>#ff453a</code></div></div>
+<div class="tile"><div class="chip" style="background:#ff9f0a;opacity:.92"></div><div class="meta"><b>Message bus</b><code>#ff9f0a</code></div></div>
+<div class="tile"><div class="chip" style="background:#8e8e93;opacity:.92"></div><div class="meta"><b>External</b><code>#8e8e93</code></div></div>
+</div>
+<h2>Type scale</h2><table><tr><th>Role</th><th>Used for</th><th>Floor</th><th>Contrast</th><th>Sample</th></tr>
+<tr><td><code>primary</code></td><td>Node title</td><td>15px</td><td>7.0 : 1</td><td style="font-size:15px">Submit e-invoice</td></tr>
+<tr><td><code>boundary</code></td><td>Frame title</td><td>13px</td><td>4.5 : 1</td><td style="font-size:13px">Submit e-invoice</td></tr>
+<tr><td><code>context</code></td><td>Node sublabel</td><td>11px</td><td>4.5 : 1</td><td style="font-size:11px">Submit e-invoice</td></tr>
+<tr><td><code>edge</code></td><td>Wire label</td><td>11px</td><td>4.5 : 1</td><td style="font-size:11px">Submit e-invoice</td></tr>
+</table><p class="sub" style="margin:8px 0 0">Floors, not targets. Never shrink type to fit &mdash; grow the card.</p>
+<h2>Label backings</h2><div class="two">
+<div class="card-box"><h3>Today</h3><span class="pill" style="border-color:transparent;background:#1c1c1e;color:#aeaeb2">mismatch retry cap 2</span><p class="sub" style="margin:10px 0 0">Flat, no border, no tie to its wire.</p></div>
+<div class="card-box"><h3>The rule</h3><span class="pill" style="border-color:#ff453a;color:#f2f2f7;background:rgba(255,69,58,0.22)">mismatch retry cap 2</span><p class="sub" style="margin:10px 0 0">Tinted from its wire, bordered in that wire's colour.</p></div>
+</div>
+<h2>Spacing and size</h2><table><tr><th>Value</th><th>Size</th></tr>
+<tr><td>Card</td><td><code>260 x 60</code></td></tr>
+<tr><td>Empty gutter</td><td><code>40</code></td></tr>
+<tr><td>Corridor</td><td><code>16</code></td></tr>
+<tr><td>Through-route</td><td><code>56</code></td></tr>
+<tr><td>Frame padding</td><td><code>18</code></td></tr>
+<tr><td>Title above members</td><td><code>34</code></td></tr>
+<tr><td>Title below frame top</td><td><code>14</code></td></tr>
+<tr><td>Wire to frame</td><td><code>16</code></td></tr>
+<tr><td>Head tip to card</td><td><code>8</code></td></tr>
+<tr><td>Label clearance</td><td><code>24</code></td></tr>
+</table>
+<h2>Corner radius</h2><div class="row">
+<div class="tile" style="border:none;background:transparent"><div style="padding:10px 0"><div style="width:180px;height:54px;border-radius:6px;background:#1c1c1e;border:1px solid #2c2c2e"></div></div><div class="meta" style="padding:0"><b>Card &mdash; 6</b><span>Solid against floating.</span></div></div>
+<div class="tile" style="border:none;background:transparent"><div style="padding:10px 0"><div style="width:180px;height:26px;border-radius:3px;background:#1c1c1e;border:1px solid #2c2c2e"></div></div><div class="meta" style="padding:0"><b>Label &mdash; 3</b><span>Solid against floating.</span></div></div>
+</div>
+<h2>Do and don't</h2><div class="two">
+<div class="card-box do"><h3>Do</h3><ul><li>Grow a card to fit its words.</li><li>Give every backing the colour of what it belongs to.</li><li>Keep one job per token.</li><li>Draw one element with one helper.</li><li>Let a frame ask for its room first.</li></ul></div>
+<div class="card-box dont"><h3>Don't</h3><ul><li>Shrink type to make words fit.</li><li>Erase a wire to seat its own label.</li><li>Use one token for two kinds of shape.</li><li>Let meaning rest on a single signal.</li><li>Hand-place cards to make a chart look right.</li></ul></div>
+</div>
+<h2>Full palette</h2><div class="swatchbar">
+<div style="background:#000000"></div>
+<div style="background:#2c2c2e"></div>
+<div style="background:#1c1c1e"></div>
+<div style="background:#8e8e93"></div>
+<div style="background:#0a84ff"></div>
+<div style="background:#ff453a"></div>
+<div style="background:#0a84ff"></div>
+<div style="background:#30d158"></div>
+<div style="background:#bf5af2"></div>
+<div style="background:#ffd60a"></div>
+<div style="background:#ff453a"></div>
+<div style="background:#ff9f0a"></div>
+<div style="background:#8e8e93"></div>
+</div>
+<p class="sub" style="margin-top:30px">The law: <a href="../DESIGN.md">DESIGN.md</a> &middot; how far we are from it: <a href="design.html">design.html</a>.</p>
+</div></body></html>
