@@ -367,10 +367,19 @@
         reflectVisible();
         var visible = Archify.view.logicalViewport();
         if (!visible) return;
-        viewport.setAttribute('x', String(visible.x));
-        viewport.setAttribute('y', String(visible.y));
-        viewport.setAttribute('width', String(visible.width));
-        viewport.setAttribute('height', String(visible.height));
+        var markerWidth = visible.outside ? Math.max(2, viewBox.width * 0.025) : visible.width;
+        var markerHeight = visible.outside ? Math.max(2, viewBox.height * 0.025) : visible.height;
+        var markerX = visible.outside
+          ? Math.max(viewBox.x, Math.min(viewBox.x + viewBox.width - markerWidth, visible.x - markerWidth / 2))
+          : visible.x;
+        var markerY = visible.outside
+          ? Math.max(viewBox.y, Math.min(viewBox.y + viewBox.height - markerHeight, visible.y - markerHeight / 2))
+          : visible.y;
+        viewport.setAttribute('x', String(markerX));
+        viewport.setAttribute('y', String(markerY));
+        viewport.setAttribute('width', String(markerWidth));
+        viewport.setAttribute('height', String(markerHeight));
+        viewport.toggleAttribute('data-outside', visible.outside === true);
         var full = visible.width >= viewBox.width * 0.98 && visible.height >= viewBox.height * 0.98;
         var mobileWide = window.innerWidth <= 720 && container.hasAttribute('data-wide-diagram');
         var viewportCopy = full

@@ -693,6 +693,22 @@ html[data-preset="editorial"] .header-row::after {
   position: relative;
 }
 
+.infinite-canvas-grid {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--text) 14%, transparent) 0 1px, transparent 1.2px),
+    radial-gradient(circle, color-mix(in srgb, var(--text) 24%, transparent) 0 1.25px, transparent 1.45px);
+  background-position:
+    var(--archify-grid-x, 1.5rem) var(--archify-grid-y, 1.5rem),
+    var(--archify-grid-x, 1.5rem) var(--archify-grid-y, 1.5rem);
+  background-size:
+    var(--archify-grid-minor, 24px) var(--archify-grid-minor, 24px),
+    var(--archify-grid-major, 120px) var(--archify-grid-major, 120px);
+}
+
 html[data-preset="signal-flow"] .diagram-container {
   position: relative;
   overflow: hidden;
@@ -855,6 +871,11 @@ html[data-motion="still"] svg {
   transition: none !important;
 }
 
+.diagram-container > svg {
+  position: relative;
+  z-index: 1;
+}
+
 svg {
   width: 100%;
   min-width: min(900px, 100%);
@@ -870,6 +891,7 @@ svg {
 .diagram-container.is-pannable { cursor: grab; }
 .diagram-container.is-panning { cursor: grabbing; user-select: none; }
 .diagram-container.is-panning svg { transition: none; }
+.diagram-container.is-wheel-panning svg { transition: none; }
 
 .diagram-nav {
   position: absolute;
@@ -1211,6 +1233,11 @@ html[data-preset="blueprint"] .overview-map-surface { border-radius: 0.1rem; }
   vector-effect: non-scaling-stroke;
   pointer-events: none;
   filter: drop-shadow(0 0 3px color-mix(in srgb, var(--frontend-stroke) 54%, transparent));
+}
+.overview-map-viewport[data-outside] {
+  fill: color-mix(in srgb, var(--security-fill) 68%, transparent);
+  stroke: var(--security-stroke);
+  stroke-dasharray: 3 2;
 }
 .overview-map-hint {
   display: flex;

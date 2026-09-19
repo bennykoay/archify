@@ -734,12 +734,26 @@ zoom/reset controls and the initial viewBox. The existing `apply()`,
 Views already exist; checks for later modules and deferred callers remain needed.
 The shared `viewerText` helper stays in classic-script scope.
 
-The interface remains `zoomIn`, `zoomOut`, `reset`, `reveal`, `centerAt`,
-`logicalViewport`, `sync`, and `state`. `state()` returns a copy of scale/x/y/mode;
+The interface includes `zoomIn`, `zoomOut`, `zoomAt`, `panBy`, `fit`, `reset`,
+`reveal`, `centerAt`, `logicalViewport`, `worldViewport`, `sync`, and `state`.
+`state()` returns a copy of scale/x/y/mode;
 the modes are overview, manual and semantic. Zoom and Reset return undefined;
 `centerAt` returns a boolean, `logicalViewport` can return null, and `sync`
 delegates to `reveal` or returns false. Manual Reset interrupts callers, whereas
 `reset({ automatic: true })` stops camera motion without the manual takeover path.
+
+Desktop Camera is an unbounded interaction surface. Empty-space pointer drag and
+wheel input pan at every zoom level; Ctrl/Cmd-wheel and trackpad pinch zoom around
+the pointer. Scale is bounded to 25%–400%, while translation has only a large
+numeric safety bound. `fit()` uses the same authored overview as Reset. The
+camera-created grid layer tracks translation and scale but remains outside the
+authored SVG, semantic geometry, and exports. Wide diagrams at widths up to 720px
+keep their established horizontal-scroll behavior.
+
+`worldViewport()` reports the unbounded visible rectangle in authored logical
+coordinates. `logicalViewport()` reports its intersection with the authored
+viewBox and includes `outside` plus the original `world` rectangle so Radar can
+render a finite edge marker when the viewport is completely outside the graph.
 
 `reveal` returns a transaction or false, with branch-specific side effects.
 Desktop empty/unknown targets can return before changing the camera. At widths
@@ -767,9 +781,9 @@ Motion Governor and other callers retain their own responsibilities.
 
 | State / dependency | Ownership and coordination |
 | --- | --- |
-| Scale/x/y/mode, drag, transaction generation/object, camera frame/timer, clip/resize frames, automatic-scroll guard | Camera owns its page-lifetime state and pointer/scroll/resize/hashchange subscriptions. There is no destroy method. |
+| Scale/x/y/mode, drag, wheel gesture/timer, transaction generation/object, camera frame/timer, clip/resize frames, automatic-scroll guard | Camera owns its page-lifetime state and pointer/wheel/scroll/resize/hashchange subscriptions. There is no destroy method. |
 | SVG `transform`, `clip-path`, `data-view-scale` | Camera applies runtime transforms and clipping without rewriting authored geometry, viewBox or semantic IDs. Export cleanup removes these from its clone. |
-| Container detail/camera attributes, `is-pannable`, camera movement/transaction flags, `data-just-panned`, `--archify-scroll-x` | Camera updates controls, drag suppression and mobile control positioning. `is-panning` is also used by Radar surface dragging; it is not exclusively owned by Camera. |
+| Camera grid element; container detail/camera attributes, grid variables, `is-pannable`, camera movement/transaction flags, `data-just-panned`, `--archify-scroll-x` | Camera updates the infinite-grid origin/scale, controls, drag suppression and mobile control positioning. `is-panning` is also used by Radar surface dragging; it is not exclusively owned by Camera. |
 | Zoom/Reset labels, disabled state, detail attributes, title and ARIA text | Camera renders controls through shared translation helpers; associated CSS stays in the shell. |
 | Reader width/wide-diagram classification; Chrome navigation reserve | Owned by the layout modules. Camera consumes geometry and classification; `apply()` schedules Chrome and synchronizes Radar. |
 | Focus / Guided Views / Route | Finishing transactions repositions Focus. Manual takeover cancels guided handoffs and pauses Story and Route Journey, preserving Route elapsed time as before. Semantic sync prioritizes Guided Views over Focus. |

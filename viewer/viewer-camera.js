@@ -6,6 +6,10 @@
       var resetDetailLabel = resetBtn.querySelector('[data-view-detail]');
       var resetPercentLabel = resetBtn.querySelector('[data-view-percent]');
       var inBtn = container.querySelector('[data-view="in"]');
+      var MIN_SCALE = 0.25;
+      var MAX_SCALE = 4;
+      var CAMERA_LIMIT = 1000000;
+      var grid = document.createElement('div');
       var state = { scale: 1, x: 0, y: 0, mode: 'overview' };
       var drag = null;
       var cameraTimer = null;
@@ -15,14 +19,21 @@
       var clipFrame = 0;
       var resizeFrame = 0;
       var autoScrollUntil = 0;
+      var wheelTimer = null;
 
       var viewBox = svg.viewBox && svg.viewBox.baseVal;
 
-      function clamp() {
-        var width = svg.clientWidth || 1;
-        var height = svg.clientHeight || 1;
-        state.x = Math.min(0, Math.max(width - width * state.scale, state.x));
-        state.y = Math.min(0, Math.max(height - height * state.scale, state.y));
+      grid.className = 'infinite-canvas-grid';
+      grid.setAttribute('aria-hidden', 'true');
+      container.insertBefore(grid, svg);
+
+      function boundCamera() {
+        state.scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, Number(state.scale) || 1));
+        state.x = Math.max(-CAMERA_LIMIT, Math.min(CAMERA_LIMIT, Number(state.x) || 0));
+        state.y = Math.max(-CAMERA_LIMIT, Math.min(CAMERA_LIMIT, Number(state.y) || 0));
+      }
+      function mobileScrollMode() {
+        return window.innerWidth <= 720 && container.hasAttribute('data-wide-diagram');
       }
       function reducedMotion() {
         return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -40,14 +51,14 @@
           offsetY: (height - viewBox.height * scale) / 2
         };
       }
-      function logicalViewport() {
+      function worldViewport() {
         var metrics = contentMetrics();
         if (!metrics) return null;
         var x;
         var y;
         var width;
         var height;
-        if (window.innerWidth <= 720 && container.hasAttribute('data-wide-diagram')) {
+        if (mobileScrollMode()) {
           x = viewBox.x + container.scrollLeft / metrics.scale;
           y = viewBox.y;
           width = Math.min(viewBox.width, Math.max(1, container.clientWidth / metrics.scale));
@@ -55,14 +66,28 @@
         } else {
           x = viewBox.x + ((-state.x / state.scale) - metrics.offsetX) / metrics.scale;
           y = viewBox.y + ((-state.y / state.scale) - metrics.offsetY) / metrics.scale;
-          width = Math.min(viewBox.width, metrics.width / state.scale / metrics.scale);
-          height = Math.min(viewBox.height, metrics.height / state.scale / metrics.scale);
+          width = metrics.width / state.scale / metrics.scale;
+          height = metrics.height / state.scale / metrics.scale;
         }
-        width = Math.max(1, Math.min(viewBox.width, width));
-        height = Math.max(1, Math.min(viewBox.height, height));
-        x = Math.max(viewBox.x, Math.min(viewBox.x + viewBox.width - width, x));
-        y = Math.max(viewBox.y, Math.min(viewBox.y + viewBox.height - height, y));
         return { x: x, y: y, width: width, height: height, scale: state.scale };
+      }
+      function logicalViewport() {
+        var world = worldViewport();
+        if (!world || !viewBox) return world;
+        var left = Math.max(viewBox.x, world.x);
+        var top = Math.max(viewBox.y, world.y);
+        var right = Math.min(viewBox.x + viewBox.width, world.x + world.width);
+        var bottom = Math.min(viewBox.y + viewBox.height, world.y + world.height);
+        var intersects = right > left && bottom > top;
+        return {
+          x: intersects ? left : Math.max(viewBox.x, Math.min(viewBox.x + viewBox.width, world.x + world.width / 2)),
+          y: intersects ? top : Math.max(viewBox.y, Math.min(viewBox.y + viewBox.height, world.y + world.height / 2)),
+          width: intersects ? right - left : 0,
+          height: intersects ? bottom - top : 0,
+          scale: state.scale,
+          outside: !intersects,
+          world: world
+        };
       }
       function detailLevel() {
         if (state.mode === 'semantic') return 'full';
@@ -132,13 +157,20 @@
         sample();
       }
       function apply() {
-        clamp();
+        boundCamera();
         svg.style.transform = 'translate(' + state.x + 'px,' + state.y + 'px) scale(' + state.scale + ')';
+        container.style.setProperty('--archify-camera-x', state.x + 'px');
+        container.style.setProperty('--archify-camera-y', state.y + 'px');
+        container.style.setProperty('--archify-camera-scale', String(state.scale));
+        container.style.setProperty('--archify-grid-x', (state.x + (svg.offsetLeft || 0)) + 'px');
+        container.style.setProperty('--archify-grid-y', (state.y + (svg.offsetTop || 0)) + 'px');
+        container.style.setProperty('--archify-grid-minor', (24 * state.scale) + 'px');
+        container.style.setProperty('--archify-grid-major', (120 * state.scale) + 'px');
         syncViewportClip();
         renderControls();
-        outBtn.disabled = state.scale <= 1;
-        inBtn.disabled = state.scale >= 3;
-        container.classList.toggle('is-pannable', state.scale > 1);
+        outBtn.disabled = state.scale <= MIN_SCALE;
+        inBtn.disabled = state.scale >= MAX_SCALE;
+        container.classList.toggle('is-pannable', !mobileScrollMode());
         svg.setAttribute('data-view-scale', String(state.scale));
         if (Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
         if (Archify.viewerChromeLayout && typeof Archify.viewerChromeLayout.schedule === 'function') {
@@ -235,20 +267,45 @@
           Archify.routeProbe.pauseJourney({ preserveElapsed: true, reason: reason || 'manual' });
         }
       }
-      function zoom(next, options) {
+      function zoomAtLocal(next, anchorX, anchorY, options) {
         options = options || {};
         if (options.manual !== false) interruptCamera();
         var previous = state.scale;
-        next = Math.max(1, Math.min(3, Math.round(next * 4) / 4));
+        next = Math.max(MIN_SCALE, Math.min(MAX_SCALE, Number(next) || previous));
+        if (options.discrete === true) next = Math.round(next * 4) / 4;
+        else next = Math.round(next * 1000) / 1000;
         if (next === previous) return;
-        var centerX = (svg.clientWidth || 1) / 2;
-        var centerY = (svg.clientHeight || 1) / 2;
-        var contentX = (centerX - state.x) / previous;
-        var contentY = (centerY - state.y) / previous;
+        var contentX = (anchorX - state.x) / previous;
+        var contentY = (anchorY - state.y) / previous;
         state.scale = next;
-        state.x = centerX - contentX * next;
-        state.y = centerY - contentY * next;
+        state.x = anchorX - contentX * next;
+        state.y = anchorY - contentY * next;
         apply();
+      }
+      function zoom(next, options) {
+        options = options || {};
+        options.discrete = true;
+        zoomAtLocal(next, (svg.clientWidth || 1) / 2, (svg.clientHeight || 1) / 2, options);
+      }
+      function zoomAt(next, clientX, clientY, options) {
+        var rect = container.getBoundingClientRect();
+        var anchorX = Number(clientX) - rect.left - (svg.offsetLeft || 0);
+        var anchorY = Number(clientY) - rect.top - (svg.offsetTop || 0);
+        if (!Number.isFinite(anchorX) || !Number.isFinite(anchorY)) return false;
+        zoomAtLocal(next, anchorX, anchorY, options);
+        return true;
+      }
+      function panBy(dx, dy, options) {
+        options = options || {};
+        dx = Number(dx);
+        dy = Number(dy);
+        if (!Number.isFinite(dx) || !Number.isFinite(dy) || mobileScrollMode()) return false;
+        if (options.manual !== false) interruptCamera();
+        state.x += dx;
+        state.y += dy;
+        state.mode = 'manual';
+        apply();
+        return true;
       }
       function reset(options) {
         options = options || {};
@@ -264,7 +321,7 @@
         var metrics = contentMetrics();
         if (!metrics || !Number.isFinite(logicalX) || !Number.isFinite(logicalY)) return false;
         interruptCamera();
-        if (window.innerWidth <= 720 && container.hasAttribute('data-wide-diagram')) {
+        if (mobileScrollMode()) {
           state.scale = 1;
           state.x = 0;
           state.y = 0;
@@ -277,9 +334,9 @@
           catch (_) { container.scrollLeft = mobileTarget; }
           return true;
         }
-        var minimumScale = Math.max(1, Math.min(3, Number(options.minimumScale) || 1));
+        var minimumScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, Number(options.minimumScale) || 1));
         var requestedScale = Number(options.scale);
-        state.scale = Math.max(minimumScale, Math.min(3, Number.isFinite(requestedScale) ? requestedScale : state.scale));
+        state.scale = Math.max(minimumScale, Math.min(MAX_SCALE, Number.isFinite(requestedScale) ? requestedScale : state.scale));
         var contentX = metrics.offsetX + (logicalX - viewBox.x) * metrics.scale;
         var contentY = metrics.offsetY + (logicalY - viewBox.y) * metrics.scale;
         state.x = metrics.width / 2 - contentX * state.scale;
@@ -477,12 +534,19 @@
           setTimeout(function () { container.removeAttribute('data-just-panned'); }, 80);
         }
       }
+      function cameraControlTarget(target) {
+        return target.closest('.diagram-nav, .focus-chip, .node-finder, .diagram-guide, .overview-map, .route-probe, .semantic-lens');
+      }
+      function cameraInteractiveTarget(target) {
+        return target.closest('[data-node-id], [data-relationship-hit-key], [data-legend-kind], [role="button"], a, button, input, select, textarea');
+      }
 
       inBtn.addEventListener('click', function () { zoom(state.scale + 0.25); });
       outBtn.addEventListener('click', function () { zoom(state.scale - 0.25); });
       resetBtn.addEventListener('click', reset);
       container.addEventListener('pointerdown', function (event) {
-        if (state.scale <= 1 || event.button !== 0 || event.target.closest('.diagram-nav, .focus-chip, .node-finder, .diagram-guide, .overview-map, .route-probe, .semantic-lens') || event.target.closest('[data-node-id]') || event.target.closest('[data-relationship-hit-key]')) return;
+        if (mobileScrollMode() || event.button !== 0 || cameraControlTarget(event.target) || cameraInteractiveTarget(event.target)) return;
+        event.preventDefault();
         interruptCamera();
         drag = { startX: event.clientX, startY: event.clientY, x: state.x, y: state.y, moved: false };
         container.classList.add('is-panning');
@@ -499,6 +563,23 @@
       });
       container.addEventListener('pointerup', onPointerEnd);
       container.addEventListener('pointercancel', onPointerEnd);
+      container.addEventListener('wheel', function (event) {
+        if (mobileScrollMode() || cameraControlTarget(event.target)) return;
+        event.preventDefault();
+        if (!container.classList.contains('is-wheel-panning')) interruptCamera('wheel');
+        container.classList.add('is-wheel-panning');
+        if (wheelTimer) clearTimeout(wheelTimer);
+        wheelTimer = setTimeout(function () {
+          wheelTimer = null;
+          container.classList.remove('is-wheel-panning');
+          if (Archify.focus && Archify.focus.reposition) Archify.focus.reposition();
+        }, 120);
+        if (event.ctrlKey || event.metaKey) {
+          zoomAt(state.scale * Math.exp(-event.deltaY * 0.002), event.clientX, event.clientY, { manual: false });
+          return;
+        }
+        panBy(-event.deltaX, -event.deltaY, { manual: false });
+      }, { passive: false });
       container.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', function () {
         if (resizeFrame) cancelAnimationFrame(resizeFrame);
@@ -516,10 +597,14 @@
       return {
         zoomIn: function () { zoom(state.scale + 0.25); },
         zoomOut: function () { zoom(state.scale - 0.25); },
+        zoomAt: zoomAt,
+        panBy: panBy,
+        fit: reset,
         reset: reset,
         reveal: reveal,
         centerAt: centerAt,
         logicalViewport: logicalViewport,
+        worldViewport: worldViewport,
         sync: syncSemantic,
         state: function () { return { scale: state.scale, x: state.x, y: state.y, mode: state.mode }; }
       };

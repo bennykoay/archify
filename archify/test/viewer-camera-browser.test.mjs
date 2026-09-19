@@ -126,21 +126,19 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
       const limits = await run(`(() => {
         const copy = Archify.view.state(); copy.scale = 99;
         const independent = Archify.view.state().scale === 1;
-        for (let i = 0; i < 12; i++) Archify.view.zoomIn();
+        Archify.view.zoomAt(99, 0, 0, { manual: false });
         const max = Archify.view.state().scale;
-        for (let i = 0; i < 12; i++) Archify.view.zoomOut();
+        Archify.view.zoomAt(0.01, 0, 0, { manual: false });
         return { independent, max, min: Archify.view.state().scale };
       })()`);
-      assert.deepEqual(limits, { independent: true, max: 3, min: 1 });
+      assert.deepEqual(limits, { independent: true, max: 4, min: 0.25 });
       await stable();
       assert.equal((await snapshot(`${mode}-limits`)).viewBox, initial.viewBox);
     }
   });
 
-  await t.test('pointer cancellation ends dragging and controls do not begin a pan', async () => {
+  await t.test('pointer cancellation ends dragging at fit scale and controls do not begin a pan', async () => {
     await load();
-    await run('Archify.view.zoomIn()');
-    await stable();
     const result = await run(`(() => {
       const c = document.querySelector('.diagram-container'), svg = c.querySelector(':scope > svg');
       const geometry = () => [...svg.querySelectorAll('[data-node-id], [data-edge-id]')].map(n =>
@@ -162,9 +160,64 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
         unchanged: JSON.stringify(ended) === JSON.stringify(Archify.view.state()),
         geometryUnchanged: beforeGeometry === JSON.stringify(geometry()) };
     })()`);
-    assert.deepEqual(result, { step: 1.25, controlExcluded: true, dragged: true, cancelled: true, unchanged: true, geometryUnchanged: true });
+    assert.deepEqual(result, { step: 1, controlExcluded: true, dragged: true, cancelled: true, unchanged: true, geometryUnchanged: true });
     await stable();
     await snapshot('pointer-cancel');
+  });
+
+  await t.test('infinite canvas pans freely, zooms at the pointer and exposes an off-canvas Radar marker', async () => {
+    await load();
+    const result = await run(`(async () => {
+      const c = document.querySelector('.diagram-container'), svg = c.querySelector(':scope > svg');
+      const grid = c.querySelector(':scope > .infinite-canvas-grid');
+      const rect = c.getBoundingClientRect();
+      const offsetLeft = svg.offsetLeft || 0, offsetTop = svg.offsetTop || 0;
+      const clientX = Math.round(rect.left + offsetLeft + 310);
+      const clientY = Math.round(rect.top + offsetTop + 220);
+      const localX = clientX - rect.left - offsetLeft;
+      const localY = clientY - rect.top - offsetTop;
+      const before = Archify.view.state();
+      const beforeAnchor = [(localX - before.x) / before.scale, (localY - before.y) / before.scale];
+      c.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true,
+        deltaY: -120, clientX, clientY }));
+      const zoomed = Archify.view.state();
+      const afterAnchor = [(localX - zoomed.x) / zoomed.scale, (localY - zoomed.y) / zoomed.scale];
+      c.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true,
+        deltaX: 40, deltaY: 55, clientX, clientY }));
+      const wheeled = Archify.view.state();
+      Archify.view.fit();
+      const fitted = Archify.view.state();
+      Archify.view.panBy(180, 140);
+      const positive = Archify.view.state();
+      Archify.view.panBy(-100000, -100000);
+      const logical = Archify.view.logicalViewport();
+      const world = Archify.view.worldViewport();
+      Archify.radar.open();
+      await cameraWait(() => document.querySelector('.overview-map-viewport')?.hasAttribute('data-outside'));
+      const marker = document.querySelector('.overview-map-viewport');
+      return {
+        api: ['zoomAt','panBy','fit','worldViewport'].every(name => typeof Archify.view[name] === 'function'),
+        grid: Boolean(grid) && getComputedStyle(grid).pointerEvents === 'none',
+        pointerAnchor: Math.abs(beforeAnchor[0] - afterAnchor[0]) < 0.01 && Math.abs(beforeAnchor[1] - afterAnchor[1]) < 0.01,
+        wheelPan: Math.abs(wheeled.x - (zoomed.x - 40)) < 0.01 && Math.abs(wheeled.y - (zoomed.y - 55)) < 0.01,
+        fitted, positive, outside: logical.outside, worldOutside: world.x > Number(svg.viewBox.baseVal.x + svg.viewBox.baseVal.width),
+        radarOutside: marker.hasAttribute('data-outside') && Number(marker.getAttribute('width')) > 0,
+        gridPosition: c.style.getPropertyValue('--archify-grid-x')
+      };
+    })()`, true);
+    assert.equal(result.api, true);
+    assert.equal(result.grid, true);
+    assert.equal(result.pointerAnchor, true, JSON.stringify(result));
+    assert.equal(result.wheelPan, true, JSON.stringify(result));
+    assert.deepEqual(result.fitted, { scale: 1, x: 0, y: 0, mode: 'overview' });
+    assert.deepEqual(result.positive, { scale: 1, x: 180, y: 140, mode: 'manual' });
+    assert.equal(result.outside, true);
+    assert.equal(result.worldOutside, true);
+    assert.equal(result.radarOutside, true);
+    assert.match(result.gridPosition, /px$/);
+    await stable();
+    await snapshot('infinite-canvas');
+    await screenshot('infinite-canvas');
   });
 
   await t.test('target selection, failure branches and instant options preserve their side effects', async () => {

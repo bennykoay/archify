@@ -10,7 +10,7 @@ Read this only when the user asks for a reader-facing capability. Ordinary gener
 - Intent Trace previews a fine-pointer or keyboard target before committed focus.
 - Node Finder searches labels and stable IDs.
 - Semantic Passport opens on focus, shows authored upstream/downstream facts, supports a copyable deep link, has an explicit close action, closes on true outside activation and Escape, and never enters canonical export.
-- Semantic Radar mirrors the visible viewport and authored graph without becoming a second source of truth.
+- Semantic Radar mirrors the visible infinite-canvas viewport and authored graph without becoming a second source of truth; when the camera is outside the authored graph, it renders a finite edge marker.
 - Direct Relationship Pin makes a unique compiled relationship operable while preserving the authored line and stable relationship identity. It must fail closed on conflicting source/target/label/ID metadata.
 - Route Probe resolves exactly two endpoints over authored directed relationships. It never infers a route from geometry.
 
