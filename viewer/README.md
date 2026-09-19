@@ -734,7 +734,7 @@ zoom/reset controls and the initial viewBox. The existing `apply()`,
 Views already exist; checks for later modules and deferred callers remain needed.
 The shared `viewerText` helper stays in classic-script scope.
 
-The interface includes `zoomIn`, `zoomOut`, `zoomAt`, `panBy`, `fit`, `reset`,
+The interface is `zoomIn`, `zoomOut`, `zoomAt`, `panBy`, `fit`, `reset`,
 `reveal`, `centerAt`, `logicalViewport`, `worldViewport`, `sync`, and `state`.
 `state()` returns a copy of scale/x/y/mode;
 the modes are overview, manual and semantic. Zoom and Reset return undefined;
@@ -742,18 +742,23 @@ the modes are overview, manual and semantic. Zoom and Reset return undefined;
 delegates to `reveal` or returns false. Manual Reset interrupts callers, whereas
 `reset({ automatic: true })` stops camera motion without the manual takeover path.
 
-Desktop Camera is an unbounded interaction surface. Empty-space pointer drag and
-wheel input pan at every zoom level; Ctrl/Cmd-wheel and trackpad pinch zoom around
-the pointer. Scale is bounded to 25%–400%, while translation has only a large
-numeric safety bound. `fit()` uses the same authored overview as Reset. The
-camera-created grid layer tracks translation and scale but remains outside the
-authored SVG, semantic geometry, and exports. Wide diagrams at widths up to 720px
-keep their established horizontal-scroll behavior.
+Large-world navigation is gated on `html[data-world-profile="large"]`, which
+Reader Layout derives from the readability contract; ordinary diagrams keep the
+historical 1–3 scale range, fit-scale non-pannable stage and native page
+scrolling. In a large world the scale cap is the finite dynamic
+`maximumCameraScale()`, empty-space pointer drag pans at every scale, plain wheel
+pans and Ctrl/Cmd-wheel or trackpad pinch zooms around the pointer (`zoomAt`).
+Wheel input is coalesced to one `apply()` per animation frame. Translation is
+bounded so at least a quarter of the stage always shows the authored frame; the
+diagram can never be lost off-screen. `fit()` is Reset. The camera-created grid
+layer is display-only, hidden outside large worlds, and never enters exports.
+Scale never drops below 1 in any profile.
 
-`worldViewport()` reports the unbounded visible rectangle in authored logical
-coordinates. `logicalViewport()` reports its intersection with the authored
-viewBox and includes `outside` plus the original `world` rectangle so Radar can
-render a finite edge marker when the viewport is completely outside the graph.
+`worldViewport()` reports the visible rectangle in authored logical coordinates
+without clamping. `logicalViewport()` keeps its historical contract for every
+consumer — a rectangle inside the authored viewBox with width/height ≥ 1 — and
+adds `outside` plus the original `world` rectangle so Radar can render a finite
+edge marker when the stage no longer intersects the graph.
 
 `reveal` returns a transaction or false, with branch-specific side effects.
 Desktop empty/unknown targets can return before changing the camera. At widths
@@ -781,9 +786,9 @@ Motion Governor and other callers retain their own responsibilities.
 
 | State / dependency | Ownership and coordination |
 | --- | --- |
-| Scale/x/y/mode, drag, wheel gesture/timer, transaction generation/object, camera frame/timer, clip/resize frames, automatic-scroll guard | Camera owns its page-lifetime state and pointer/wheel/scroll/resize/hashchange subscriptions. There is no destroy method. |
+| Scale/x/y/mode, drag, wheel gesture/timer/frame, transaction generation/object, camera frame/timer, clip/resize frames, automatic-scroll guard | Camera owns its page-lifetime state and pointer/wheel/scroll/resize/hashchange subscriptions. There is no destroy method. |
 | SVG `transform`, `clip-path`, `data-view-scale` | Camera applies runtime transforms and clipping without rewriting authored geometry, viewBox or semantic IDs. Export cleanup removes these from its clone. |
-| Camera grid element; container detail/camera attributes, grid variables, `is-pannable`, camera movement/transaction flags, `data-just-panned`, `--archify-scroll-x` | Camera updates the infinite-grid origin/scale, controls, drag suppression and mobile control positioning. `is-panning` is also used by Radar surface dragging; it is not exclusively owned by Camera. |
+| Camera grid element; container detail/camera attributes, grid variables, `is-pannable`, camera movement/transaction flags, `data-just-panned`, `--archify-scroll-x` | Camera updates the large-world grid origin/scale, controls, drag suppression and mobile control positioning. `is-panning` is also used by Radar surface dragging; it is not exclusively owned by Camera. |
 | Zoom/Reset labels, disabled state, detail attributes, title and ARIA text | Camera renders controls through shared translation helpers; associated CSS stays in the shell. |
 | Reader width/wide-diagram classification; Chrome navigation reserve | Owned by the layout modules. Camera consumes geometry and classification; `apply()` schedules Chrome and synchronizes Radar. |
 | Focus / Guided Views / Route | Finishing transactions repositions Focus. Manual takeover cancels guided handoffs and pauses Story and Route Journey, preserving Route elapsed time as before. Semantic sync prioritizes Guided Views over Focus. |
@@ -844,6 +849,8 @@ restoring the previous camera state.
 
 Compact expansion may hide Passport temporarily. Failed expansion, returning to
 compact, unavailable space and closing restore it through their existing paths.
+Restoration asks Focus to reposition the visible Passport before Radar measures
+it again; hidden-panel measurements must not become its restored bounds.
 Space retry permits four 60ms attempts per round; success and external reflow
 can reset the count. Close clears that timer and both drag records, hides the
 panel and removes the shared panning class. It does not cancel the already queued
@@ -961,3 +968,18 @@ isolated clone tests supplement them for restoration and idempotence.
 
 For required browser, output and package evidence, follow
 [Contributing](../CONTRIBUTING.md#local-setup-and-verification).
+
+## Camera and large-world state
+
+`Archify.view` exposes `zoomIn`, `zoomOut`, `zoomAt`, `panBy`, `fit`, `reset`,
+`reveal`, `centerAt`, `logicalViewport`, `worldViewport`, `sync`, and `state`.
+Scale remains a dimensionless multiplier where 1 is full Fit-all and never drops
+below 1. The large-world work adds navigation input (wheel, pinch, pointer
+pan) but no authoring state, schema field, or second Home concept.
+
+Reader Layout owns the derived fixed-stage CSS variables and profile receipt.
+Camera owns only the current transform, finite dynamic cap, automatic-entry
+lease, and transaction. Reset/`0` restore `{scale: 1, x: 0, y: 0}`. Export owns
+the full canonical clone and pixel-budget preflight; it never reads the camera
+viewport as export geometry. Mobile, embed, presentation, and print keep their
+existing models and clear the large-world fixed stage.
