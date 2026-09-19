@@ -6,6 +6,10 @@
       var resetDetailLabel = resetBtn.querySelector('[data-view-detail]');
       var resetPercentLabel = resetBtn.querySelector('[data-view-percent]');
       var inBtn = container.querySelector('[data-view="in"]');
+      var MIN_SCALE = 0.25;
+      var MAX_SCALE = 4;
+      var CAMERA_LIMIT = 1000000;
+      var grid = document.createElement('div');
       var state = { scale: 1, x: 0, y: 0, mode: 'overview' };
       var drag = null;
       var cameraTimer = null;
@@ -15,14 +19,7 @@
       var clipFrame = 0;
       var resizeFrame = 0;
       var autoScrollUntil = 0;
-      var MIN_SCALE = 1;
-      var grid = document.createElement('div');
       var wheelTimer = null;
-      var wheelFrame = 0;
-      var wheelPending = null;
-      var automaticEntryLease = true;
-      var automaticEntryAttempted = false;
-      var readabilityContract = archifyReadabilityContract || {};
 
       var viewBox = svg.viewBox && svg.viewBox.baseVal;
 
@@ -30,34 +27,16 @@
       grid.setAttribute('aria-hidden', 'true');
       container.insertBefore(grid, svg);
 
-      function largeWorld() {
-        return document.documentElement.getAttribute('data-world-profile') === 'large';
+      function boundCamera() {
+        state.scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, Number(state.scale) || 1));
+        state.x = Math.max(-CAMERA_LIMIT, Math.min(CAMERA_LIMIT, Number(state.x) || 0));
+        state.y = Math.max(-CAMERA_LIMIT, Math.min(CAMERA_LIMIT, Number(state.y) || 0));
       }
       function mobileScrollMode() {
         return window.innerWidth <= 720 && container.hasAttribute('data-wide-diagram');
       }
-      function clamp() {
-        var width = svg.clientWidth || 1;
-        var height = svg.clientHeight || 1;
-        state.scale = Math.max(MIN_SCALE, Math.min(maximumCameraScale(), Number(state.scale) || 1));
-        if (largeWorld() && !mobileScrollMode()) {
-          // Bounded large-world pan: the authored frame may leave the stage on
-          // any side, but at least a quarter of the stage always shows content
-          // so the diagram can never be lost off-screen.
-          var keepX = width * 0.25;
-          var keepY = height * 0.25;
-          state.x = Math.min(width - keepX, Math.max(keepX - width * state.scale, Number(state.x) || 0));
-          state.y = Math.min(height - keepY, Math.max(keepY - height * state.scale, Number(state.y) || 0));
-          return;
-        }
-        state.x = Math.min(0, Math.max(width - width * state.scale, state.x));
-        state.y = Math.min(0, Math.max(height - height * state.scale, state.y));
-      }
       function reducedMotion() {
         return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      }
-      function releaseAutomaticEntry() {
-        automaticEntryLease = false;
       }
       function contentMetrics() {
         if (!viewBox || viewBox.width <= 0 || viewBox.height <= 0) return null;
@@ -100,17 +79,11 @@
         var right = Math.min(viewBox.x + viewBox.width, world.x + world.width);
         var bottom = Math.min(viewBox.y + viewBox.height, world.y + world.height);
         var intersects = right > left && bottom > top;
-        // Keep the historical contract for every consumer: the rectangle is
-        // always inside the authored viewBox with width/height >= 1. When the
-        // camera is entirely outside the graph the rectangle collapses to a
-        // 1x1 probe at the nearest edge and `outside` is set for Radar.
-        var x = intersects ? left : Math.max(viewBox.x, Math.min(viewBox.x + viewBox.width - 1, world.x + world.width / 2));
-        var y = intersects ? top : Math.max(viewBox.y, Math.min(viewBox.y + viewBox.height - 1, world.y + world.height / 2));
         return {
-          x: x,
-          y: y,
-          width: intersects ? Math.max(1, right - left) : 1,
-          height: intersects ? Math.max(1, bottom - top) : 1,
+          x: intersects ? left : Math.max(viewBox.x, Math.min(viewBox.x + viewBox.width, world.x + world.width / 2)),
+          y: intersects ? top : Math.max(viewBox.y, Math.min(viewBox.y + viewBox.height, world.y + world.height / 2)),
+          width: intersects ? right - left : 0,
+          height: intersects ? bottom - top : 0,
           scale: state.scale,
           outside: !intersects,
           world: world
@@ -121,15 +94,6 @@
         if (state.scale >= 1.75) return 'full';
         if (state.scale >= 1) return 'read';
         return 'map';
-      }
-      function maximumCameraScale() {
-        if (document.documentElement.getAttribute('data-world-profile') !== 'large') return 3;
-        var metrics = contentMetrics();
-        if (!metrics || !Number.isFinite(metrics.scale) || metrics.scale <= 0) return 3;
-        return Math.max(1, Math.min(
-          readabilityContract.maximumFitMultiplier || 32,
-          (readabilityContract.maximumWorldToCssScale || 4) / metrics.scale
-        ));
       }
       function renderControls() {
         var semantic = state.mode === 'semantic' && state.scale > 1.01;
@@ -193,19 +157,20 @@
         sample();
       }
       function apply() {
-        clamp();
+        boundCamera();
         svg.style.transform = 'translate(' + state.x + 'px,' + state.y + 'px) scale(' + state.scale + ')';
-        if (largeWorld()) {
-          container.style.setProperty('--archify-grid-x', (state.x + (svg.offsetLeft || 0)) + 'px');
-          container.style.setProperty('--archify-grid-y', (state.y + (svg.offsetTop || 0)) + 'px');
-          container.style.setProperty('--archify-grid-minor', (24 * state.scale) + 'px');
-          container.style.setProperty('--archify-grid-major', (120 * state.scale) + 'px');
-        }
+        container.style.setProperty('--archify-camera-x', state.x + 'px');
+        container.style.setProperty('--archify-camera-y', state.y + 'px');
+        container.style.setProperty('--archify-camera-scale', String(state.scale));
+        container.style.setProperty('--archify-grid-x', (state.x + (svg.offsetLeft || 0)) + 'px');
+        container.style.setProperty('--archify-grid-y', (state.y + (svg.offsetTop || 0)) + 'px');
+        container.style.setProperty('--archify-grid-minor', (24 * state.scale) + 'px');
+        container.style.setProperty('--archify-grid-major', (120 * state.scale) + 'px');
         syncViewportClip();
         renderControls();
         outBtn.disabled = state.scale <= MIN_SCALE;
-        inBtn.disabled = state.scale >= maximumCameraScale() - 0.001;
-        container.classList.toggle('is-pannable', !mobileScrollMode() && (state.scale > 1 || largeWorld()));
+        inBtn.disabled = state.scale >= MAX_SCALE;
+        container.classList.toggle('is-pannable', !mobileScrollMode());
         svg.setAttribute('data-view-scale', String(state.scale));
         if (Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
         if (Archify.viewerChromeLayout && typeof Archify.viewerChromeLayout.schedule === 'function') {
@@ -286,7 +251,6 @@
         container.removeAttribute('data-camera-transaction');
       }
       function interruptCamera(reason) {
-        releaseAutomaticEntry();
         if (Archify.guidedViews && Archify.guidedViews.cancelHandoff) {
           Archify.guidedViews.cancelHandoff(reason || 'manual');
         }
@@ -307,7 +271,7 @@
         options = options || {};
         if (options.manual !== false) interruptCamera();
         var previous = state.scale;
-        next = Math.max(MIN_SCALE, Math.min(maximumCameraScale(), Number(next) || previous));
+        next = Math.max(MIN_SCALE, Math.min(MAX_SCALE, Number(next) || previous));
         if (options.discrete === true) next = Math.round(next * 4) / 4;
         else next = Math.round(next * 1000) / 1000;
         if (next === previous) return;
@@ -316,7 +280,6 @@
         state.scale = next;
         state.x = anchorX - contentX * next;
         state.y = anchorY - contentY * next;
-        if (state.mode === 'overview' && next > 1) state.mode = 'manual';
         apply();
       }
       function zoom(next, options) {
@@ -329,7 +292,6 @@
         var anchorX = Number(clientX) - rect.left - (svg.offsetLeft || 0);
         var anchorY = Number(clientY) - rect.top - (svg.offsetTop || 0);
         if (!Number.isFinite(anchorX) || !Number.isFinite(anchorY)) return false;
-        releaseAutomaticEntry();
         zoomAtLocal(next, anchorX, anchorY, options);
         return true;
       }
@@ -338,38 +300,12 @@
         dx = Number(dx);
         dy = Number(dy);
         if (!Number.isFinite(dx) || !Number.isFinite(dy) || mobileScrollMode()) return false;
-        if (!largeWorld() && state.scale <= 1) return false;
-        releaseAutomaticEntry();
         if (options.manual !== false) interruptCamera();
         state.x += dx;
         state.y += dy;
         state.mode = 'manual';
         apply();
         return true;
-      }
-      // Wheel input is coalesced to one apply() per animation frame so that a
-      // burst of wheel events on a large world costs a single layout pass.
-      function flushWheel() {
-        wheelFrame = 0;
-        var pending = wheelPending;
-        wheelPending = null;
-        if (!pending) return;
-        if (pending.zoomFactor !== 1) {
-          zoomAt(state.scale * pending.zoomFactor, pending.clientX, pending.clientY, { manual: false });
-        }
-        if (pending.dx || pending.dy) panBy(pending.dx, pending.dy, { manual: false });
-      }
-      function queueWheel(event) {
-        if (!wheelPending) wheelPending = { dx: 0, dy: 0, zoomFactor: 1, clientX: event.clientX, clientY: event.clientY };
-        if (event.ctrlKey || event.metaKey) {
-          wheelPending.zoomFactor *= Math.exp(-event.deltaY * 0.002);
-          wheelPending.clientX = event.clientX;
-          wheelPending.clientY = event.clientY;
-        } else {
-          wheelPending.dx -= event.deltaX;
-          wheelPending.dy -= event.deltaY;
-        }
-        if (!wheelFrame) wheelFrame = requestAnimationFrame(flushWheel);
       }
       function reset(options) {
         options = options || {};
@@ -398,10 +334,9 @@
           catch (_) { container.scrollLeft = mobileTarget; }
           return true;
         }
-        var maximumScale = maximumCameraScale();
-        var minimumScale = Math.max(MIN_SCALE, Math.min(maximumScale, Number(options.minimumScale) || 1));
+        var minimumScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, Number(options.minimumScale) || 1));
         var requestedScale = Number(options.scale);
-        state.scale = Math.max(minimumScale, Math.min(maximumScale, Number.isFinite(requestedScale) ? requestedScale : state.scale));
+        state.scale = Math.max(minimumScale, Math.min(MAX_SCALE, Number.isFinite(requestedScale) ? requestedScale : state.scale));
         var contentX = metrics.offsetX + (logicalX - viewBox.x) * metrics.scale;
         var contentY = metrics.offsetY + (logicalY - viewBox.y) * metrics.scale;
         state.x = metrics.width / 2 - contentX * state.scale;
@@ -433,28 +368,6 @@
           })
           .filter(Boolean);
       }
-      function minimumTargetSourceFont(ids) {
-        var wanted = semanticIds(ids, false);
-        var selectors = Array.isArray(readabilityContract.labelSelectors)
-          ? readabilityContract.labelSelectors.join(',')
-          : 'text[data-node-label],text[data-boundary-label],[data-node-id] text[data-detail="context"]';
-        var minimum = null;
-        function include(text) {
-          var owner = text.closest('[data-node-id]');
-          if (owner && Object.keys(wanted).length && !wanted[owner.getAttribute('data-node-id')]) return;
-          var size = parseFloat(getComputedStyle(text).fontSize || text.getAttribute('font-size'));
-          if (Number.isFinite(size) && size > 0 && (minimum === null || size < minimum)) minimum = size;
-        }
-        Array.prototype.forEach.call(svg.querySelectorAll(selectors), include);
-        // Third-party/legacy standalone SVGs may have semantic node groups but
-        // predate Archify's label annotations. Keep navigation functional by
-        // measuring target-owned text only; profile classification still uses
-        // the authoritative annotated selector set.
-        if (minimum === null) {
-          Array.prototype.forEach.call(svg.querySelectorAll('[data-node-id] text'), include);
-        }
-        return minimum === null ? 0 : minimum;
-      }
       function frameDesktop(ids, options) {
         options = options || {};
         var boxes = boxesFor(ids, options.includeNeighbors === true);
@@ -474,16 +387,17 @@
           width: Math.max(1, (maxX - minX) * contentScale),
           height: Math.max(1, (maxY - minY) * contentScale)
         };
-        var left = 0;
-        var right = svgWidth;
-        var top = 0;
-        var bottom = svgHeight;
+        var padding = options.padding || 48;
+        var left = padding;
+        var right = svgWidth - padding;
+        var top = padding;
+        var bottom = svgHeight - Math.max(padding, 72);
         var containerRect = container.getBoundingClientRect();
         var visibleTop = Math.max(0, -containerRect.top);
         var visibleBottom = Math.min(svgHeight, window.innerHeight - containerRect.top);
         if (visibleBottom - visibleTop >= 240) {
-          top = Math.max(top, visibleTop);
-          bottom = Math.min(bottom, visibleBottom);
+          top = Math.max(top, visibleTop + padding);
+          bottom = Math.min(bottom, visibleBottom - Math.max(padding, 72));
         }
         var chip = document.getElementById('focus-chip');
         if (chip && !chip.hidden) {
@@ -498,46 +412,12 @@
           else bottom = Math.min(bottom, receiptTop - 24);
         }
         if (right <= left || bottom <= top) return false;
-        var sourceFont = minimumTargetSourceFont(ids);
-        var derived = typeof archifyDeriveLargeWorldReadability === 'function'
-          ? archifyDeriveLargeWorldReadability({
-              safeStageWidth: right - left,
-              safeStageHeight: bottom - top,
-              canonicalWorldWidth: viewBox.width,
-              canonicalWorldHeight: viewBox.height,
-              // Text-free targets still need geometric framing; a positive
-              // probe keeps the derivation defined and the readability clause
-              // below still rejects them when readability is required.
-              minimumTargetSourceFontWorldUnits: sourceFont > 0 ? sourceFont : 1,
-              targetBoundsWidth: Math.max(1, maxX - minX),
-              targetBoundsHeight: Math.max(1, maxY - minY)
-            })
-          : null;
-        if (!derived || contentScale <= 0) return false;
-        var targetFitScale = derived.targetFitScale / contentScale;
-        var requiredScale = derived.requiredReadableScale / contentScale;
-        var dynamicMaximum = maximumCameraScale();
-        var legacyMaximum = Number(options.maxScale) || (options.includeNeighbors ? 1.9 : 2.15);
-        var maxScale = document.documentElement.getAttribute('data-world-profile') === 'large'
-          ? Math.min(dynamicMaximum, Math.max(legacyMaximum, requiredScale))
-          : Math.min(dynamicMaximum, legacyMaximum);
-        var targetScale = targetFitScale;
+        var maxScale = options.maxScale || (options.includeNeighbors ? 1.9 : 2.15);
+        var targetScale = Math.min((right - left) / bounds.width, (bottom - top) / bounds.height) * 0.9;
         targetScale = Math.max(1, Math.min(maxScale, targetScale));
-        // Compare the multiplier in the same unit as the authoritative
-        // requirement. Re-multiplying the quotient can turn an exact 6px
-        // boundary into 5.999999999999999 through floating-point drift.
-        var readable = sourceFont > 0 && targetScale >= requiredScale;
-        if (!readable) {
-          container.setAttribute('data-camera-diagnostic', options.automaticEntry
-            ? 'viewer/entry-text-unreadable'
-            : 'viewer/navigation-text-unreadable');
-          if (options.requireReadable === true) return false;
-        } else {
-          container.removeAttribute('data-camera-diagnostic');
-        }
         if (targetScale < 1.08) targetScale = 1;
         var target = {
-          scale: targetScale,
+          scale: Math.round(targetScale * 100) / 100,
           x: 0,
           y: 0,
           mode: 'semantic'
@@ -633,63 +513,6 @@
         if (Array.isArray(active) && active.length) return reveal(active, { reason: 'selection-sync' });
         return false;
       }
-      function hasSemanticHashIntent() {
-        var guided = Archify.guidedViews && typeof Archify.guidedViews.active === 'function'
-          ? Archify.guidedViews.active() : null;
-        var active = Archify.focus && typeof Archify.focus.active === 'function'
-          ? Archify.focus.active() : null;
-        return Boolean(guided || (typeof active === 'string' && active) || (Array.isArray(active) && active.length));
-      }
-      function syncExplicitHashIntent() {
-        if (!location.hash || location.hash.length <= 1) return false;
-        if (!hasSemanticHashIntent()) {
-          reset({ automatic: true });
-          container.setAttribute('data-camera-diagnostic', 'viewer/semantic-id-invalid');
-          return false;
-        }
-        var result = syncSemantic();
-        if (result) container.removeAttribute('data-camera-diagnostic');
-        return result;
-      }
-      function initialGuidedFocus() {
-        var data = document.getElementById('archify-guided-views-data');
-        if (!data) return [];
-        try {
-          var views = JSON.parse(data.textContent || '[]');
-          return views.length && Array.isArray(views[0].focus) ? views[0].focus.slice() : [];
-        } catch (_) { return []; }
-      }
-      function automaticEntry() {
-        if (automaticEntryAttempted || !automaticEntryLease) return false;
-        automaticEntryAttempted = true;
-        if (location.hash && location.hash.length > 1) {
-          releaseAutomaticEntry();
-          return syncExplicitHashIntent();
-        }
-        var receipt = Archify.readerLayout && Archify.readerLayout.receipt ? Archify.readerLayout.receipt() : null;
-        if (!receipt || receipt.worldProfile !== 'large') return false;
-        var candidates = [];
-        var guided = initialGuidedFocus();
-        if (guided.length) candidates.push(guided);
-        var start = svg.querySelector('[data-node-id][data-node-kind="start"]');
-        if (start) candidates.push([start.getAttribute('data-node-id')]);
-        var first = svg.querySelector('[data-node-id]');
-        if (first) candidates.push([first.getAttribute('data-node-id')]);
-        for (var index = 0; index < candidates.length; index++) {
-          var framed = frameDesktop(candidates[index], {
-            automaticEntry: true,
-            requireReadable: true,
-            instant: true,
-            reason: 'large-world-entry'
-          });
-          if (framed) {
-            container.setAttribute('data-automatic-entry', candidates[index].join(' '));
-            return framed;
-          }
-        }
-        container.setAttribute('data-camera-diagnostic', 'viewer/entry-text-unreadable');
-        return false;
-      }
       function pinControls() {
         container.style.setProperty('--archify-scroll-x', container.scrollLeft + 'px');
       }
@@ -711,19 +534,18 @@
           setTimeout(function () { container.removeAttribute('data-just-panned'); }, 80);
         }
       }
-
-      inBtn.addEventListener('click', function () { zoom(state.scale + 0.25); });
-      outBtn.addEventListener('click', function () { zoom(state.scale - 0.25); });
-      resetBtn.addEventListener('click', reset);
       function cameraControlTarget(target) {
         return target.closest('.diagram-nav, .focus-chip, .node-finder, .diagram-guide, .overview-map, .route-probe, .semantic-lens');
       }
       function cameraInteractiveTarget(target) {
         return target.closest('[data-node-id], [data-relationship-hit-key], [data-legend-kind], [role="button"], a, button, input, select, textarea');
       }
+
+      inBtn.addEventListener('click', function () { zoom(state.scale + 0.25); });
+      outBtn.addEventListener('click', function () { zoom(state.scale - 0.25); });
+      resetBtn.addEventListener('click', reset);
       container.addEventListener('pointerdown', function (event) {
         if (mobileScrollMode() || event.button !== 0 || cameraControlTarget(event.target) || cameraInteractiveTarget(event.target)) return;
-        if (!largeWorld() && state.scale <= 1) return;
         event.preventDefault();
         interruptCamera();
         drag = { startX: event.clientX, startY: event.clientY, x: state.x, y: state.y, moved: false };
@@ -741,11 +563,8 @@
       });
       container.addEventListener('pointerup', onPointerEnd);
       container.addEventListener('pointercancel', onPointerEnd);
-      // Large worlds take over the wheel: plain wheel pans, Ctrl/Cmd-wheel and
-      // trackpad pinch zoom around the pointer. Ordinary diagrams keep native
-      // page scrolling so the summary cards below the stage stay reachable.
       container.addEventListener('wheel', function (event) {
-        if (!largeWorld() || mobileScrollMode() || cameraControlTarget(event.target)) return;
+        if (mobileScrollMode() || cameraControlTarget(event.target)) return;
         event.preventDefault();
         if (!container.classList.contains('is-wheel-panning')) interruptCamera('wheel');
         container.classList.add('is-wheel-panning');
@@ -755,7 +574,11 @@
           container.classList.remove('is-wheel-panning');
           if (Archify.focus && Archify.focus.reposition) Archify.focus.reposition();
         }, 120);
-        queueWheel(event);
+        if (event.ctrlKey || event.metaKey) {
+          zoomAt(state.scale * Math.exp(-event.deltaY * 0.002), event.clientX, event.clientY, { manual: false });
+          return;
+        }
+        panBy(-event.deltaX, -event.deltaY, { manual: false });
       }, { passive: false });
       container.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', function () {
@@ -766,32 +589,23 @@
           else apply();
         });
       });
-      window.addEventListener('hashchange', function () {
-        releaseAutomaticEntry();
-        requestAnimationFrame(syncExplicitHashIntent);
-      });
+      window.addEventListener('hashchange', function () { requestAnimationFrame(syncSemantic); });
       apply();
       pinControls();
-      var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready.catch(function () {}) : Promise.resolve();
-      fontsReady.then(function () {
-        var stable = Archify.readerLayout && Archify.readerLayout.whenStable
-          ? Archify.readerLayout.whenStable().catch(function () {})
-          : Promise.resolve();
-        return stable.then(function () { requestAnimationFrame(automaticEntry); });
-      });
+      requestAnimationFrame(syncSemantic);
 
       return {
-        zoomIn: function () { releaseAutomaticEntry(); zoom(state.scale + 0.25); },
-        zoomOut: function () { releaseAutomaticEntry(); zoom(state.scale - 0.25); },
+        zoomIn: function () { zoom(state.scale + 0.25); },
+        zoomOut: function () { zoom(state.scale - 0.25); },
         zoomAt: zoomAt,
         panBy: panBy,
         fit: reset,
         reset: reset,
-        reveal: function (ids, options) { releaseAutomaticEntry(); return reveal(ids, options); },
+        reveal: reveal,
         centerAt: centerAt,
         logicalViewport: logicalViewport,
         worldViewport: worldViewport,
-        sync: function () { releaseAutomaticEntry(); return syncSemantic(); },
+        sync: syncSemantic,
         state: function () { return { scale: state.scale, x: state.x, y: state.y, mode: state.mode }; }
       };
     })();

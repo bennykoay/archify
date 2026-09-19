@@ -131,16 +131,14 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
         Archify.view.zoomAt(0.01, 0, 0, { manual: false });
         return { independent, max, min: Archify.view.state().scale };
       })()`);
-      assert.deepEqual(limits, { independent: true, max: 3, min: 1 });
+      assert.deepEqual(limits, { independent: true, max: 4, min: 0.25 });
       await stable();
       assert.equal((await snapshot(`${mode}-limits`)).viewBox, initial.viewBox);
     }
   });
 
-  await t.test('pointer cancellation ends dragging and controls do not begin a pan', async () => {
+  await t.test('pointer cancellation ends dragging at fit scale and controls do not begin a pan', async () => {
     await load();
-    await run('Archify.view.zoomIn()');
-    await stable();
     const result = await run(`(() => {
       const c = document.querySelector('.diagram-container'), svg = c.querySelector(':scope > svg');
       const geometry = () => [...svg.querySelectorAll('[data-node-id], [data-edge-id]')].map(n =>
@@ -162,42 +160,16 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
         unchanged: JSON.stringify(ended) === JSON.stringify(Archify.view.state()),
         geometryUnchanged: beforeGeometry === JSON.stringify(geometry()) };
     })()`);
-    assert.deepEqual(result, { step: 1.25, controlExcluded: true, dragged: true, cancelled: true, unchanged: true, geometryUnchanged: true });
+    assert.deepEqual(result, { step: 1, controlExcluded: true, dragged: true, cancelled: true, unchanged: true, geometryUnchanged: true });
     await stable();
     await snapshot('pointer-cancel');
   });
 
-  await t.test('ordinary diagrams keep native wheel scrolling and fit-scale pointer behaviour', async () => {
-    await load();
-    const result = await run(`(() => {
-      const c = document.querySelector('.diagram-container');
-      const grid = c.querySelector(':scope > .infinite-canvas-grid');
-      const before = Archify.view.state();
-      const wheel = new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 55, clientX: 10, clientY: 10 });
-      c.dispatchEvent(wheel);
-      const panned = Archify.view.panBy(40, 40);
-      return {
-        large: document.documentElement.getAttribute('data-world-profile') === 'large',
-        wheelDefaultKept: !wheel.defaultPrevented,
-        gridHidden: !grid || getComputedStyle(grid).display === 'none',
-        pannable: c.classList.contains('is-pannable'),
-        panRefused: panned === false,
-        unchanged: JSON.stringify(before) === JSON.stringify(Archify.view.state())
-      };
-    })()`);
-    assert.deepEqual(result, { large: false, wheelDefaultKept: true, gridHidden: true, pannable: false, panRefused: true, unchanged: true });
-    await stable();
-  });
-
-  await t.test('large worlds pan within bounds, zoom at the pointer and coalesce wheel input per frame', async () => {
+  await t.test('infinite canvas pans freely, zooms at the pointer and exposes an off-canvas Radar marker', async () => {
     await load();
     const result = await run(`(async () => {
       const c = document.querySelector('.diagram-container'), svg = c.querySelector(':scope > svg');
       const grid = c.querySelector(':scope > .infinite-canvas-grid');
-      // Simulate the reader-layout classification without a huge fixture.
-      document.documentElement.setAttribute('data-world-profile', 'large');
-      Archify.view.reset();
-      const frame = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
       const rect = c.getBoundingClientRect();
       const offsetLeft = svg.offsetLeft || 0, offsetTop = svg.offsetTop || 0;
       const clientX = Math.round(rect.left + offsetLeft + 310);
@@ -206,52 +178,46 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
       const localY = clientY - rect.top - offsetTop;
       const before = Archify.view.state();
       const beforeAnchor = [(localX - before.x) / before.scale, (localY - before.y) / before.scale];
-      const zoomWheel = new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true, deltaY: -120, clientX, clientY });
-      c.dispatchEvent(zoomWheel);
-      const syncState = Archify.view.state();
-      await frame();
+      c.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true,
+        deltaY: -120, clientX, clientY }));
       const zoomed = Archify.view.state();
       const afterAnchor = [(localX - zoomed.x) / zoomed.scale, (localY - zoomed.y) / zoomed.scale];
-      c.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaX: 10, deltaY: 20, clientX, clientY }));
-      c.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaX: 30, deltaY: 35, clientX, clientY }));
-      await frame();
+      c.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true,
+        deltaX: 40, deltaY: 55, clientX, clientY }));
       const wheeled = Archify.view.state();
       Archify.view.fit();
       const fitted = Archify.view.state();
-      Archify.view.panBy(-1000000, -1000000);
-      const clamped = Archify.view.state();
-      const width = svg.clientWidth, height = svg.clientHeight;
+      Archify.view.panBy(180, 140);
+      const positive = Archify.view.state();
+      Archify.view.panBy(-100000, -100000);
       const logical = Archify.view.logicalViewport();
-      document.documentElement.removeAttribute('data-world-profile');
-      Archify.view.reset();
+      const world = Archify.view.worldViewport();
+      Archify.radar.open();
+      await cameraWait(() => document.querySelector('.overview-map-viewport')?.hasAttribute('data-outside'));
+      const marker = document.querySelector('.overview-map-viewport');
       return {
         api: ['zoomAt','panBy','fit','worldViewport'].every(name => typeof Archify.view[name] === 'function'),
-        wheelPrevented: zoomWheel.defaultPrevented,
-        deferredToFrame: syncState.scale === before.scale && zoomed.scale > before.scale,
-        gridShown: Boolean(grid) && getComputedStyle(grid).display === 'block' && getComputedStyle(grid).pointerEvents === 'none',
+        grid: Boolean(grid) && getComputedStyle(grid).pointerEvents === 'none',
         pointerAnchor: Math.abs(beforeAnchor[0] - afterAnchor[0]) < 0.01 && Math.abs(beforeAnchor[1] - afterAnchor[1]) < 0.01,
         wheelPan: Math.abs(wheeled.x - (zoomed.x - 40)) < 0.01 && Math.abs(wheeled.y - (zoomed.y - 55)) < 0.01,
-        fitted,
-        boundedX: Math.abs(clamped.x - (width * 0.25 - width * clamped.scale)) < 0.01,
-        boundedY: Math.abs(clamped.y - (height * 0.25 - height * clamped.scale)) < 0.01,
-        logicalInside: logical.width >= 1 && logical.height >= 1 && logical.outside === false,
+        fitted, positive, outside: logical.outside, worldOutside: world.x > Number(svg.viewBox.baseVal.x + svg.viewBox.baseVal.width),
+        radarOutside: marker.hasAttribute('data-outside') && Number(marker.getAttribute('width')) > 0,
         gridPosition: c.style.getPropertyValue('--archify-grid-x')
       };
     })()`, true);
     assert.equal(result.api, true);
-    assert.equal(result.wheelPrevented, true);
-    assert.equal(result.deferredToFrame, true, JSON.stringify(result));
-    assert.equal(result.gridShown, true);
+    assert.equal(result.grid, true);
     assert.equal(result.pointerAnchor, true, JSON.stringify(result));
     assert.equal(result.wheelPan, true, JSON.stringify(result));
     assert.deepEqual(result.fitted, { scale: 1, x: 0, y: 0, mode: 'overview' });
-    assert.equal(result.boundedX, true, JSON.stringify(result));
-    assert.equal(result.boundedY, true, JSON.stringify(result));
-    assert.equal(result.logicalInside, true, JSON.stringify(result));
+    assert.deepEqual(result.positive, { scale: 1, x: 180, y: 140, mode: 'manual' });
+    assert.equal(result.outside, true);
+    assert.equal(result.worldOutside, true);
+    assert.equal(result.radarOutside, true);
     assert.match(result.gridPosition, /px$/);
     await stable();
-    await snapshot('large-world-canvas');
-    await screenshot('large-world-canvas');
+    await snapshot('infinite-canvas');
+    await screenshot('infinite-canvas');
   });
 
   await t.test('target selection, failure branches and instant options preserve their side effects', async () => {

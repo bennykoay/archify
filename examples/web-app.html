@@ -859,30 +859,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       padding-bottom: calc(1.5rem + var(--archify-nav-reserve));
       overflow: hidden;
       position: relative;
-      box-sizing: border-box;
-    }
-
-    html[data-world-profile="large"]:not([data-embed="true"]):not([data-present="true"]) .diagram-container {
-      height: var(--archify-stage-height);
-    }
-    html[data-world-profile="large"]:not([data-embed="true"]):not([data-present="true"]) .container,
-    html[data-world-measuring="true"]:not([data-embed="true"]):not([data-present="true"]) .container {
-      max-width: 1440px;
-    }
-    html[data-world-profile="large"]:not([data-embed="true"]):not([data-present="true"]) .diagram-container > svg {
-      width: 100%;
-      height: 100%;
-      min-height: 0;
-      position: relative;
-      z-index: 1;
-      /* Large worlds are transformed at high multipliers; promoting the SVG to its
-         own compositing layer avoids re-rasterizing the whole frame on every
-         page-scroll / pan frame. Ordinary diagrams keep the default path. */
-      will-change: transform;
     }
 
     .infinite-canvas-grid {
-      display: none;
       position: absolute;
       z-index: 0;
       inset: 0;
@@ -896,9 +875,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       background-size:
         var(--archify-grid-minor, 24px) var(--archify-grid-minor, 24px),
         var(--archify-grid-major, 120px) var(--archify-grid-major, 120px);
-    }
-    html[data-world-profile="large"]:not([data-embed="true"]):not([data-present="true"]) .infinite-canvas-grid {
-      display: block;
     }
 
     html[data-preset="signal-flow"] .diagram-container {
@@ -1061,6 +1037,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     html[data-motion="still"] svg [data-legend-hit],
     html[data-motion="still"] svg {
       transition: none !important;
+    }
+
+    .diagram-container > svg {
+      position: relative;
+      z-index: 1;
     }
 
     svg {
@@ -5668,57 +5649,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
   <script>
     var Archify = {};
-    var archifyReadabilityContract = Object.freeze({"version":1,"minimumProjectedTextPx":6,"targetPaddingCssPx":24,"maximumFitMultiplier":32,"maximumWorldToCssScale":4,"minimumDesktopViewportWidthExclusive":720,"minimumAvailableStageHeight":360,"maximumStageHeight":900,"stageBottomGapCssPx":24,"labelSelectors":["text[data-node-label]","text[data-boundary-label]","[data-node-id] text[data-detail=\"context\"]"]});
-var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWithContract(contract, {
-  safeStageWidth,
-  safeStageHeight,
-  canonicalWorldWidth,
-  canonicalWorldHeight,
-  minimumTargetSourceFontWorldUnits,
-  targetBoundsWidth,
-  targetBoundsHeight,
-} = {}) {
-  const values = [
-    safeStageWidth,
-    safeStageHeight,
-    canonicalWorldWidth,
-    canonicalWorldHeight,
-    minimumTargetSourceFontWorldUnits,
-    targetBoundsWidth,
-    targetBoundsHeight,
-  ];
-  if (!values.every(Number.isFinite) || values.some((value) => value <= 0)) return null;
-
-  if (!contract || typeof contract !== 'object') return null;
-  const worldScaleFit = Math.min(
-    safeStageWidth / canonicalWorldWidth,
-    safeStageHeight / canonicalWorldHeight,
-  );
-  const projectedTextPx = minimumTargetSourceFontWorldUnits * worldScaleFit;
-  const requiredReadableScale = contract.minimumProjectedTextPx / minimumTargetSourceFontWorldUnits;
-  const paddedWidth = safeStageWidth - contract.targetPaddingCssPx * 2;
-  const paddedHeight = safeStageHeight - contract.targetPaddingCssPx * 2;
-  const targetFitScale = paddedWidth > 0 && paddedHeight > 0
-    ? Math.min(paddedWidth / targetBoundsWidth, paddedHeight / targetBoundsHeight)
-    : 0;
-  const maximumWorldToCssScale = Math.max(
-    worldScaleFit,
-    Math.min(worldScaleFit * contract.maximumFitMultiplier, contract.maximumWorldToCssScale),
-  );
-  const targetWorldToCssScale = Math.max(worldScaleFit, requiredReadableScale);
-
-  return {
-    worldProfile: projectedTextPx < contract.minimumProjectedTextPx ? 'large' : 'small',
-    worldScaleFit,
-    projectedTextPx,
-    requiredReadableScale,
-    targetFitScale,
-    maximumWorldToCssScale,
-    targetWorldToCssScale,
-    cameraMultiplier: targetWorldToCssScale / worldScaleFit,
-    targetReadableAndContained: targetWorldToCssScale <= Math.min(targetFitScale, maximumWorldToCssScale),
-  };
-}).bind(null, archifyReadabilityContract);
     var archifyI18nData = (function () {
       var node = document.getElementById('archify-i18n-data');
       try { return JSON.parse(node ? node.textContent : '{}'); }
@@ -5956,10 +5886,11 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
     /* ============================================================
        Export — Share Card / PNG / JPEG / WebP / SVG / WebM and clipboard
 
-       Raster exports request 4x source resolution, then preflight the full
-       canonical frame against a bounded pixel budget before allocating a
-       canvas. The largest safe integer scale is used; SVG remains the
-       lossless fallback when even 1x cannot fit.
+       Raster exports are always rendered at 4x source resolution for
+       maximum sharpness. The trick: we set the serialized SVG's
+       `width`/`height` to viewBox * 4 so the browser rasterizes the
+       vectors at that resolution natively. drawImage then draws at
+       the image's natural size (no upscaling = no blur).
 
        JPEG/WebP paint the current theme's background explicitly since
        those formats have no alpha channel.
@@ -6095,7 +6026,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           el.removeAttribute('data-story-beat-state');
           el.removeAttribute('data-story-beat-step');
           el.style.removeProperty('--story-step');
-          if (!el.style.cssText) el.removeAttribute('style');
         });
         Array.prototype.forEach.call(clone.querySelectorAll('[data-focus-match], [data-focus-selected]'), function (el) {
           el.removeAttribute('data-focus-match');
@@ -6135,7 +6065,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           el.removeAttribute('data-route-journey-state');
           el.removeAttribute('data-route-journey-current');
           el.style.removeProperty('--route-step');
-          if (!el.style.cssText) el.removeAttribute('style');
         });
         Array.prototype.forEach.call(clone.querySelectorAll('[data-share-route-match], [data-share-route-step], [data-share-route-start], [data-share-route-end], [data-share-route-middle]'), function (el) {
           el.removeAttribute('data-share-route-match');
@@ -6156,14 +6085,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         Array.prototype.forEach.call(clone.querySelectorAll('[data-node-id][aria-pressed]'), function (el) {
           el.setAttribute('aria-pressed', 'false');
         });
-        // Interaction modules may remove their data attributes before export
-        // while leaving an empty inline style shell behind. Empty style
-        // attributes carry no authored geometry or appearance and would make
-        // the canonical bytes depend on navigation history.
-        Array.prototype.forEach.call(clone.querySelectorAll('[style]'), function (el) {
-          if (!el.style.cssText) el.removeAttribute('style');
-        });
-        if (!clone.style.cssText) clone.removeAttribute('style');
         return !clone.hasAttribute('data-view-scale') &&
           !clone.hasAttribute('data-focus-active') &&
           !clone.hasAttribute('data-reach-active') &&
@@ -6553,56 +6474,13 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
       // desktop Safari are far higher but start failing on memory-constrained
       // devices. We pick the largest integer scale in {4,3,2,1} whose target
       // pixel count fits under this cap.
-      var MAX_CANVAS_PIXELS = 16000000;
-      var exportPreflights = new WeakMap();
+      var MAX_CANVAS_PIXELS = 16 * 1024 * 1024;
 
-      function rasterBudgetError(receipt) {
-        var error = exportError('viewer.export.error.rasterBudget', {
-          format: receipt.format.toUpperCase(),
-          width: receipt.actualWidth,
-          height: receipt.actualHeight,
-          limit: receipt.limit
-        });
-        error.code = 'export/raster-budget-exceeded';
-        error.receipt = receipt;
-        return error;
-      }
-
-      function rasterPreflight(format, vbW, vbH, requestedScale) {
-        var candidates = [];
-        for (var s = Math.max(1, Math.floor(requestedScale)); s >= 1; s--) {
-          var width = Math.ceil(vbW * s);
-          var height = Math.ceil(vbH * s);
-          var pixels = width * height;
-          candidates.push({ scale: s, width: width, height: height, pixels: pixels });
-          if (pixels <= MAX_CANVAS_PIXELS) {
-            return {
-              ok: true, format: format, requestedScale: requestedScale, actualScale: s,
-              requestedWidth: Math.ceil(vbW * requestedScale), requestedHeight: Math.ceil(vbH * requestedScale),
-              actualWidth: width, actualHeight: height, candidates: candidates,
-              limit: MAX_CANVAS_PIXELS, fallback: 'svg'
-            };
-          }
+      function pickSafeScale(vbW, vbH) {
+        for (var s = RASTER_SCALE; s >= 1; s--) {
+          if (vbW * s * vbH * s <= MAX_CANVAS_PIXELS) return s;
         }
-        return {
-          ok: false, format: format, requestedScale: requestedScale, actualScale: null,
-          requestedWidth: Math.ceil(vbW * requestedScale), requestedHeight: Math.ceil(vbH * requestedScale),
-          actualWidth: Math.ceil(vbW), actualHeight: Math.ceil(vbH), candidates: candidates,
-          limit: MAX_CANVAS_PIXELS, fallback: 'svg'
-        };
-      }
-
-      function webmPreflight(vbW, vbH, scale) {
-        var width = Math.max(2, Math.round(vbW * scale / 2) * 2);
-        var height = Math.max(2, Math.round(vbH * scale / 2) * 2);
-        return {
-          ok: width * height <= MAX_CANVAS_PIXELS,
-          format: 'webm', requestedScale: scale, actualScale: scale,
-          requestedWidth: width, requestedHeight: height,
-          actualWidth: width, actualHeight: height,
-          candidates: [{ scale: scale, width: width, height: height, pixels: width * height }],
-          limit: MAX_CANVAS_PIXELS, fallback: 'svg'
-        };
+        return 1;
       }
 
       function rasterize(format) {
@@ -6612,9 +6490,7 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         // size — no upsampling blur.
         var svg = document.querySelector('.diagram-container svg');
         var vb = svg.viewBox.baseVal;
-        var preflight = rasterPreflight(format, vb.width, vb.height, RASTER_SCALE);
-        if (!preflight.ok) return Promise.reject(rasterBudgetError(preflight));
-        var scale = preflight.actualScale;
+        var scale = pickSafeScale(vb.width, vb.height);
         var data = serializeSvg(scale);
         var svgBlob = new Blob([data.svgString], { type: 'image/svg+xml;charset=utf-8' });
         var svgUrl = URL.createObjectURL(svgBlob);
@@ -6639,10 +6515,7 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
               var quality = format === 'png' ? undefined : 0.95;
               canvas.toBlob(function (blob) {
                 if (!blob) reject(exportError('viewer.export.error.toBlobNull', { label: format }));
-                else {
-                  exportPreflights.set(blob, preflight);
-                  resolve(blob);
-                }
+                else resolve(blob);
               }, mime, quality);
             } catch (error) {
               URL.revokeObjectURL(svgUrl);
@@ -6692,9 +6565,7 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         if (routeSnapshot && reachSnapshot) return Promise.reject(exportError('viewer.export.error.variantsCombined'));
         var svg = document.querySelector('.diagram-container svg');
         var vb = svg.viewBox.baseVal;
-        var sourcePreflight = rasterPreflight('share-card', vb.width, vb.height, 2);
-        if (!sourcePreflight.ok) return Promise.reject(rasterBudgetError(sourcePreflight));
-        var sourceScale = sourcePreflight.actualScale;
+        var sourceScale = Math.min(2, pickSafeScale(vb.width, vb.height));
         var data = serializeSvg(sourceScale, { routeSnapshot: routeSnapshot, reachSnapshot: reachSnapshot });
         if (!data.canonicalStateClean) return Promise.reject(exportError('viewer.export.error.viewerState'));
         if (routeSnapshot && !data.routeStateClean) return Promise.reject(exportError('viewer.export.error.routeState'));
@@ -6861,8 +6732,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         var svg = document.querySelector('.diagram-container svg');
         var vb = svg.viewBox.baseVal;
         var scale = Math.min(1, 1280 / vb.width);
-        var preflight = webmPreflight(vb.width, vb.height, scale);
-        if (!preflight.ok) return Promise.reject(rasterBudgetError(preflight));
         var data = serializeSvg(scale);
         var sourceUrl = URL.createObjectURL(new Blob([data.svgString], { type: 'image/svg+xml;charset=utf-8' }));
 
@@ -7019,8 +6888,8 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           var backgroundImage = new Image();
           backgroundImage.onload = function () {
             var canvas = document.createElement('canvas');
-            canvas.width = preflight.actualWidth;
-            canvas.height = preflight.actualHeight;
+            canvas.width = Math.max(2, Math.round(data.width / 2) * 2);
+            canvas.height = Math.max(2, Math.round(data.height / 2) * 2);
             var ctx = canvas.getContext('2d');
             var stream = canvas.captureStream(fps);
             var mime = motionMimeType();
@@ -7060,10 +6929,7 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
               cleanup();
               var blob = new Blob(chunks, { type: recorder.mimeType || mime });
               if (!blob.size) reject(exportError('viewer.export.error.emptyWebm'));
-              else {
-                exportPreflights.set(blob, preflight);
-                resolve(blob);
-              }
+              else resolve(blob);
             };
             drawMotionFrame(ctx, backgroundImage, motionScene, 0);
             recorder.start(250);
@@ -7262,7 +7128,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
             })
         ).catch(function (err) {
           console.error(err);
-          recordPreflightReceipt(err && err.receipt ? err.receipt : null);
           var technicalMessage = err && err.message ? err.message : format;
           var message = exportMessage(err);
           document.documentElement.setAttribute('data-last-export-error-format', format);
@@ -7356,27 +7221,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           document.documentElement.removeAttribute('data-last-export-width');
           document.documentElement.removeAttribute('data-last-export-height');
         }
-        recordPreflightReceipt(exportPreflights.get(blob) || null);
-      }
-
-      function recordPreflightReceipt(preflight) {
-        var names = [
-          'requested-width', 'requested-height', 'actual-width', 'actual-height',
-          'requested-scale', 'actual-scale', 'candidate-pixels', 'pixel-limit', 'fallback'
-        ];
-        if (!preflight) {
-          names.forEach(function (name) { document.documentElement.removeAttribute('data-last-export-' + name); });
-          return;
-        }
-        document.documentElement.setAttribute('data-last-export-requested-width', String(preflight.requestedWidth));
-        document.documentElement.setAttribute('data-last-export-requested-height', String(preflight.requestedHeight));
-        document.documentElement.setAttribute('data-last-export-actual-width', String(preflight.actualWidth));
-        document.documentElement.setAttribute('data-last-export-actual-height', String(preflight.actualHeight));
-        document.documentElement.setAttribute('data-last-export-requested-scale', String(preflight.requestedScale));
-        document.documentElement.setAttribute('data-last-export-actual-scale', preflight.actualScale == null ? 'none' : String(preflight.actualScale));
-        document.documentElement.setAttribute('data-last-export-candidate-pixels', JSON.stringify(preflight.candidates || []));
-        document.documentElement.setAttribute('data-last-export-pixel-limit', String(preflight.limit));
-        document.documentElement.setAttribute('data-last-export-fallback', String(preflight.fallback || 'svg'));
       }
 
       function clearExportReceipt() {
@@ -7390,7 +7234,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         document.documentElement.removeAttribute('data-last-export-reach-state-clean');
         document.documentElement.removeAttribute('data-last-export-error-format');
         document.documentElement.removeAttribute('data-last-export-error');
-        recordPreflightReceipt(null);
       }
 
       function writePngToClipboard(blobPromise) {
@@ -7495,7 +7338,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         }
       } catch (_) {}
     })();
-
 
     /* ============================================================
        Motion Governor — one reader switch and one motion budget. Ambient
@@ -10616,6 +10458,7 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         panel.setAttribute('data-story-follow-node', step.nodeId);
         var receipt = Archify.view.reveal(ids, {
           reason: options.manual === true ? 'story-beat' : 'story-follow',
+          padding: 64,
           maxScale: 1.65,
           duration: STORY_FOLLOW_DURATION_MS,
           instant: options.instant === true || reducedMotion() || document.documentElement.getAttribute('data-motion') !== 'live'
@@ -11385,7 +11228,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
       };
     })();
 
-
     /* ============================================================
        Adaptive Reader Shell — one diagram across laptop and monitor.
        The canonical SVG and viewBox never change. On ordinary desktop pages,
@@ -11449,14 +11291,12 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
       var frame = 0;
       var settleFrame = 0;
       var lastWidth = 0;
-      var lastWorldReceipt = null;
       var WIDE_RATIO = 1.55;
       var MIN_DESKTOP_WIDTH = 1024;
       var MIN_READER_WIDTH = 960;
       var MAX_READER_WIDTH = 1920;
       var MIN_PROJECTED_NODE_TEXT_PX = 6;
       var SAFE_BOTTOM_GAP = 12;
-      var worldContract = archifyReadabilityContract || {};
 
       if (diagram && ratio >= WIDE_RATIO) {
         diagram.setAttribute('data-wide-diagram', 'true');
@@ -11492,31 +11332,18 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
       }
       function eligible() {
         return Boolean(
-          ordinaryStandalone() && (ratio >= WIDE_RATIO || measuredHeightFit) &&
-          window.innerWidth >= MIN_DESKTOP_WIDTH
-        );
-      }
-      function ordinaryStandalone() {
-        return Boolean(
-          shell && diagram && svg &&
-          window.innerWidth > (worldContract.minimumDesktopViewportWidthExclusive || 720) &&
+          shell && diagram && svg && (ratio >= WIDE_RATIO || measuredHeightFit) &&
+          window.innerWidth >= MIN_DESKTOP_WIDTH &&
           html.getAttribute('data-embed') !== 'true' &&
           html.getAttribute('data-present') !== 'true' &&
           (!window.matchMedia || !window.matchMedia('print').matches)
         );
       }
-      function clearReader() {
+      function clear() {
         html.style.removeProperty('--archify-reader-width');
         html.removeAttribute('data-reader-layout');
         html.removeAttribute('data-reader-overflow');
         lastWidth = 0;
-      }
-      function clearWorldProfile() {
-        html.style.removeProperty('--archify-stage-height');
-        html.removeAttribute('data-world-measuring');
-        html.removeAttribute('data-world-profile');
-        if (diagram) diagram.removeAttribute('data-world-profile');
-        lastWorldReceipt = null;
       }
       function chromeMetrics() {
         var bodyStyle = window.getComputedStyle(body);
@@ -11537,96 +11364,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         html.style.setProperty('--archify-reader-width', rounded + 'px');
         html.setAttribute('data-reader-layout', 'adaptive');
         return true;
-      }
-      function minimumSourceFont() {
-        var selectors = Array.isArray(worldContract.labelSelectors) ? worldContract.labelSelectors : [];
-        var elements = selectors.length ? svg.querySelectorAll(selectors.join(',')) : [];
-        var minimum = null;
-        Array.prototype.forEach.call(elements, function (element) {
-          var value = number(window.getComputedStyle(element).fontSize || element.getAttribute('font-size'));
-          if (value > 0 && (minimum === null || value < minimum)) minimum = value;
-        });
-        return minimum === null ? 0 : minimum;
-      }
-      function measureWorldProfile() {
-        if (!ordinaryStandalone() || !viewBox || viewBox.width <= 0 || viewBox.height <= 0) {
-          clearWorldProfile();
-          return null;
-        }
-        var scrollState = ['guided-view-trail'].map(function (id) {
-          var element = document.getElementById(id);
-          return element ? { element: element, left: element.scrollLeft } : null;
-        }).filter(Boolean);
-        function finishProspectiveMeasurement() {
-          html.removeAttribute('data-world-measuring');
-          scrollState.forEach(function (state) { state.element.scrollLeft = state.left; });
-        }
-        html.setAttribute('data-world-measuring', 'true');
-        var bodyStyle = window.getComputedStyle(body);
-        var shellStyle = window.getComputedStyle(shell);
-        var diagramStyle = window.getComputedStyle(diagram);
-        var stageTop = diagram.getBoundingClientRect().top;
-        var belowStageRequiredHeight = outerHeight(cards) + number(shellStyle.paddingBottom) + number(bodyStyle.paddingBottom);
-        var availableStageHeight = Math.floor(
-          window.innerHeight - stageTop - belowStageRequiredHeight -
-          (worldContract.stageBottomGapCssPx || 24)
-        );
-        var minimumStageHeight = worldContract.minimumAvailableStageHeight || 360;
-        if (!Number.isFinite(availableStageHeight) || availableStageHeight < minimumStageHeight) {
-          finishProspectiveMeasurement();
-          clearWorldProfile();
-          return null;
-        }
-        var stageHeight = Math.min(worldContract.maximumStageHeight || 900, availableStageHeight);
-        var horizontalChrome = number(diagramStyle.paddingLeft) + number(diagramStyle.paddingRight) +
-          number(diagramStyle.borderLeftWidth) + number(diagramStyle.borderRightWidth);
-        var verticalChrome = number(diagramStyle.paddingTop) + number(diagramStyle.paddingBottom) +
-          number(diagramStyle.borderTopWidth) + number(diagramStyle.borderBottomWidth);
-        var prospectiveStageWidth = Math.min(
-          1440,
-          window.innerWidth - number(bodyStyle.paddingLeft) - number(bodyStyle.paddingRight)
-        );
-        var safeStageWidth = Math.max(1, prospectiveStageWidth - horizontalChrome);
-        var safeStageHeight = Math.max(1, stageHeight - verticalChrome);
-        var sourceFont = minimumSourceFont();
-        var derived = typeof archifyDeriveLargeWorldReadability === 'function'
-          ? archifyDeriveLargeWorldReadability({
-              safeStageWidth: safeStageWidth,
-              safeStageHeight: safeStageHeight,
-              canonicalWorldWidth: viewBox.width,
-              canonicalWorldHeight: viewBox.height,
-              minimumTargetSourceFontWorldUnits: sourceFont,
-              targetBoundsWidth: 1,
-              targetBoundsHeight: 1
-            })
-          : null;
-        finishProspectiveMeasurement();
-        if (!derived) {
-          clearWorldProfile();
-          return null;
-        }
-        var profile = derived.worldProfile;
-        if (profile === 'large') html.style.setProperty('--archify-stage-height', stageHeight + 'px');
-        else html.style.removeProperty('--archify-stage-height');
-        html.setAttribute('data-world-profile', profile);
-        diagram.setAttribute('data-world-profile', profile);
-        lastWorldReceipt = {
-          worldProfile: profile,
-          stageTop: stageTop,
-          belowStageRequiredHeight: belowStageRequiredHeight,
-          availableStageHeight: availableStageHeight,
-          stageHeight: stageHeight,
-          safeStageWidth: safeStageWidth,
-          safeStageHeight: safeStageHeight,
-          canonicalWorldWidth: viewBox.width,
-          canonicalWorldHeight: viewBox.height,
-          minimumSourceFontWorldUnits: sourceFont,
-          worldScaleFit: derived.worldScaleFit,
-          projectedTextPx: derived.projectedTextPx,
-          minimumProjectedTextPx: worldContract.minimumProjectedTextPx || 6,
-          obscurers: ['diagram-padding', 'navigation-dock']
-        };
-        return lastWorldReceipt;
       }
       function settleOverflow(minWidth) {
         if (settleFrame) cancelAnimationFrame(settleFrame);
@@ -11650,33 +11387,31 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
       function measure() {
         frame = 0;
         if (!eligible()) {
-          clearReader();
-        } else {
-          var chrome = chromeMetrics();
-          var viewportCap = Math.max(0, window.innerWidth - chrome.bodyX);
-          var readableWidth = viewBox && viewBox.width > 0
-            ? viewBox.width * minimumReadableScale() + chrome.diagramX
-            : MIN_READER_WIDTH;
-          var minWidth = Math.min(
-            measuredHeightFit && ratio < WIDE_RATIO ? readableWidth : MIN_READER_WIDTH,
-            viewportCap
-          );
-          var maxWidth = Math.min(MAX_READER_WIDTH, viewportCap);
-          var fixedHeight = chrome.bodyY + chrome.diagramY + SAFE_BOTTOM_GAP +
-            outerHeight(header) + outerHeight(guided) + outerHeight(cards);
-          var availableSvgHeight = Math.max(1, window.innerHeight - fixedHeight);
-          var desiredWidth = availableSvgHeight * ratio + chrome.diagramX;
-          var width = Math.max(minWidth, Math.min(maxWidth, desiredWidth));
-          applyWidth(width);
-          settleOverflow(minWidth);
+          clear();
+          return null;
         }
-        var world = measureWorldProfile();
+        var chrome = chromeMetrics();
+        var viewportCap = Math.max(0, window.innerWidth - chrome.bodyX);
+        var readableWidth = viewBox && viewBox.width > 0
+          ? viewBox.width * minimumReadableScale() + chrome.diagramX
+          : MIN_READER_WIDTH;
+        var minWidth = Math.min(
+          measuredHeightFit && ratio < WIDE_RATIO ? readableWidth : MIN_READER_WIDTH,
+          viewportCap
+        );
+        var maxWidth = Math.min(MAX_READER_WIDTH, viewportCap);
+        var fixedHeight = chrome.bodyY + chrome.diagramY + SAFE_BOTTOM_GAP +
+          outerHeight(header) + outerHeight(guided) + outerHeight(cards);
+        var availableSvgHeight = Math.max(1, window.innerHeight - fixedHeight);
+        var desiredWidth = availableSvgHeight * ratio + chrome.diagramX;
+        var width = Math.max(minWidth, Math.min(maxWidth, desiredWidth));
+        applyWidth(width);
+        settleOverflow(minWidth);
         return {
           ratio: ratio,
-          width: lastWidth,
-          worldProfile: world ? world.worldProfile : null,
-          stageHeight: world ? world.stageHeight : 0,
-          projectedTextPx: world ? world.projectedTextPx : null
+          width: Math.round(width),
+          availableSvgHeight: Math.round(availableSvgHeight),
+          fixedHeight: Math.round(fixedHeight)
         };
       }
       function schedule() {
@@ -11690,8 +11425,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           lastWidth,
           html.getAttribute('data-reader-layout') || '',
           html.getAttribute('data-reader-overflow') || '',
-          html.getAttribute('data-world-profile') || '',
-          html.style.getPropertyValue('--archify-stage-height'),
           Math.ceil(document.documentElement.scrollWidth),
           Math.ceil(document.documentElement.scrollHeight),
           Math.ceil(document.body.scrollWidth),
@@ -11731,11 +11464,7 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         schedule: schedule,
         whenStable: whenStable,
         active: function () { return html.getAttribute('data-reader-layout') === 'adaptive'; },
-        receipt: function () {
-          var receipt = { ratio: ratio, width: lastWidth };
-          if (lastWorldReceipt) Object.keys(lastWorldReceipt).forEach(function (key) { receipt[key] = lastWorldReceipt[key]; });
-          return receipt;
-        }
+        receipt: function () { return { ratio: ratio, width: lastWidth }; }
       };
     })();
 
@@ -12059,6 +11788,10 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
       var resetDetailLabel = resetBtn.querySelector('[data-view-detail]');
       var resetPercentLabel = resetBtn.querySelector('[data-view-percent]');
       var inBtn = container.querySelector('[data-view="in"]');
+      var MIN_SCALE = 0.25;
+      var MAX_SCALE = 4;
+      var CAMERA_LIMIT = 1000000;
+      var grid = document.createElement('div');
       var state = { scale: 1, x: 0, y: 0, mode: 'overview' };
       var drag = null;
       var cameraTimer = null;
@@ -12068,14 +11801,7 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
       var clipFrame = 0;
       var resizeFrame = 0;
       var autoScrollUntil = 0;
-      var MIN_SCALE = 1;
-      var grid = document.createElement('div');
       var wheelTimer = null;
-      var wheelFrame = 0;
-      var wheelPending = null;
-      var automaticEntryLease = true;
-      var automaticEntryAttempted = false;
-      var readabilityContract = archifyReadabilityContract || {};
 
       var viewBox = svg.viewBox && svg.viewBox.baseVal;
 
@@ -12083,34 +11809,16 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
       grid.setAttribute('aria-hidden', 'true');
       container.insertBefore(grid, svg);
 
-      function largeWorld() {
-        return document.documentElement.getAttribute('data-world-profile') === 'large';
+      function boundCamera() {
+        state.scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, Number(state.scale) || 1));
+        state.x = Math.max(-CAMERA_LIMIT, Math.min(CAMERA_LIMIT, Number(state.x) || 0));
+        state.y = Math.max(-CAMERA_LIMIT, Math.min(CAMERA_LIMIT, Number(state.y) || 0));
       }
       function mobileScrollMode() {
         return window.innerWidth <= 720 && container.hasAttribute('data-wide-diagram');
       }
-      function clamp() {
-        var width = svg.clientWidth || 1;
-        var height = svg.clientHeight || 1;
-        state.scale = Math.max(MIN_SCALE, Math.min(maximumCameraScale(), Number(state.scale) || 1));
-        if (largeWorld() && !mobileScrollMode()) {
-          // Bounded large-world pan: the authored frame may leave the stage on
-          // any side, but at least a quarter of the stage always shows content
-          // so the diagram can never be lost off-screen.
-          var keepX = width * 0.25;
-          var keepY = height * 0.25;
-          state.x = Math.min(width - keepX, Math.max(keepX - width * state.scale, Number(state.x) || 0));
-          state.y = Math.min(height - keepY, Math.max(keepY - height * state.scale, Number(state.y) || 0));
-          return;
-        }
-        state.x = Math.min(0, Math.max(width - width * state.scale, state.x));
-        state.y = Math.min(0, Math.max(height - height * state.scale, state.y));
-      }
       function reducedMotion() {
         return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      }
-      function releaseAutomaticEntry() {
-        automaticEntryLease = false;
       }
       function contentMetrics() {
         if (!viewBox || viewBox.width <= 0 || viewBox.height <= 0) return null;
@@ -12153,17 +11861,11 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         var right = Math.min(viewBox.x + viewBox.width, world.x + world.width);
         var bottom = Math.min(viewBox.y + viewBox.height, world.y + world.height);
         var intersects = right > left && bottom > top;
-        // Keep the historical contract for every consumer: the rectangle is
-        // always inside the authored viewBox with width/height >= 1. When the
-        // camera is entirely outside the graph the rectangle collapses to a
-        // 1x1 probe at the nearest edge and `outside` is set for Radar.
-        var x = intersects ? left : Math.max(viewBox.x, Math.min(viewBox.x + viewBox.width - 1, world.x + world.width / 2));
-        var y = intersects ? top : Math.max(viewBox.y, Math.min(viewBox.y + viewBox.height - 1, world.y + world.height / 2));
         return {
-          x: x,
-          y: y,
-          width: intersects ? Math.max(1, right - left) : 1,
-          height: intersects ? Math.max(1, bottom - top) : 1,
+          x: intersects ? left : Math.max(viewBox.x, Math.min(viewBox.x + viewBox.width, world.x + world.width / 2)),
+          y: intersects ? top : Math.max(viewBox.y, Math.min(viewBox.y + viewBox.height, world.y + world.height / 2)),
+          width: intersects ? right - left : 0,
+          height: intersects ? bottom - top : 0,
           scale: state.scale,
           outside: !intersects,
           world: world
@@ -12174,15 +11876,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         if (state.scale >= 1.75) return 'full';
         if (state.scale >= 1) return 'read';
         return 'map';
-      }
-      function maximumCameraScale() {
-        if (document.documentElement.getAttribute('data-world-profile') !== 'large') return 3;
-        var metrics = contentMetrics();
-        if (!metrics || !Number.isFinite(metrics.scale) || metrics.scale <= 0) return 3;
-        return Math.max(1, Math.min(
-          readabilityContract.maximumFitMultiplier || 32,
-          (readabilityContract.maximumWorldToCssScale || 4) / metrics.scale
-        ));
       }
       function renderControls() {
         var semantic = state.mode === 'semantic' && state.scale > 1.01;
@@ -12246,19 +11939,20 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         sample();
       }
       function apply() {
-        clamp();
+        boundCamera();
         svg.style.transform = 'translate(' + state.x + 'px,' + state.y + 'px) scale(' + state.scale + ')';
-        if (largeWorld()) {
-          container.style.setProperty('--archify-grid-x', (state.x + (svg.offsetLeft || 0)) + 'px');
-          container.style.setProperty('--archify-grid-y', (state.y + (svg.offsetTop || 0)) + 'px');
-          container.style.setProperty('--archify-grid-minor', (24 * state.scale) + 'px');
-          container.style.setProperty('--archify-grid-major', (120 * state.scale) + 'px');
-        }
+        container.style.setProperty('--archify-camera-x', state.x + 'px');
+        container.style.setProperty('--archify-camera-y', state.y + 'px');
+        container.style.setProperty('--archify-camera-scale', String(state.scale));
+        container.style.setProperty('--archify-grid-x', (state.x + (svg.offsetLeft || 0)) + 'px');
+        container.style.setProperty('--archify-grid-y', (state.y + (svg.offsetTop || 0)) + 'px');
+        container.style.setProperty('--archify-grid-minor', (24 * state.scale) + 'px');
+        container.style.setProperty('--archify-grid-major', (120 * state.scale) + 'px');
         syncViewportClip();
         renderControls();
         outBtn.disabled = state.scale <= MIN_SCALE;
-        inBtn.disabled = state.scale >= maximumCameraScale() - 0.001;
-        container.classList.toggle('is-pannable', !mobileScrollMode() && (state.scale > 1 || largeWorld()));
+        inBtn.disabled = state.scale >= MAX_SCALE;
+        container.classList.toggle('is-pannable', !mobileScrollMode());
         svg.setAttribute('data-view-scale', String(state.scale));
         if (Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
         if (Archify.viewerChromeLayout && typeof Archify.viewerChromeLayout.schedule === 'function') {
@@ -12339,7 +12033,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         container.removeAttribute('data-camera-transaction');
       }
       function interruptCamera(reason) {
-        releaseAutomaticEntry();
         if (Archify.guidedViews && Archify.guidedViews.cancelHandoff) {
           Archify.guidedViews.cancelHandoff(reason || 'manual');
         }
@@ -12360,7 +12053,7 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         options = options || {};
         if (options.manual !== false) interruptCamera();
         var previous = state.scale;
-        next = Math.max(MIN_SCALE, Math.min(maximumCameraScale(), Number(next) || previous));
+        next = Math.max(MIN_SCALE, Math.min(MAX_SCALE, Number(next) || previous));
         if (options.discrete === true) next = Math.round(next * 4) / 4;
         else next = Math.round(next * 1000) / 1000;
         if (next === previous) return;
@@ -12369,7 +12062,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         state.scale = next;
         state.x = anchorX - contentX * next;
         state.y = anchorY - contentY * next;
-        if (state.mode === 'overview' && next > 1) state.mode = 'manual';
         apply();
       }
       function zoom(next, options) {
@@ -12382,7 +12074,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         var anchorX = Number(clientX) - rect.left - (svg.offsetLeft || 0);
         var anchorY = Number(clientY) - rect.top - (svg.offsetTop || 0);
         if (!Number.isFinite(anchorX) || !Number.isFinite(anchorY)) return false;
-        releaseAutomaticEntry();
         zoomAtLocal(next, anchorX, anchorY, options);
         return true;
       }
@@ -12391,38 +12082,12 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         dx = Number(dx);
         dy = Number(dy);
         if (!Number.isFinite(dx) || !Number.isFinite(dy) || mobileScrollMode()) return false;
-        if (!largeWorld() && state.scale <= 1) return false;
-        releaseAutomaticEntry();
         if (options.manual !== false) interruptCamera();
         state.x += dx;
         state.y += dy;
         state.mode = 'manual';
         apply();
         return true;
-      }
-      // Wheel input is coalesced to one apply() per animation frame so that a
-      // burst of wheel events on a large world costs a single layout pass.
-      function flushWheel() {
-        wheelFrame = 0;
-        var pending = wheelPending;
-        wheelPending = null;
-        if (!pending) return;
-        if (pending.zoomFactor !== 1) {
-          zoomAt(state.scale * pending.zoomFactor, pending.clientX, pending.clientY, { manual: false });
-        }
-        if (pending.dx || pending.dy) panBy(pending.dx, pending.dy, { manual: false });
-      }
-      function queueWheel(event) {
-        if (!wheelPending) wheelPending = { dx: 0, dy: 0, zoomFactor: 1, clientX: event.clientX, clientY: event.clientY };
-        if (event.ctrlKey || event.metaKey) {
-          wheelPending.zoomFactor *= Math.exp(-event.deltaY * 0.002);
-          wheelPending.clientX = event.clientX;
-          wheelPending.clientY = event.clientY;
-        } else {
-          wheelPending.dx -= event.deltaX;
-          wheelPending.dy -= event.deltaY;
-        }
-        if (!wheelFrame) wheelFrame = requestAnimationFrame(flushWheel);
       }
       function reset(options) {
         options = options || {};
@@ -12451,10 +12116,9 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           catch (_) { container.scrollLeft = mobileTarget; }
           return true;
         }
-        var maximumScale = maximumCameraScale();
-        var minimumScale = Math.max(MIN_SCALE, Math.min(maximumScale, Number(options.minimumScale) || 1));
+        var minimumScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, Number(options.minimumScale) || 1));
         var requestedScale = Number(options.scale);
-        state.scale = Math.max(minimumScale, Math.min(maximumScale, Number.isFinite(requestedScale) ? requestedScale : state.scale));
+        state.scale = Math.max(minimumScale, Math.min(MAX_SCALE, Number.isFinite(requestedScale) ? requestedScale : state.scale));
         var contentX = metrics.offsetX + (logicalX - viewBox.x) * metrics.scale;
         var contentY = metrics.offsetY + (logicalY - viewBox.y) * metrics.scale;
         state.x = metrics.width / 2 - contentX * state.scale;
@@ -12486,28 +12150,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           })
           .filter(Boolean);
       }
-      function minimumTargetSourceFont(ids) {
-        var wanted = semanticIds(ids, false);
-        var selectors = Array.isArray(readabilityContract.labelSelectors)
-          ? readabilityContract.labelSelectors.join(',')
-          : 'text[data-node-label],text[data-boundary-label],[data-node-id] text[data-detail="context"]';
-        var minimum = null;
-        function include(text) {
-          var owner = text.closest('[data-node-id]');
-          if (owner && Object.keys(wanted).length && !wanted[owner.getAttribute('data-node-id')]) return;
-          var size = parseFloat(getComputedStyle(text).fontSize || text.getAttribute('font-size'));
-          if (Number.isFinite(size) && size > 0 && (minimum === null || size < minimum)) minimum = size;
-        }
-        Array.prototype.forEach.call(svg.querySelectorAll(selectors), include);
-        // Third-party/legacy standalone SVGs may have semantic node groups but
-        // predate Archify's label annotations. Keep navigation functional by
-        // measuring target-owned text only; profile classification still uses
-        // the authoritative annotated selector set.
-        if (minimum === null) {
-          Array.prototype.forEach.call(svg.querySelectorAll('[data-node-id] text'), include);
-        }
-        return minimum === null ? 0 : minimum;
-      }
       function frameDesktop(ids, options) {
         options = options || {};
         var boxes = boxesFor(ids, options.includeNeighbors === true);
@@ -12527,16 +12169,17 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           width: Math.max(1, (maxX - minX) * contentScale),
           height: Math.max(1, (maxY - minY) * contentScale)
         };
-        var left = 0;
-        var right = svgWidth;
-        var top = 0;
-        var bottom = svgHeight;
+        var padding = options.padding || 48;
+        var left = padding;
+        var right = svgWidth - padding;
+        var top = padding;
+        var bottom = svgHeight - Math.max(padding, 72);
         var containerRect = container.getBoundingClientRect();
         var visibleTop = Math.max(0, -containerRect.top);
         var visibleBottom = Math.min(svgHeight, window.innerHeight - containerRect.top);
         if (visibleBottom - visibleTop >= 240) {
-          top = Math.max(top, visibleTop);
-          bottom = Math.min(bottom, visibleBottom);
+          top = Math.max(top, visibleTop + padding);
+          bottom = Math.min(bottom, visibleBottom - Math.max(padding, 72));
         }
         var chip = document.getElementById('focus-chip');
         if (chip && !chip.hidden) {
@@ -12551,46 +12194,12 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           else bottom = Math.min(bottom, receiptTop - 24);
         }
         if (right <= left || bottom <= top) return false;
-        var sourceFont = minimumTargetSourceFont(ids);
-        var derived = typeof archifyDeriveLargeWorldReadability === 'function'
-          ? archifyDeriveLargeWorldReadability({
-              safeStageWidth: right - left,
-              safeStageHeight: bottom - top,
-              canonicalWorldWidth: viewBox.width,
-              canonicalWorldHeight: viewBox.height,
-              // Text-free targets still need geometric framing; a positive
-              // probe keeps the derivation defined and the readability clause
-              // below still rejects them when readability is required.
-              minimumTargetSourceFontWorldUnits: sourceFont > 0 ? sourceFont : 1,
-              targetBoundsWidth: Math.max(1, maxX - minX),
-              targetBoundsHeight: Math.max(1, maxY - minY)
-            })
-          : null;
-        if (!derived || contentScale <= 0) return false;
-        var targetFitScale = derived.targetFitScale / contentScale;
-        var requiredScale = derived.requiredReadableScale / contentScale;
-        var dynamicMaximum = maximumCameraScale();
-        var legacyMaximum = Number(options.maxScale) || (options.includeNeighbors ? 1.9 : 2.15);
-        var maxScale = document.documentElement.getAttribute('data-world-profile') === 'large'
-          ? Math.min(dynamicMaximum, Math.max(legacyMaximum, requiredScale))
-          : Math.min(dynamicMaximum, legacyMaximum);
-        var targetScale = targetFitScale;
+        var maxScale = options.maxScale || (options.includeNeighbors ? 1.9 : 2.15);
+        var targetScale = Math.min((right - left) / bounds.width, (bottom - top) / bounds.height) * 0.9;
         targetScale = Math.max(1, Math.min(maxScale, targetScale));
-        // Compare the multiplier in the same unit as the authoritative
-        // requirement. Re-multiplying the quotient can turn an exact 6px
-        // boundary into 5.999999999999999 through floating-point drift.
-        var readable = sourceFont > 0 && targetScale >= requiredScale;
-        if (!readable) {
-          container.setAttribute('data-camera-diagnostic', options.automaticEntry
-            ? 'viewer/entry-text-unreadable'
-            : 'viewer/navigation-text-unreadable');
-          if (options.requireReadable === true) return false;
-        } else {
-          container.removeAttribute('data-camera-diagnostic');
-        }
         if (targetScale < 1.08) targetScale = 1;
         var target = {
-          scale: targetScale,
+          scale: Math.round(targetScale * 100) / 100,
           x: 0,
           y: 0,
           mode: 'semantic'
@@ -12686,63 +12295,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         if (Array.isArray(active) && active.length) return reveal(active, { reason: 'selection-sync' });
         return false;
       }
-      function hasSemanticHashIntent() {
-        var guided = Archify.guidedViews && typeof Archify.guidedViews.active === 'function'
-          ? Archify.guidedViews.active() : null;
-        var active = Archify.focus && typeof Archify.focus.active === 'function'
-          ? Archify.focus.active() : null;
-        return Boolean(guided || (typeof active === 'string' && active) || (Array.isArray(active) && active.length));
-      }
-      function syncExplicitHashIntent() {
-        if (!location.hash || location.hash.length <= 1) return false;
-        if (!hasSemanticHashIntent()) {
-          reset({ automatic: true });
-          container.setAttribute('data-camera-diagnostic', 'viewer/semantic-id-invalid');
-          return false;
-        }
-        var result = syncSemantic();
-        if (result) container.removeAttribute('data-camera-diagnostic');
-        return result;
-      }
-      function initialGuidedFocus() {
-        var data = document.getElementById('archify-guided-views-data');
-        if (!data) return [];
-        try {
-          var views = JSON.parse(data.textContent || '[]');
-          return views.length && Array.isArray(views[0].focus) ? views[0].focus.slice() : [];
-        } catch (_) { return []; }
-      }
-      function automaticEntry() {
-        if (automaticEntryAttempted || !automaticEntryLease) return false;
-        automaticEntryAttempted = true;
-        if (location.hash && location.hash.length > 1) {
-          releaseAutomaticEntry();
-          return syncExplicitHashIntent();
-        }
-        var receipt = Archify.readerLayout && Archify.readerLayout.receipt ? Archify.readerLayout.receipt() : null;
-        if (!receipt || receipt.worldProfile !== 'large') return false;
-        var candidates = [];
-        var guided = initialGuidedFocus();
-        if (guided.length) candidates.push(guided);
-        var start = svg.querySelector('[data-node-id][data-node-kind="start"]');
-        if (start) candidates.push([start.getAttribute('data-node-id')]);
-        var first = svg.querySelector('[data-node-id]');
-        if (first) candidates.push([first.getAttribute('data-node-id')]);
-        for (var index = 0; index < candidates.length; index++) {
-          var framed = frameDesktop(candidates[index], {
-            automaticEntry: true,
-            requireReadable: true,
-            instant: true,
-            reason: 'large-world-entry'
-          });
-          if (framed) {
-            container.setAttribute('data-automatic-entry', candidates[index].join(' '));
-            return framed;
-          }
-        }
-        container.setAttribute('data-camera-diagnostic', 'viewer/entry-text-unreadable');
-        return false;
-      }
       function pinControls() {
         container.style.setProperty('--archify-scroll-x', container.scrollLeft + 'px');
       }
@@ -12764,19 +12316,18 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           setTimeout(function () { container.removeAttribute('data-just-panned'); }, 80);
         }
       }
-
-      inBtn.addEventListener('click', function () { zoom(state.scale + 0.25); });
-      outBtn.addEventListener('click', function () { zoom(state.scale - 0.25); });
-      resetBtn.addEventListener('click', reset);
       function cameraControlTarget(target) {
         return target.closest('.diagram-nav, .focus-chip, .node-finder, .diagram-guide, .overview-map, .route-probe, .semantic-lens');
       }
       function cameraInteractiveTarget(target) {
         return target.closest('[data-node-id], [data-relationship-hit-key], [data-legend-kind], [role="button"], a, button, input, select, textarea');
       }
+
+      inBtn.addEventListener('click', function () { zoom(state.scale + 0.25); });
+      outBtn.addEventListener('click', function () { zoom(state.scale - 0.25); });
+      resetBtn.addEventListener('click', reset);
       container.addEventListener('pointerdown', function (event) {
         if (mobileScrollMode() || event.button !== 0 || cameraControlTarget(event.target) || cameraInteractiveTarget(event.target)) return;
-        if (!largeWorld() && state.scale <= 1) return;
         event.preventDefault();
         interruptCamera();
         drag = { startX: event.clientX, startY: event.clientY, x: state.x, y: state.y, moved: false };
@@ -12794,11 +12345,8 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
       });
       container.addEventListener('pointerup', onPointerEnd);
       container.addEventListener('pointercancel', onPointerEnd);
-      // Large worlds take over the wheel: plain wheel pans, Ctrl/Cmd-wheel and
-      // trackpad pinch zoom around the pointer. Ordinary diagrams keep native
-      // page scrolling so the summary cards below the stage stay reachable.
       container.addEventListener('wheel', function (event) {
-        if (!largeWorld() || mobileScrollMode() || cameraControlTarget(event.target)) return;
+        if (mobileScrollMode() || cameraControlTarget(event.target)) return;
         event.preventDefault();
         if (!container.classList.contains('is-wheel-panning')) interruptCamera('wheel');
         container.classList.add('is-wheel-panning');
@@ -12808,7 +12356,11 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           container.classList.remove('is-wheel-panning');
           if (Archify.focus && Archify.focus.reposition) Archify.focus.reposition();
         }, 120);
-        queueWheel(event);
+        if (event.ctrlKey || event.metaKey) {
+          zoomAt(state.scale * Math.exp(-event.deltaY * 0.002), event.clientX, event.clientY, { manual: false });
+          return;
+        }
+        panBy(-event.deltaX, -event.deltaY, { manual: false });
       }, { passive: false });
       container.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', function () {
@@ -12819,32 +12371,23 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
           else apply();
         });
       });
-      window.addEventListener('hashchange', function () {
-        releaseAutomaticEntry();
-        requestAnimationFrame(syncExplicitHashIntent);
-      });
+      window.addEventListener('hashchange', function () { requestAnimationFrame(syncSemantic); });
       apply();
       pinControls();
-      var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready.catch(function () {}) : Promise.resolve();
-      fontsReady.then(function () {
-        var stable = Archify.readerLayout && Archify.readerLayout.whenStable
-          ? Archify.readerLayout.whenStable().catch(function () {})
-          : Promise.resolve();
-        return stable.then(function () { requestAnimationFrame(automaticEntry); });
-      });
+      requestAnimationFrame(syncSemantic);
 
       return {
-        zoomIn: function () { releaseAutomaticEntry(); zoom(state.scale + 0.25); },
-        zoomOut: function () { releaseAutomaticEntry(); zoom(state.scale - 0.25); },
+        zoomIn: function () { zoom(state.scale + 0.25); },
+        zoomOut: function () { zoom(state.scale - 0.25); },
         zoomAt: zoomAt,
         panBy: panBy,
         fit: reset,
         reset: reset,
-        reveal: function (ids, options) { releaseAutomaticEntry(); return reveal(ids, options); },
+        reveal: reveal,
         centerAt: centerAt,
         logicalViewport: logicalViewport,
         worldViewport: worldViewport,
-        sync: function () { releaseAutomaticEntry(); return syncSemantic(); },
+        sync: syncSemantic,
         state: function () { return { scale: state.scale, x: state.x, y: state.y, mode: state.mode }; }
       };
     })();
@@ -13142,9 +12685,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         if (passportPreviousAriaHidden === null) passport.removeAttribute('aria-hidden');
         else passport.setAttribute('aria-hidden', passportPreviousAriaHidden);
         passportPreviousAriaHidden = null;
-        // Camera/layout callbacks may have positioned the yielded (zero-height)
-        // panel. Restore its real bounds before Radar measures this blocker.
-        if (Archify.focus && typeof Archify.focus.reposition === 'function') Archify.focus.reposition();
       }
       function reflectVisible() {
         panel.hidden = false;
@@ -14369,6 +13909,7 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
             includeNeighbors: false,
             reason: 'route-journey',
             maxScale: 1.65,
+            padding: 64,
             duration: 360,
             instant: !journeyMotionAllowed()
           });
@@ -14863,7 +14404,6 @@ var archifyDeriveLargeWorldReadability = (function deriveLargeWorldReadabilityWi
         }
       };
     })();
-
 
     /* ============================================================
        Semantic Lens — a counted, viewer-only legend over data-node-kind.
