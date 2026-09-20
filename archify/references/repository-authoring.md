@@ -17,6 +17,16 @@ fact has supporting source evidence.
 2. **Map the slice.** Use project instructions, manifests, entry points,
    registrations, and deployment configuration to locate candidate runtime
    units. Read the entry, configuration, and modules relevant to the request.
+   When those leads do not identify the relevant module in a large repository,
+   run `node bin/archify.mjs inspect-repo <repo-root> --json` and use its
+   directory inventory and `level1.boundaries` as discovery leads. Follow
+   `coverage.nextArguments` only while an unresolved question needs more
+   candidates. The scan returns file paths and bounded configuration facts;
+   `coverage.complete` describes inventory coverage, not semantic completeness.
+   A `truncated` or `factsTruncated` configuration, or
+   `boundariesTruncated: true`, needs targeted inspection before treating the
+   corresponding facts as complete. Configuration identifiers can be sensitive;
+   keep the output local. Confirm diagram claims in source as usual.
    Follow imports and call sites
    until the requested responsibility reaches its actual input, output, or
    side effect. Read a small connected slice instead of scanning the repository
