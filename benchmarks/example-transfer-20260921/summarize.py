@@ -48,6 +48,15 @@ def summarize(out):
                     repairs += 1
                 failed = failed or not r['ok']
                 previous = r['sha256']
+        audit = read(directory / 'public-audit.json', {})
+        if 'tool_calls' in trace:
+            reference_access = sum('worked-example-reference-access' in c.get('categories', []) for c in trace['tool_calls'])
+            example_access = sum('worked-example-file-access' in c.get('categories', []) for c in trace['tool_calls'])
+        elif 'tool_calls' in audit:
+            reference_access = sum('guide' in c.get('literal_access_markers', []) for c in audit['tool_calls'])
+            example_access = sum('example_json' in c.get('literal_access_markers', []) or 'example_directory' in c.get('literal_access_markers', []) for c in audit['tool_calls'])
+        else:
+            reference_access = example_access = None
         q = quality.get(name, {})
         versions = []
         before_finalize = []
@@ -65,8 +74,9 @@ def summarize(out):
         qualified = machine and q.get('final_pass') is True
         rows.append({'run': name, 'condition': name.rsplit('-', 1)[1],
                      'native_seconds': trace.get('native_task_seconds'),
-                     'worked_reference_access_calls': sum('worked-example-reference-access' in c.get('categories', []) for c in trace.get('tool_calls', [])),
-                     'worked_example_access_calls': sum('worked-example-file-access' in c.get('categories', []) for c in trace.get('tool_calls', [])),
+                     'worked_reference_access_calls': reference_access,
+                     'worked_example_access_calls': example_access,
+                     'censored_observation_seconds': audit.get('native_observed_until_terminal_seconds') if trace.get('censored') else None,
                      'full_seconds': trace.get('full_task_seconds'),
                      'setup_and_dispatch_seconds': trace.get('full_task_seconds', 0) - trace.get('native_task_seconds', 0) if trace.get('native_task_seconds') is not None else None,
                      'after_first_structural_seconds': trace['native_task_seconds'] - trace['first_complete_from_native_start_seconds'] if trace.get('native_task_seconds') is not None and trace.get('first_complete_from_native_start_seconds') is not None else None,
