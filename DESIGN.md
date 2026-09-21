@@ -352,7 +352,7 @@ enforced. A clause without one is only a wish.
 | Painted colour matches its token | P3. |
 
 **One frame clause above still has no check:** a frame title stacked on a
-neighbour. A16 and A17 now close the other two.
+neighbour. A16 FRAME_CROSSING and A17 FRAME_FILL were written 2026-09-17 in archify commit 3e132e9 and first ran 2026-09-20; they now close the other two.
 
 A17 judges container frames only. Lanes, exception-lanes and stages are
 routing corridors — you pass through them, you do not fill them — and they
@@ -364,6 +364,10 @@ reports "Sales" crossing "Accounting" at 7348.21px2.
 
 **Seven elements have no check at all:** E5, E7, E9, E10, E12, E13, and telling
 E17 from E15. Those clauses are wishes until someone builds the check.
+
+**The audit was measured on an older ruler.** `docs/design-audit.md` was measured on a 16-check ruler while today's ruler emits 18 assertions (A1-A17 + O1a), so every FAIL/PASS/GAP tally in the audit predates A16 and A17.
+
+That audit reports 15 FAIL / 2 GAP / 11 PASS, which omits 2 UNUSED (E8 security-group, E9 grid) — 30 items, 28 accounted.
 
 ## 📚 Companion files
 
