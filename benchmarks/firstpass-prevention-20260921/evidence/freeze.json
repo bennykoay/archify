@@ -362,7 +362,7 @@
     "tasks.json": "e78b303cd574b861d0d0bb04f4937658726b877c3fc227af5e78a7c5957a3483",
     "protocol.json": "6415992a3fee98a07c37642165fc84fbdcedcbf563b42fdbda3421a68a1d93ed",
     "run.py": "aa257954d5da765758c213db7ad28a5e16d34b5f0b8bf0ded993350a3dfa87a7",
-    "watch.py": "fc5ad5e247549c908892005093ed422501cfca21d59559714eab1e22e5bc35e7",
+    "watch.py": "914932db8d62cd66a4163b7077ae51ee07b8d2be77aa5721050371f32d4b7efb",
     "evaluate.py": "9f73eb6cdf7e7876f28ddf8d25ed985a9a6d055864de7e6da742432879ac731c"
   },
   "tasks": {
@@ -512,5 +512,12 @@
     "lilconfig-B1",
     "lilconfig-P1"
   ],
-  "experiment": "One combined experimental author helper/guide; cannot attribute effects uniquely to mapping, dimensions or rows. No task-specific answers. Baseline uses unchanged packaged Skill."
+  "experiment": "One combined experimental author helper/guide; cannot attribute effects uniquely to mapping, dimensions or rows. No task-specific answers. Baseline uses unchanged packaged Skill.",
+  "pre_dispatch_amendment": {
+    "epoch": 1789993721.243735,
+    "file": "watch.py",
+    "before": "fc5ad5e247549c908892005093ed422501cfca21d59559714eab1e22e5bc35e7",
+    "after": "914932db8d62cd66a4163b7077ae51ee07b8d2be77aa5721050371f32d4b7efb",
+    "reason": "Trailing whitespace only, found by git diff --check. No author prepared or dispatched; helper/guide/protocol unchanged."
+  }
 }

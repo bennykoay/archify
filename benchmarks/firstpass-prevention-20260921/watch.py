@@ -64,7 +64,7 @@ def main():
             (args.out / saved).write_bytes(raw)
             sidecars.append({'filename': filename, 'snapshot': saved, 'sha256': digest,
                              'epoch': time.time(), 'elapsed_seconds': now - started})
-        done = args.out / 'done.json' 
+        done = args.out / 'done.json'
         expired = now - started >= args.cap
         if done.exists() or expired:
             result = {'start_epoch': start_epoch, 'observed_seconds': now - started,
