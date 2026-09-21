@@ -12,4 +12,6 @@ Corrections to the source PR:
 
 The reproducible synthetic benchmark and saved local result are in [`benchmarks/pr486-inspect-repo-20260921/`](../benchmarks/pr486-inspect-repo-20260921/README.md). On 2,040 tracked files, the second page had an 84.7 ms median with snapshot reuse versus 159.7 ms with a fresh scan (five alternating runs). This demonstrates only a local scanning advantage. It does not establish lower total Agent tokens, complete diagram quality, or same-quality end-to-end delivery time.
 
+A dogfood invocation on this clean integration checkout returned 923 retained files, 13 directory modules, and a 20-file first page of 18,993 JSON bytes. Its configuration summary identified `archify/package.json` and `.github/workflows/ci.yml`, which are useful leads. The first page also surfaced fixture CLIs before Archify's actual top-level CLI, so it is not a reliable standalone source map; targeted follow-up remains necessary.
+
 Validation on the integration worktree: 14 focused repository-index/Level 1 tests passed; `npm test` completed with 1,730 passed, 72 skipped, and no failures; a Node 22 rebuild byte-matched `archify.zip`; the extracted archive passed `scripts/package-smoke.mjs` on macOS. The skipped browser suites are not browser acceptance for a newly drawn diagram; this integration does not change renderer or Viewer behavior.
