@@ -771,6 +771,15 @@ clipping, Radar, and Chrome Layout synchronize once the gesture settles. Contain
 resizing and page scrolling update viewport docking separately, so camera movement
 does not force a container layout read on every frame.
 
+Unmodified wheel panning accumulates device deltas into a target camera position
+and approaches it with elapsed-time interpolation. Discrete mouse-wheel ticks and
+continuous trackpad input therefore share the same frame-driven motion path.
+Modifier-wheel zoom remains pointer-anchored and directly responsive.
+
+Interactive frames update only the SVG camera transform and the lightweight dotted
+canvas grid. Clipping, Radar, control state, and Chrome Layout settle afterward.
+The canvas grid uses dots at minor and major intervals; it does not draw solid lines.
+
 `worldViewport()` reports the unbounded visible rectangle in authored logical
 coordinates. `logicalViewport()` reports its intersection with the authored
 viewBox and includes `outside` plus the original `world` rectangle so Radar can

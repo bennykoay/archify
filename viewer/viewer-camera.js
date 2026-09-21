@@ -19,6 +19,7 @@
       var cameraTransaction = null;
       var clipFrame = 0;
       var interactionFrame = 0;
+      var interactionChangesScale = false;
       var keyboardFrame = 0;
       var keyboardStartedAt = 0;
       var keyboardShift = false;
@@ -28,6 +29,10 @@
       var wheelTimer = null;
       var wheelGeometry = null;
       var wheelMode = '';
+      var wheelPanFrame = 0;
+      var wheelPanTimestamp = 0;
+      var wheelPanTarget = null;
+      var wheelPanInputEnded = false;
       var suppressContextMenuUntil = 0;
       var lastControlKey = '';
       var interactionMetrics = { offsetLeft: 0, offsetTop: 0, width: 1, height: 1 };
@@ -174,10 +179,11 @@
       function apply(options) {
         options = options || {};
         boundCamera();
+        svg.style.transform = 'translate(' + state.x + 'px,' + state.y + 'px) scale(' + state.scale + ')';
         var offsetLeft = options.interactive === true ? interactionMetrics.offsetLeft : (svg.offsetLeft || 0);
         var offsetTop = options.interactive === true ? interactionMetrics.offsetTop : (svg.offsetTop || 0);
-        svg.style.transform = 'translate(' + state.x + 'px,' + state.y + 'px) scale(' + state.scale + ')';
-        if (options.interactive !== true) syncGrid(offsetLeft, offsetTop);
+        syncGrid(offsetLeft, offsetTop, options.gridPositionOnly === true);
+        if (options.cameraOnly === true) return;
         if (options.interactive === true) {
           if (clipFrame) cancelAnimationFrame(clipFrame);
           clipFrame = 0;
@@ -196,19 +202,22 @@
           }
         }
       }
-      function syncGrid(offsetLeft, offsetTop) {
+      function syncGrid(offsetLeft, offsetTop, positionOnly) {
         offsetLeft = Number.isFinite(offsetLeft) ? offsetLeft : (svg.offsetLeft || 0);
         offsetTop = Number.isFinite(offsetTop) ? offsetTop : (svg.offsetTop || 0);
         container.style.setProperty('--archify-grid-x', (state.x + offsetLeft) + 'px');
         container.style.setProperty('--archify-grid-y', (state.y + offsetTop) + 'px');
+        if (positionOnly) return;
         container.style.setProperty('--archify-grid-minor', (24 * state.scale) + 'px');
         container.style.setProperty('--archify-grid-major', (120 * state.scale) + 'px');
       }
-      function scheduleInteractionApply() {
+      function scheduleInteractionApply(changesScale) {
+        if (changesScale === true) interactionChangesScale = true;
         if (interactionFrame) return;
         interactionFrame = requestAnimationFrame(function () {
           interactionFrame = 0;
-          apply({ interactive: true });
+          apply({ interactive: true, cameraOnly: true, gridPositionOnly: !interactionChangesScale });
+          interactionChangesScale = false;
         });
       }
       function captureInteractionGeometry() {
@@ -224,16 +233,12 @@
         if (!interactionFrame) return;
         cancelAnimationFrame(interactionFrame);
         interactionFrame = 0;
-        apply({ interactive: true });
+        apply({ interactive: true, cameraOnly: true, gridPositionOnly: !interactionChangesScale });
+        interactionChangesScale = false;
       }
       function settleInteraction() {
         flushInteractionApply();
-        syncGrid(interactionMetrics.offsetLeft, interactionMetrics.offsetTop);
-        clipToViewport(state);
-        if (Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
-        if (Archify.viewerChromeLayout && typeof Archify.viewerChromeLayout.schedule === 'function') {
-          Archify.viewerChromeLayout.schedule();
-        }
+        apply();
       }
       function keyboardDirectionActive() {
         return keyboardDirections.ArrowLeft || keyboardDirections.ArrowRight ||
@@ -263,16 +268,58 @@
         state.x += horizontal * distance;
         state.y += vertical * distance;
         state.mode = 'manual';
-        apply({ interactive: true });
+        apply({ interactive: true, cameraOnly: true, gridPositionOnly: true });
         keyboardFrame = requestAnimationFrame(stepKeyboardPan);
       }
       function startKeyboardPan() {
         if (container.classList.contains('is-keyboard-panning')) return;
+        if (container.classList.contains('is-wheel-moving')) finishWheelGesture(true);
         interruptCamera('keyboard');
         captureInteractionGeometry();
         container.classList.add('is-keyboard-panning');
         keyboardStartedAt = 0;
         keyboardFrame = requestAnimationFrame(stepKeyboardPan);
+      }
+      function finishWheelGesture(commitPanTarget) {
+        if (wheelTimer) clearTimeout(wheelTimer);
+        wheelTimer = null;
+        if (wheelPanFrame) cancelAnimationFrame(wheelPanFrame);
+        wheelPanFrame = 0;
+        wheelPanTimestamp = 0;
+        if (commitPanTarget && wheelPanTarget) {
+          state.x = wheelPanTarget.x;
+          state.y = wheelPanTarget.y;
+          state.mode = 'manual';
+          apply({ interactive: true, cameraOnly: true, gridPositionOnly: true });
+          try { getComputedStyle(svg).transform; } catch (_) {}
+        }
+        settleInteraction();
+        container.classList.remove('is-wheel-moving');
+        wheelGeometry = null;
+        wheelMode = '';
+        wheelPanTarget = null;
+        wheelPanInputEnded = false;
+        if (Archify.focus && Archify.focus.reposition) Archify.focus.reposition();
+      }
+      function stepWheelPan(timestamp) {
+        wheelPanFrame = 0;
+        if (!wheelPanTarget || wheelMode !== 'pan') return;
+        var elapsed = wheelPanTimestamp ? Math.min(32, timestamp - wheelPanTimestamp) : 16.67;
+        wheelPanTimestamp = timestamp;
+        var blend = 1 - Math.exp(-elapsed / 35);
+        state.x += (wheelPanTarget.x - state.x) * blend;
+        state.y += (wheelPanTarget.y - state.y) * blend;
+        state.mode = 'manual';
+        var remaining = Math.abs(wheelPanTarget.x - state.x) + Math.abs(wheelPanTarget.y - state.y);
+        if (wheelPanInputEnded && remaining < 0.25) {
+          finishWheelGesture(true);
+          return;
+        }
+        apply({ interactive: true, cameraOnly: true, gridPositionOnly: true });
+        wheelPanFrame = requestAnimationFrame(stepWheelPan);
+      }
+      function scheduleWheelPan() {
+        if (!wheelPanFrame) wheelPanFrame = requestAnimationFrame(stepWheelPan);
       }
       function sampleRenderedState() {
         var transform = '';
@@ -378,7 +425,7 @@
         state.scale = next;
         state.x = anchorX - contentX * next;
         state.y = anchorY - contentY * next;
-        if (options.defer === true) scheduleInteractionApply();
+        if (options.defer === true) scheduleInteractionApply(true);
         else apply();
       }
       function zoom(next, options) {
@@ -403,7 +450,7 @@
         state.x += dx;
         state.y += dy;
         state.mode = 'manual';
-        if (options.defer === true) scheduleInteractionApply();
+        if (options.defer === true) scheduleInteractionApply(false);
         else apply();
         return true;
       }
@@ -669,6 +716,7 @@
       container.addEventListener('pointerdown', function (event) {
         if (mobileScrollMode() || event.button !== 2 || cameraControlTarget(event.target)) return;
         event.preventDefault();
+        if (container.classList.contains('is-wheel-moving')) finishWheelGesture(true);
         stopKeyboardPan();
         interruptCamera();
         captureInteractionGeometry();
@@ -683,7 +731,7 @@
         if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
         state.x = drag.x + dx;
         state.y = drag.y + dy;
-        scheduleInteractionApply();
+        scheduleInteractionApply(false);
       });
       container.addEventListener('pointerup', onPointerEnd);
       container.addEventListener('pointercancel', onPointerEnd);
@@ -696,7 +744,7 @@
         var nextWheelMode = event.ctrlKey || event.metaKey ? 'zoom' : 'pan';
         var startingWheel = !container.classList.contains('is-wheel-moving') || wheelMode !== nextWheelMode;
         if (startingWheel) {
-          if (container.classList.contains('is-wheel-moving')) settleInteraction();
+          if (container.classList.contains('is-wheel-moving')) finishWheelGesture(true);
           stopKeyboardPan();
           interruptCamera('wheel');
           var rect = captureInteractionGeometry();
@@ -705,25 +753,31 @@
             top: rect.top + interactionMetrics.offsetTop
           };
           wheelMode = nextWheelMode;
+          if (wheelMode === 'pan') {
+            wheelPanTarget = { x: state.x, y: state.y };
+            wheelPanTimestamp = 0;
+          }
         }
         container.classList.add('is-wheel-moving');
         if (wheelTimer) clearTimeout(wheelTimer);
-        wheelTimer = setTimeout(function () {
-          wheelTimer = null;
-          settleInteraction();
-          container.classList.remove('is-wheel-moving');
-          wheelGeometry = null;
-          wheelMode = '';
-          if (Archify.focus && Archify.focus.reposition) Archify.focus.reposition();
-        }, 120);
         if (wheelMode === 'zoom') {
           zoomAtLocal(state.scale * Math.exp(-event.deltaY * 0.002),
             event.clientX - wheelGeometry.left, event.clientY - wheelGeometry.top,
             { manual: false, defer: true });
+          wheelTimer = setTimeout(function () { finishWheelGesture(false); }, 120);
         } else {
-          panBy(-event.deltaX, -event.deltaY, { manual: false, defer: true });
+          var deltaFactor = event.deltaMode === 1 ? 16 : (event.deltaMode === 2 ? container.clientHeight : 1);
+          wheelPanTarget.x -= event.deltaX * deltaFactor;
+          wheelPanTarget.y -= event.deltaY * deltaFactor;
+          wheelPanInputEnded = false;
+          scheduleWheelPan();
+          wheelTimer = setTimeout(function () {
+            wheelTimer = null;
+            wheelPanInputEnded = true;
+            scheduleWheelPan();
+          }, 80);
         }
-        if (startingWheel) flushInteractionApply();
+        if (startingWheel && wheelMode === 'zoom') flushInteractionApply();
       }, { passive: false });
       window.addEventListener('keydown', function (event) {
         if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || mobileScrollMode() ||
