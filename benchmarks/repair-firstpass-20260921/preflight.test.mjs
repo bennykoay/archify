@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { semanticHash, semanticProjection } from './preflight.mjs';
+import { preflight, semanticHash, semanticProjection } from './preflight.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const script = path.join(root, 'benchmarks/repair-firstpass-20260921/preflight.mjs');
@@ -99,4 +99,40 @@ test('out path resolving to the source, including through a symlink, is rejected
     assert.equal(report.reason, 'unsafe-output-path');
     assert.deepEqual(fs.readFileSync(source), before);
   }
+});
+
+test('out path resolving through a hard link is rejected before a repair can overwrite source bytes', t => {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-preflight-hard-link-'));
+  t.after(() => fs.rmSync(temp, { recursive: true, force: true }));
+  const source = path.join(temp, 'source.json');
+  const alias = path.join(temp, 'source-hard-link.json');
+  const before = Buffer.from(JSON.stringify(diagram({ narrow: true }), null, 2));
+  fs.writeFileSync(source, before);
+  fs.linkSync(source, alias);
+  const result = spawnSync(process.execPath, [script, source, '--out', alias, '--repo-root', root, '--allow-reflow', '--json'], { encoding: 'utf8' });
+  assert.equal(result.status, 1, result.stderr);
+  assert.equal(JSON.parse(result.stdout).reason, 'unsafe-output-path');
+  assert.deepEqual(fs.readFileSync(source), before);
+});
+
+test('an exhausted preflight budget cannot return a candidate', () => {
+  const report = preflight(diagram(), { repoRoot: root, started: Date.now() - 20_000 });
+  assert.equal(report.status, 'declined');
+  assert.equal('candidate' in report, false);
+});
+
+test('desktop readability feedback can widen all secondary-text boxes without changing semantics', t => {
+  const input = diagram({ narrow: true });
+  // An oversized but valid canvas forces normal showcase validation to report
+  // a projected-font defect after the layout pass succeeds.
+  input.meta.viewBox = [4_000, 800];
+  const fixture = run(t, input);
+  assert.equal(fixture.result.status, 1);
+  assert.equal(fixture.report.status, 'declined');
+  const readabilityAttempt = fixture.report.attempts.find((attempt) => (
+    attempt.proposal.includes('readable-secondary')
+  ));
+  assert.ok(readabilityAttempt, JSON.stringify(fixture.report.attempts.map((attempt) => attempt.proposal)));
+  assert.deepEqual(fs.readFileSync(fixture.source), fixture.before);
+  assert.equal(fs.existsSync(fixture.out), false);
 });

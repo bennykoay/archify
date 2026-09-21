@@ -142,6 +142,14 @@ function translateOne(input, index, dx, dy) {
   return candidate;
 }
 
+function translateCandidate(input, index, dx, dy) {
+  const candidate = clone(input);
+  const position = candidate.components[index]?.pos;
+  if (!Array.isArray(position)) return candidate;
+  setComponentPos(candidate, index, [position[0] + dx, position[1] + dy]);
+  return candidate;
+}
+
 function translateAll(input, dx, dy) {
   const candidate = growText(input);
   for (const entry of positions(candidate)) setComponentPos(candidate, entry.index, [entry.pos[0] + dx, entry.pos[1] + dy]);
@@ -207,12 +215,138 @@ function proposalSeeds(input, layoutReceipt) {
   return seeds;
 }
 
+function diagnosticScore(receipt) {
+  const diagnostics = Array.isArray(receipt?.diagnostics) ? receipt.diagnostics : [];
+  const count = (code) => diagnostics.filter((item) => item?.code === code).length;
+  // Compare the complete diagnostic-instance multiset before its category
+  // counts. This keeps the beam from treating two remaining short stubs as
+  // equivalent to one and makes progress reproducible across candidates.
+  return [
+    diagnostics.length,
+    count('layout/constraint'),
+    count('composition/label-route-clearance'),
+    count('clean-flow/edge-through-node'),
+    count('composition/proper-crossing'),
+    count('composition/short-interior-segment'),
+    count('composition/micro-segment'),
+    ...diagnostics.map((item) => `${item.code}:${JSON.stringify(item.subject ?? {})}`).sort(),
+  ];
+}
+
+function lessScore(left, right) {
+  const length = Math.max(left.length, right.length);
+  for (let index = 0; index < length; index += 1) {
+    const a = left[index] ?? '';
+    const b = right[index] ?? '';
+    if (a === b) continue;
+    return a < b;
+  }
+  return false;
+}
+
+function targetIds(diagnostic) {
+  const ids = [
+    diagnostic?.subject?.from,
+    diagnostic?.subject?.to,
+    diagnostic?.evidence?.obstacle?.id,
+    diagnostic?.subject?.obstacle?.id,
+    diagnostic?.evidence?.otherRelationship?.from,
+    diagnostic?.evidence?.otherRelationship?.to,
+  ].filter((id) => typeof id === 'string');
+  return [...new Set(ids)];
+}
+
+function targetAxes(diagnostic) {
+  const start = diagnostic?.evidence?.from;
+  const end = diagnostic?.evidence?.to;
+  if (Array.isArray(start) && Array.isArray(end)) {
+    if (start[0] === end[0]) return [[1, 0], [-1, 0]];
+    if (start[1] === end[1]) return [[0, 1], [0, -1]];
+  }
+  return [[1, 0], [0, 1]];
+}
+
+function targetedSeeds(candidate, receipt, parentId) {
+  const seeds = [];
+  for (const [diagnosticIndex, diagnostic] of (receipt?.diagnostics ?? []).entries()) {
+    const ids = targetIds(diagnostic);
+    if (!ids.length) continue;
+    for (const id of ids) {
+      const componentIndex = candidate.components.findIndex((component) => component.id === id);
+      if (componentIndex < 0 || !Array.isArray(candidate.components[componentIndex].pos)) continue;
+      for (const [dx, dy] of targetAxes(diagnostic)) {
+        for (const amount of [16, 32]) {
+          seeds.push({
+            id: `${parentId}>${diagnostic.code}:${diagnosticIndex}:${componentIndex}:${dx * amount},${dy * amount}`,
+            make: () => translateCandidate(candidate, componentIndex, dx * amount, dy * amount),
+          });
+        }
+      }
+    }
+  }
+  // The fixed cap ensures one good intermediate state cannot consume the
+  // protocol's 64 attempts before another independent diagnostic is tried.
+  return seeds.slice(0, 16);
+}
+
+function readableTextSeed(candidate, receipt, parentId) {
+  const readability = (receipt?.diagnostics ?? []).filter((diagnostic) => (
+    diagnostic?.code === 'composition/desktop-readability'
+  ));
+  if (!readability.length) return [];
+  const requiredFont = Math.max(...readability.map((diagnostic) => {
+    const evidence = diagnostic.evidence ?? {};
+    const scale = Number(evidence.scale);
+    const minimum = Number(evidence.minimumProjectedFontPx);
+    return Number.isFinite(scale) && scale > 0 && Number.isFinite(minimum)
+      ? minimum / scale + 0.05 : 6;
+  }));
+  return [{
+    id: `${parentId}>readable-secondary-${Math.ceil(requiredFont * 10) / 10}`,
+    make: () => {
+      const widened = clone(candidate);
+      for (const component of widened.components) {
+        const [width = 120, height = 60] = Array.isArray(component.size) ? component.size : [];
+        const secondaryWidths = [component.sublabel, component.tag]
+          .filter((text) => typeof text === 'string' && text.length > 0)
+          .map((text) => Math.ceil(textUnits(text) * 0.6 * requiredFont + 9));
+        if (secondaryWidths.length) component.size = [Math.max(width, ...secondaryWidths), height];
+      }
+      return widened;
+    },
+  }];
+}
+
 function parseJson(text) {
   try { return JSON.parse(text); } catch { return null; }
 }
 
-function compactDiagnostics(receipt) {
-  return [...new Set((receipt?.diagnostics ?? []).map((item) => item?.code).filter(Boolean))];
+function diagnosticInstances(receipt) {
+  return (receipt?.diagnostics ?? []).map((item) => ({
+    code: item?.code,
+    ...(item?.subject === undefined ? {} : { subject: item.subject }),
+    ...(item?.evidence === undefined ? {} : { evidence: item.evidence }),
+  }));
+}
+
+function diagnosticSummary(receipt) {
+  const instances = diagnosticInstances(receipt);
+  return {
+    count: instances.length,
+    codes: [...new Set(instances.map((item) => item.code).filter(Boolean))],
+    instances,
+  };
+}
+
+function hasOnlyGeometricDiagnostics(receipt) {
+  const diagnostics = receipt?.diagnostics;
+  if (!Array.isArray(diagnostics)) return false;
+  return diagnostics.every((item) => (
+    item?.code === 'layout/constraint'
+      || item?.code?.startsWith('layout/')
+      || item?.code?.startsWith('composition/')
+      || item?.code?.startsWith('clean-flow/')
+  ));
 }
 
 function geometryProposal(candidate) {
@@ -247,7 +381,7 @@ function runCli(args, remainingMs) {
     exitCode: result.status ?? (result.error?.code === 'ETIMEDOUT' ? 124 : 1),
     timedOut: result.error?.code === 'ETIMEDOUT',
     receipt,
-    diagnostics: compactDiagnostics(receipt),
+    diagnostics: diagnosticSummary(receipt),
     stderr: result.stderr?.trim() || undefined,
   };
 }
@@ -277,7 +411,9 @@ function makeAttempt({ id, candidate, repoRoot, started, temp }) {
     candidateSha256: prepared.sha256,
     layout: { exitCode: layout.exitCode, timedOut: layout.timedOut, diagnostics: layout.diagnostics },
   };
-  if (layout.exitCode !== 0 || layout.receipt?.ok !== true) return { attempt, accepted: false, layoutReceipt: layout.receipt };
+  if (layout.exitCode !== 0 || layout.receipt?.ok !== true) return {
+    attempt, accepted: false, layoutReceipt: layout.receipt, assessmentReceipt: layout.receipt,
+  };
   const validation = runCli(qualityArgs(prepared.file, repoRoot, false), Math.max(1, MAX_MS - elapsed()));
   attempt.validation = { exitCode: validation.exitCode, timedOut: validation.timedOut, diagnostics: validation.diagnostics };
   attempt.elapsedMs = elapsed();
@@ -286,6 +422,7 @@ function makeAttempt({ id, candidate, repoRoot, started, temp }) {
     attempt,
     accepted: attempt.withinTimeBudget && validation.exitCode === 0 && staticPass(validation.receipt, prepared.sha256),
     layoutReceipt: layout.receipt,
+    assessmentReceipt: validation.exitCode === 0 ? layout.receipt : validation.receipt,
   };
 }
 
@@ -305,24 +442,49 @@ export function preflight(input, { repoRoot = projectRoot, started = Date.now(),
     if (baseline.accepted && Date.now() - started <= MAX_MS) return {
       status: 'unchanged', sourceSemanticHash, ...(inputSha256 ? { inputSha256 } : {}), candidate: input, attempts, elapsedMs: Date.now() - started,
     };
+    if (!hasOnlyGeometricDiagnostics(baseline.assessmentReceipt)) return {
+      status: 'declined', reason: 'non-geometric-baseline-failure', sourceSemanticHash,
+      ...(inputSha256 ? { inputSha256 } : {}), attempts, elapsedMs: Date.now() - started,
+    };
     // The first attempt's renderer receipt is the only diagnostic source for
     // proposal ordering. It is already recorded in attempts; do not spend a
-    // hidden extra validation pass just to regenerate it.
-    const seeds = proposalSeeds(input, baseline.layoutReceipt);
-    for (const seed of seeds) {
-      if (attempts.length >= MAX_ATTEMPTS || Date.now() - started >= MAX_MS) break;
+    // hidden extra validation pass just to regenerate it. Later proposals are
+    // built from a strictly better candidate state, never from a patch merge.
+    const queue = [];
+    let sequence = 0;
+    const enqueue = (seed, parentScore) => {
       let candidate;
-      try { candidate = seed.make(); } catch { continue; }
-      if (!candidate || semanticHash(candidate) !== sourceSemanticHash) continue;
+      try { candidate = seed.make(); } catch { return; }
+      if (!candidate || semanticHash(candidate) !== sourceSemanticHash) return;
       const digest = sha256(canonical(candidate));
-      if (seen.has(digest)) continue;
+      if (seen.has(digest)) return;
       seen.add(digest);
-      const result = makeAttempt({ id: seed.id, candidate, repoRoot: path.resolve(repoRoot), started, temp });
+      queue.push({ id: seed.id, candidate, parentScore, sequence: sequence += 1 });
+    };
+    const baselineScore = diagnosticScore(baseline.assessmentReceipt);
+    let bestScore = baselineScore;
+    for (const seed of proposalSeeds(input, baseline.layoutReceipt)) enqueue(seed, baselineScore);
+    for (const seed of readableTextSeed(input, baseline.assessmentReceipt, 'baseline')) enqueue(seed, baselineScore);
+    while (queue.length) {
+      if (attempts.length >= MAX_ATTEMPTS || Date.now() - started >= MAX_MS) break;
+      queue.sort((left, right) => {
+        if (lessScore(left.parentScore, right.parentScore)) return -1;
+        if (lessScore(right.parentScore, left.parentScore)) return 1;
+        return left.sequence - right.sequence;
+      });
+      const next = queue.shift();
+      const result = makeAttempt({ id: next.id, candidate: next.candidate, repoRoot: path.resolve(repoRoot), started, temp });
       attempts.push(result.attempt);
       if (result.accepted && Date.now() - started <= MAX_MS) return {
-        status: 'accepted', sourceSemanticHash, ...(inputSha256 ? { inputSha256 } : {}), candidateSemanticHash: semanticHash(candidate), candidate,
+        status: 'accepted', sourceSemanticHash, ...(inputSha256 ? { inputSha256 } : {}), candidateSemanticHash: semanticHash(next.candidate), candidate: next.candidate,
         attempts, elapsedMs: Date.now() - started,
       };
+      const score = diagnosticScore(result.assessmentReceipt);
+      if (hasOnlyGeometricDiagnostics(result.assessmentReceipt) && lessScore(score, bestScore)) {
+        bestScore = score;
+        for (const seed of targetedSeeds(next.candidate, result.assessmentReceipt, next.id)) enqueue(seed, score);
+        for (const seed of readableTextSeed(next.candidate, result.assessmentReceipt, next.id)) enqueue(seed, score);
+      }
     }
     return {
       status: 'declined', reason: Date.now() - started >= MAX_MS ? 'time-budget-exhausted' : 'no-passing-geometry-proposal',
@@ -372,7 +534,13 @@ function main(args) {
     return;
   }
   try {
-    if (canonicalOutputPath(inputPath) === canonicalOutputPath(rest[outAt + 1])) {
+    const inputStat = fs.statSync(inputPath);
+    const outputPath = rest[outAt + 1];
+    const sameFile = fs.existsSync(outputPath) && (() => {
+      const outputStat = fs.statSync(outputPath);
+      return inputStat.dev === outputStat.dev && inputStat.ino === outputStat.ino;
+    })();
+    if (sameFile || canonicalOutputPath(inputPath) === canonicalOutputPath(outputPath)) {
       process.stdout.write(`${JSON.stringify({ status: 'declined', reason: 'unsafe-output-path', reasons: ['--out must name a distinct file from the input.'], attempts: [] })}\n`);
       process.exitCode = 1;
       return;
