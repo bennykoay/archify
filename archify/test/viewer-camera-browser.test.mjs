@@ -32,6 +32,10 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
     execFileSync(process.execPath, [path.join(skillRoot, `renderers/${mode}/render-${mode}.mjs`),
       path.join(skillRoot, 'examples', example), files[mode]]);
   }
+  files.large = path.join(scratch, 'workflow-300.html');
+  execFileSync(process.execPath, [path.join(skillRoot, 'renderers/workflow/render-workflow.mjs'),
+    path.resolve(skillRoot, '..', 'benchmarks/hybrid-large-world-viewer-pilot/corpus/workflow-300.workflow.json'),
+    files.large]);
   const trace = JSON.parse(fs.readFileSync(path.join(skillRoot, 'examples', cases.architecture), 'utf8'));
   trace.meta.animation = 'trace';
   fs.writeFileSync(path.join(scratch, 'trace.json'), JSON.stringify(trace));
@@ -137,35 +141,45 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
     }
   });
 
-  await t.test('pointer cancellation ends dragging at fit scale and controls do not begin a pan', async () => {
+  await t.test('right-button dragging pans from diagram content while left drag and controls remain unchanged', async () => {
     await load();
     const result = await run(`(() => {
       const c = document.querySelector('.diagram-container'), svg = c.querySelector(':scope > svg');
       const geometry = () => [...svg.querySelectorAll('[data-node-id], [data-edge-id]')].map(n =>
         ['data-node-id','data-edge-id','transform','d','x','y','width','height'].map(a => n.getAttribute(a)));
       const beforeGeometry = JSON.stringify(geometry());
-      const pointer = (type, x, y) => new PointerEvent(type, { bubbles: true, pointerId: 31, button: 0, clientX: x, clientY: y });
+      const pointer = (type, x, y, button) => new PointerEvent(type, {
+        bubbles: true, pointerId: 31, button, buttons: type === 'pointerup' || type === 'pointercancel' ? 0 : (button === 2 ? 2 : 1),
+        clientX: x, clientY: y
+      });
       const before = Archify.view.state();
-      c.querySelector('.diagram-nav').dispatchEvent(pointer('pointerdown', 500, 400));
-      c.dispatchEvent(pointer('pointermove', 450, 350));
+      c.querySelector('.diagram-nav').dispatchEvent(pointer('pointerdown', 500, 400, 2));
+      c.dispatchEvent(pointer('pointermove', 450, 350, 2));
       const controlExcluded = JSON.stringify(before) === JSON.stringify(Archify.view.state());
-      c.dispatchEvent(pointer('pointerdown', 500, 400));
-      c.dispatchEvent(pointer('pointermove', 450, 350));
+      c.dispatchEvent(pointer('pointerdown', 500, 400, 0));
+      c.dispatchEvent(pointer('pointermove', 450, 350, 0));
+      const leftExcluded = JSON.stringify(before) === JSON.stringify(Archify.view.state()) && !c.classList.contains('is-panning');
+      svg.querySelector('[data-node-id]').dispatchEvent(pointer('pointerdown', 500, 400, 2));
+      c.dispatchEvent(pointer('pointermove', 450, 350, 2));
       const dragged = c.classList.contains('is-panning');
-      c.dispatchEvent(pointer('pointercancel', 450, 350));
+      c.dispatchEvent(pointer('pointercancel', 450, 350, 2));
       const cancelled = !c.classList.contains('is-panning');
       const ended = Archify.view.state();
-      c.dispatchEvent(pointer('pointermove', 100, 100));
-      return { step: before.scale, controlExcluded, dragged, cancelled,
+      c.dispatchEvent(pointer('pointermove', 100, 100, 2));
+      const contextMenu = new MouseEvent('contextmenu', { bubbles: true, cancelable: true, button: 2 });
+      c.dispatchEvent(contextMenu);
+      return { step: before.scale, controlExcluded, leftExcluded, dragged, cancelled,
+        moved: ended.x === -50 && ended.y === -50, contextSuppressed: contextMenu.defaultPrevented,
         unchanged: JSON.stringify(ended) === JSON.stringify(Archify.view.state()),
         geometryUnchanged: beforeGeometry === JSON.stringify(geometry()) };
     })()`);
-    assert.deepEqual(result, { step: 1, controlExcluded: true, dragged: true, cancelled: true, unchanged: true, geometryUnchanged: true });
+    assert.deepEqual(result, { step: 1, controlExcluded: true, leftExcluded: true, dragged: true, cancelled: true,
+      moved: true, contextSuppressed: true, unchanged: true, geometryUnchanged: true });
     await stable();
     await snapshot('pointer-cancel');
   });
 
-  await t.test('infinite canvas pans freely, zooms at the pointer and exposes an off-canvas Radar marker', async () => {
+  await t.test('wheel pans, modified wheel zooms at the pointer, arrow keys pan, and Radar marks an off-canvas viewport', async () => {
     await load();
     const result = await run(`(async () => {
       const c = document.querySelector('.diagram-container'), svg = c.querySelector(':scope > svg');
@@ -177,14 +191,23 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
       const localX = clientX - rect.left - offsetLeft;
       const localY = clientY - rect.top - offsetTop;
       const before = Archify.view.state();
-      const beforeAnchor = [(localX - before.x) / before.scale, (localY - before.y) / before.scale];
-      c.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true,
-        deltaY: -120, clientX, clientY }));
+      const panWheel = new WheelEvent('wheel', { bubbles: true, cancelable: true,
+        deltaX: 40, deltaY: 55, clientX, clientY });
+      c.dispatchEvent(panWheel);
+      const panned = Archify.view.state();
+      await new Promise(resolve => setTimeout(resolve, 140));
+      const beforeAnchor = [(localX - panned.x) / panned.scale, (localY - panned.y) / panned.scale];
+      const zoomWheel = new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true,
+        deltaY: -120, clientX, clientY });
+      c.dispatchEvent(zoomWheel);
       const zoomed = Archify.view.state();
       const afterAnchor = [(localX - zoomed.x) / zoomed.scale, (localY - zoomed.y) / zoomed.scale];
-      c.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true,
-        deltaX: 40, deltaY: 55, clientX, clientY }));
-      const wheeled = Archify.view.state();
+      const arrow = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true });
+      window.dispatchEvent(arrow);
+      await cameraWait(() => Archify.view.state().y < zoomed.y - 1);
+      const keyed = Archify.view.state();
+      window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown', bubbles: true }));
+      await cameraWait(() => !c.classList.contains('is-keyboard-panning'));
       Archify.view.fit();
       const fitted = Archify.view.state();
       Archify.view.panBy(180, 140);
@@ -199,7 +222,10 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
         api: ['zoomAt','panBy','fit','worldViewport'].every(name => typeof Archify.view[name] === 'function'),
         grid: Boolean(grid) && getComputedStyle(grid).pointerEvents === 'none',
         pointerAnchor: Math.abs(beforeAnchor[0] - afterAnchor[0]) < 0.01 && Math.abs(beforeAnchor[1] - afterAnchor[1]) < 0.01,
-        wheelPan: Math.abs(wheeled.x - (zoomed.x - 40)) < 0.01 && Math.abs(wheeled.y - (zoomed.y - 55)) < 0.01,
+        wheelPan: panWheel.defaultPrevented && panned.scale === before.scale &&
+          Math.abs(panned.x - (before.x - 40)) < 0.01 && Math.abs(panned.y - (before.y - 55)) < 0.01,
+        wheelZoom: zoomWheel.defaultPrevented && zoomed.scale > panned.scale,
+        keyboardPan: arrow.defaultPrevented && Math.abs(keyed.x - zoomed.x) < 0.01 && keyed.y < zoomed.y - 1,
         fitted, positive, outside: logical.outside, worldOutside: world.x > Number(svg.viewBox.baseVal.x + svg.viewBox.baseVal.width),
         radarOutside: marker.hasAttribute('data-outside') && Number(marker.getAttribute('width')) > 0,
         gridPosition: c.style.getPropertyValue('--archify-grid-x')
@@ -209,6 +235,8 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
     assert.equal(result.grid, true);
     assert.equal(result.pointerAnchor, true, JSON.stringify(result));
     assert.equal(result.wheelPan, true, JSON.stringify(result));
+    assert.equal(result.wheelZoom, true, JSON.stringify(result));
+    assert.equal(result.keyboardPan, true, JSON.stringify(result));
     assert.deepEqual(result.fitted, { scale: 1, x: 0, y: 0, mode: 'overview' });
     assert.deepEqual(result.positive, { scale: 1, x: 180, y: 140, mode: 'manual' });
     assert.equal(result.outside, true);
@@ -218,6 +246,42 @@ test('Camera preserves transactions, rendered state and real caller handoffs', {
     await stable();
     await snapshot('infinite-canvas');
     await screenshot('infinite-canvas');
+  });
+
+  await t.test('a large diagram keeps navigation visible while wheel pan and Reset leave page scroll unchanged', async () => {
+    await load('large');
+    const result = await run(`(() => {
+      const c = document.querySelector('.diagram-container');
+      const svg = c.querySelector(':scope > svg');
+      const nav = c.querySelector('.diagram-nav');
+      const visible = () => {
+        const rect = nav.getBoundingClientRect();
+        return rect.top >= 0 && rect.bottom <= innerHeight && rect.left >= 0 && rect.right <= innerWidth;
+      };
+      const navRect = () => { const rect = nav.getBoundingClientRect(); return [rect.x, rect.y, rect.width, rect.height]; };
+      const initial = { visible: visible(), docked: nav.hasAttribute('data-viewport-docked'), position: getComputedStyle(nav).position,
+        scrollY, nav: navRect(), viewport: [innerWidth, innerHeight] };
+      const rect = c.getBoundingClientRect();
+      c.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 900,
+        clientX: rect.left + 300, clientY: Math.max(rect.top + 100, 300) }));
+      const afterWheel = { visible: visible(), scrollY, state: Archify.view.state(), transform: svg.style.transform };
+      c.querySelector('[data-view="reset"]').click();
+      return { initial, afterWheel, afterReset: { visible: visible(), scrollY, state: Archify.view.state() } };
+    })()`);
+    assert.equal(result.initial.visible, true, JSON.stringify(result));
+    assert.equal(result.initial.docked, true, JSON.stringify(result));
+    assert.equal(result.initial.scrollY, 0, JSON.stringify(result));
+    assert.equal(result.afterWheel.visible, true, JSON.stringify(result));
+    assert.equal(result.afterWheel.scrollY, 0);
+    assert.equal(result.afterWheel.state.scale, 1);
+    assert.equal(result.afterWheel.state.y, -900);
+    assert.match(result.afterWheel.transform, /translate\(0px, -900px\) scale\(1\)/);
+    assert.deepEqual(result.afterReset, {
+      visible: true, scrollY: 0, state: { scale: 1, x: 0, y: 0, mode: 'overview' },
+    });
+    await stable();
+    await snapshot('large-navigation');
+    await screenshot('large-navigation');
   });
 
   await t.test('target selection, failure branches and instant options preserve their side effects', async () => {

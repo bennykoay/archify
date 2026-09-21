@@ -725,6 +725,10 @@ resulting layout rather than importing Chrome's private state. Keeping this
 contract beside the source localizes navigation-clearance maintenance; the
 Reader/Chrome feedback and Camera/CSS dependencies still exist.
 
+Camera's viewport-docked navigation is outside the authored stage and therefore
+is not eligible for a Chrome Layout reserve. Returning the navigation to its
+container restores the normal overlap measurement and rail behavior.
+
 ## Camera contract
 
 `viewer-camera.js` initializes `Archify.view` once, after Reader and Chrome
@@ -742,13 +746,30 @@ the modes are overview, manual and semantic. Zoom and Reset return undefined;
 delegates to `reveal` or returns false. Manual Reset interrupts callers, whereas
 `reset({ automatic: true })` stops camera motion without the manual takeover path.
 
-Desktop Camera is an unbounded interaction surface. Empty-space pointer drag and
-wheel input pan at every zoom level; Ctrl/Cmd-wheel and trackpad pinch zoom around
-the pointer. Scale is bounded to 25%–400%, while translation has only a large
-numeric safety bound. `fit()` uses the same authored overview as Reset. The
-camera-created grid layer tracks translation and scale but remains outside the
-authored SVG, semantic geometry, and exports. Wide diagrams at widths up to 720px
-keep their established horizontal-scroll behavior.
+Desktop Camera is an unbounded interaction surface. Holding the right mouse
+button pans from any diagram content outside Viewer controls, arrow keys pan while
+the diagram intersects the viewport, and ordinary wheel input pans vertically
+(and horizontally when the device supplies `deltaX`). Ctrl/Cmd-wheel and trackpad
+pinch zoom around the pointer. Scale is bounded to 25%–400%, while translation has
+only a large numeric safety bound. `fit()` uses the same authored overview as Reset.
+On diagrams taller than the viewport, the navigation toolbar docks to the viewport
+bottom while the diagram remains visible. The camera-created grid layer tracks
+translation and scale but remains outside the authored SVG, semantic geometry, and
+exports. Wide diagrams at widths up to 720px keep their established horizontal-scroll
+behavior.
+
+Arrow-key movement uses elapsed-time animation frames rather than operating-system
+key-repeat steps. Holding multiple arrows combines their directions, Shift raises
+the movement speed, key release ends the interaction, and window blur clears held
+keys. The animation rate follows the browser and display refresh rate without a
+fixed 60fps cap.
+
+High-frequency pointer and wheel input coalesces into at most one interactive
+render per animation frame. Interactive renders update the camera and controls
+while the container supplies the live clipping boundary; the grid, final SVG
+clipping, Radar, and Chrome Layout synchronize once the gesture settles. Container
+resizing and page scrolling update viewport docking separately, so camera movement
+does not force a container layout read on every frame.
 
 `worldViewport()` reports the unbounded visible rectangle in authored logical
 coordinates. `logicalViewport()` reports its intersection with the authored

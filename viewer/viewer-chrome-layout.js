@@ -84,6 +84,7 @@
           container && svg && nav &&
           window.innerWidth > 720 &&
           html.getAttribute('data-embed') !== 'true' &&
+          !nav.hasAttribute('data-viewport-docked') &&
           (!window.matchMedia || !window.matchMedia('print').matches) &&
           visible(nav)
         );

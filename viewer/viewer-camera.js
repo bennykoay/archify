@@ -6,6 +6,7 @@
       var resetDetailLabel = resetBtn.querySelector('[data-view-detail]');
       var resetPercentLabel = resetBtn.querySelector('[data-view-percent]');
       var inBtn = container.querySelector('[data-view="in"]');
+      var navigation = container.querySelector('.diagram-nav');
       var MIN_SCALE = 0.25;
       var MAX_SCALE = 4;
       var CAMERA_LIMIT = 1000000;
@@ -17,9 +18,19 @@
       var cameraGeneration = 0;
       var cameraTransaction = null;
       var clipFrame = 0;
+      var interactionFrame = 0;
+      var keyboardFrame = 0;
+      var keyboardStartedAt = 0;
+      var keyboardShift = false;
+      var keyboardDirections = Object.create(null);
       var resizeFrame = 0;
       var autoScrollUntil = 0;
       var wheelTimer = null;
+      var wheelGeometry = null;
+      var wheelMode = '';
+      var suppressContextMenuUntil = 0;
+      var lastControlKey = '';
+      var interactionMetrics = { offsetLeft: 0, offsetTop: 0, width: 1, height: 1 };
 
       var viewBox = svg.viewBox && svg.viewBox.baseVal;
 
@@ -99,6 +110,9 @@
         var semantic = state.mode === 'semantic' && state.scale > 1.01;
         var detail = detailLevel();
         var percent = Math.round(state.scale * 100) + '%';
+        var controlKey = [state.mode, semantic, detail, percent].join('|');
+        if (controlKey === lastControlKey) return;
+        lastControlKey = controlKey;
         var levelLabel = viewerText('viewer.nav.level.' + detail);
         var detailHint = detail === 'map'
           ? viewerText('viewer.nav.detail.map')
@@ -123,22 +137,23 @@
         container.setAttribute('data-camera-mode', state.mode);
         container.setAttribute('data-camera-indicator', semantic ? 'true' : 'false');
       }
-      function clipToViewport(camera) {
+      function clipToViewport(camera, metrics) {
         camera = camera || state;
         if (camera.scale <= 1.001) {
-          svg.style.removeProperty('clip-path');
+          if (svg.style.clipPath) svg.style.removeProperty('clip-path');
           return;
         }
-        var width = svg.clientWidth || 1;
-        var height = svg.clientHeight || 1;
+        var width = metrics ? metrics.width : (svg.clientWidth || 1);
+        var height = metrics ? metrics.height : (svg.clientHeight || 1);
         var scale = camera.scale;
         var top = Math.max(0, Math.min(height, -camera.y / scale));
         var left = Math.max(0, Math.min(width, -camera.x / scale));
         var right = Math.max(0, Math.min(width, width - (width - camera.x) / scale));
         var bottom = Math.max(0, Math.min(height, height - (height - camera.y) / scale));
-        svg.style.clipPath = 'inset(' + [top, right, bottom, left].map(function (value) {
+        var nextClip = 'inset(' + [top, right, bottom, left].map(function (value) {
           return Math.round(value * 1000) / 1000 + 'px';
         }).join(' ') + ')';
+        if (svg.style.clipPath !== nextClip) svg.style.clipPath = nextClip;
       }
       function cameraSettled(rendered) {
         return Math.abs(rendered.scale - state.scale) < 0.001 &&
@@ -156,26 +171,108 @@
         }
         sample();
       }
-      function apply() {
+      function apply(options) {
+        options = options || {};
         boundCamera();
+        var offsetLeft = options.interactive === true ? interactionMetrics.offsetLeft : (svg.offsetLeft || 0);
+        var offsetTop = options.interactive === true ? interactionMetrics.offsetTop : (svg.offsetTop || 0);
         svg.style.transform = 'translate(' + state.x + 'px,' + state.y + 'px) scale(' + state.scale + ')';
-        container.style.setProperty('--archify-camera-x', state.x + 'px');
-        container.style.setProperty('--archify-camera-y', state.y + 'px');
-        container.style.setProperty('--archify-camera-scale', String(state.scale));
-        container.style.setProperty('--archify-grid-x', (state.x + (svg.offsetLeft || 0)) + 'px');
-        container.style.setProperty('--archify-grid-y', (state.y + (svg.offsetTop || 0)) + 'px');
-        container.style.setProperty('--archify-grid-minor', (24 * state.scale) + 'px');
-        container.style.setProperty('--archify-grid-major', (120 * state.scale) + 'px');
-        syncViewportClip();
+        if (options.interactive !== true) syncGrid(offsetLeft, offsetTop);
+        if (options.interactive === true) {
+          if (clipFrame) cancelAnimationFrame(clipFrame);
+          clipFrame = 0;
+        } else {
+          syncViewportClip();
+        }
         renderControls();
         outBtn.disabled = state.scale <= MIN_SCALE;
         inBtn.disabled = state.scale >= MAX_SCALE;
         container.classList.toggle('is-pannable', !mobileScrollMode());
         svg.setAttribute('data-view-scale', String(state.scale));
+        if (options.interactive !== true) {
+          if (Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
+          if (Archify.viewerChromeLayout && typeof Archify.viewerChromeLayout.schedule === 'function') {
+            Archify.viewerChromeLayout.schedule();
+          }
+        }
+      }
+      function syncGrid(offsetLeft, offsetTop) {
+        offsetLeft = Number.isFinite(offsetLeft) ? offsetLeft : (svg.offsetLeft || 0);
+        offsetTop = Number.isFinite(offsetTop) ? offsetTop : (svg.offsetTop || 0);
+        container.style.setProperty('--archify-grid-x', (state.x + offsetLeft) + 'px');
+        container.style.setProperty('--archify-grid-y', (state.y + offsetTop) + 'px');
+        container.style.setProperty('--archify-grid-minor', (24 * state.scale) + 'px');
+        container.style.setProperty('--archify-grid-major', (120 * state.scale) + 'px');
+      }
+      function scheduleInteractionApply() {
+        if (interactionFrame) return;
+        interactionFrame = requestAnimationFrame(function () {
+          interactionFrame = 0;
+          apply({ interactive: true });
+        });
+      }
+      function captureInteractionGeometry() {
+        interactionMetrics = {
+          offsetLeft: svg.offsetLeft || 0,
+          offsetTop: svg.offsetTop || 0,
+          width: svg.clientWidth || 1,
+          height: svg.clientHeight || 1
+        };
+        return container.getBoundingClientRect();
+      }
+      function flushInteractionApply() {
+        if (!interactionFrame) return;
+        cancelAnimationFrame(interactionFrame);
+        interactionFrame = 0;
+        apply({ interactive: true });
+      }
+      function settleInteraction() {
+        flushInteractionApply();
+        syncGrid(interactionMetrics.offsetLeft, interactionMetrics.offsetTop);
+        clipToViewport(state);
         if (Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
         if (Archify.viewerChromeLayout && typeof Archify.viewerChromeLayout.schedule === 'function') {
           Archify.viewerChromeLayout.schedule();
         }
+      }
+      function keyboardDirectionActive() {
+        return keyboardDirections.ArrowLeft || keyboardDirections.ArrowRight ||
+          keyboardDirections.ArrowUp || keyboardDirections.ArrowDown;
+      }
+      function stopKeyboardPan() {
+        if (keyboardFrame) cancelAnimationFrame(keyboardFrame);
+        keyboardFrame = 0;
+        keyboardStartedAt = 0;
+        keyboardDirections = Object.create(null);
+        keyboardShift = false;
+        if (!container.classList.contains('is-keyboard-panning')) return;
+        settleInteraction();
+        container.classList.remove('is-keyboard-panning');
+      }
+      function stepKeyboardPan(timestamp) {
+        keyboardFrame = 0;
+        if (!keyboardDirectionActive()) {
+          stopKeyboardPan();
+          return;
+        }
+        var elapsed = keyboardStartedAt ? Math.min(32, timestamp - keyboardStartedAt) : 0;
+        keyboardStartedAt = timestamp;
+        var distance = (keyboardShift ? 1100 : 650) * elapsed / 1000;
+        var horizontal = (keyboardDirections.ArrowLeft ? 1 : 0) - (keyboardDirections.ArrowRight ? 1 : 0);
+        var vertical = (keyboardDirections.ArrowUp ? 1 : 0) - (keyboardDirections.ArrowDown ? 1 : 0);
+        state.x += horizontal * distance;
+        state.y += vertical * distance;
+        state.mode = 'manual';
+        apply({ interactive: true });
+        keyboardFrame = requestAnimationFrame(stepKeyboardPan);
+      }
+      function startKeyboardPan() {
+        if (container.classList.contains('is-keyboard-panning')) return;
+        interruptCamera('keyboard');
+        captureInteractionGeometry();
+        container.classList.add('is-keyboard-panning');
+        keyboardStartedAt = 0;
+        keyboardFrame = requestAnimationFrame(stepKeyboardPan);
       }
       function sampleRenderedState() {
         var transform = '';
@@ -254,6 +351,7 @@
         if (Archify.guidedViews && Archify.guidedViews.cancelHandoff) {
           Archify.guidedViews.cancelHandoff(reason || 'manual');
         }
+        flushInteractionApply();
         var rendered = sampleRenderedState();
         stopCameraMotion(reason || 'manual', false);
         state = rendered;
@@ -280,7 +378,8 @@
         state.scale = next;
         state.x = anchorX - contentX * next;
         state.y = anchorY - contentY * next;
-        apply();
+        if (options.defer === true) scheduleInteractionApply();
+        else apply();
       }
       function zoom(next, options) {
         options = options || {};
@@ -304,7 +403,8 @@
         state.x += dx;
         state.y += dy;
         state.mode = 'manual';
-        apply();
+        if (options.defer === true) scheduleInteractionApply();
+        else apply();
         return true;
       }
       function reset(options) {
@@ -516,6 +616,22 @@
       function pinControls() {
         container.style.setProperty('--archify-scroll-x', container.scrollLeft + 'px');
       }
+      function syncNavigationDock() {
+        if (!navigation) return;
+        var rect = container.getBoundingClientRect();
+        var margin = window.innerWidth <= 720 ? 8 : 16;
+        var docked = !mobileScrollMode() && rect.height > window.innerHeight * 1.5 &&
+          rect.top < window.innerHeight - margin && rect.bottom > window.innerHeight - margin;
+        var changed = navigation.hasAttribute('data-viewport-docked') !== docked;
+        navigation.toggleAttribute('data-viewport-docked', docked);
+        if (docked) {
+          var visibleRight = Math.min(rect.right, window.innerWidth);
+          navigation.style.setProperty('--archify-nav-viewport-right', Math.max(margin, window.innerWidth - visibleRight + margin) + 'px');
+        } else {
+          navigation.style.removeProperty('--archify-nav-viewport-right');
+        }
+        if (changed && Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
+      }
       function onScroll() {
         pinControls();
         if (Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
@@ -527,9 +643,11 @@
         if (!drag) return;
         var moved = drag.moved;
         drag = null;
-        container.classList.remove('is-panning');
         try { container.releasePointerCapture(event.pointerId); } catch (_) {}
+        if (moved) settleInteraction();
+        container.classList.remove('is-panning');
         if (moved) {
+          suppressContextMenuUntil = Date.now() + 250;
           container.setAttribute('data-just-panned', 'true');
           setTimeout(function () { container.removeAttribute('data-just-panned'); }, 80);
         }
@@ -537,17 +655,23 @@
       function cameraControlTarget(target) {
         return target.closest('.diagram-nav, .focus-chip, .node-finder, .diagram-guide, .overview-map, .route-probe, .semantic-lens');
       }
-      function cameraInteractiveTarget(target) {
-        return target.closest('[data-node-id], [data-relationship-hit-key], [data-legend-kind], [role="button"], a, button, input, select, textarea');
+      function keyboardInputTarget(target) {
+        return target && target.closest && target.closest('input, select, textarea, [contenteditable="true"]');
+      }
+      function diagramInViewport() {
+        var rect = container.getBoundingClientRect();
+        return rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
       }
 
       inBtn.addEventListener('click', function () { zoom(state.scale + 0.25); });
       outBtn.addEventListener('click', function () { zoom(state.scale - 0.25); });
       resetBtn.addEventListener('click', reset);
       container.addEventListener('pointerdown', function (event) {
-        if (mobileScrollMode() || event.button !== 0 || cameraControlTarget(event.target) || cameraInteractiveTarget(event.target)) return;
+        if (mobileScrollMode() || event.button !== 2 || cameraControlTarget(event.target)) return;
         event.preventDefault();
+        stopKeyboardPan();
         interruptCamera();
+        captureInteractionGeometry();
         drag = { startX: event.clientX, startY: event.clientY, x: state.x, y: state.y, moved: false };
         container.classList.add('is-panning');
         try { container.setPointerCapture(event.pointerId); } catch (_) {}
@@ -559,28 +683,68 @@
         if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
         state.x = drag.x + dx;
         state.y = drag.y + dy;
-        apply();
+        scheduleInteractionApply();
       });
       container.addEventListener('pointerup', onPointerEnd);
       container.addEventListener('pointercancel', onPointerEnd);
+      container.addEventListener('contextmenu', function (event) {
+        if (Date.now() < suppressContextMenuUntil && !cameraControlTarget(event.target)) event.preventDefault();
+      });
       container.addEventListener('wheel', function (event) {
         if (mobileScrollMode() || cameraControlTarget(event.target)) return;
         event.preventDefault();
-        if (!container.classList.contains('is-wheel-panning')) interruptCamera('wheel');
-        container.classList.add('is-wheel-panning');
+        var nextWheelMode = event.ctrlKey || event.metaKey ? 'zoom' : 'pan';
+        var startingWheel = !container.classList.contains('is-wheel-moving') || wheelMode !== nextWheelMode;
+        if (startingWheel) {
+          if (container.classList.contains('is-wheel-moving')) settleInteraction();
+          stopKeyboardPan();
+          interruptCamera('wheel');
+          var rect = captureInteractionGeometry();
+          wheelGeometry = {
+            left: rect.left + interactionMetrics.offsetLeft,
+            top: rect.top + interactionMetrics.offsetTop
+          };
+          wheelMode = nextWheelMode;
+        }
+        container.classList.add('is-wheel-moving');
         if (wheelTimer) clearTimeout(wheelTimer);
         wheelTimer = setTimeout(function () {
           wheelTimer = null;
-          container.classList.remove('is-wheel-panning');
+          settleInteraction();
+          container.classList.remove('is-wheel-moving');
+          wheelGeometry = null;
+          wheelMode = '';
           if (Archify.focus && Archify.focus.reposition) Archify.focus.reposition();
         }, 120);
-        if (event.ctrlKey || event.metaKey) {
-          zoomAt(state.scale * Math.exp(-event.deltaY * 0.002), event.clientX, event.clientY, { manual: false });
-          return;
+        if (wheelMode === 'zoom') {
+          zoomAtLocal(state.scale * Math.exp(-event.deltaY * 0.002),
+            event.clientX - wheelGeometry.left, event.clientY - wheelGeometry.top,
+            { manual: false, defer: true });
+        } else {
+          panBy(-event.deltaX, -event.deltaY, { manual: false, defer: true });
         }
-        panBy(-event.deltaX, -event.deltaY, { manual: false });
+        if (startingWheel) flushInteractionApply();
       }, { passive: false });
+      window.addEventListener('keydown', function (event) {
+        if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || mobileScrollMode() ||
+            drag || keyboardInputTarget(event.target) || !diagramInViewport()) return;
+        if (!/^Arrow(Left|Right|Up|Down)$/.test(event.key)) return;
+        event.preventDefault();
+        keyboardDirections[event.key] = true;
+        keyboardShift = event.shiftKey;
+        startKeyboardPan();
+      });
+      window.addEventListener('keyup', function (event) {
+        if (event.key === 'Shift') keyboardShift = false;
+        if (!/^Arrow(Left|Right|Up|Down)$/.test(event.key)) return;
+        delete keyboardDirections[event.key];
+        keyboardShift = event.shiftKey;
+        if (!keyboardDirectionActive()) stopKeyboardPan();
+      });
+      window.addEventListener('blur', stopKeyboardPan);
       container.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('scroll', syncNavigationDock, { passive: true });
+      if (window.ResizeObserver) new ResizeObserver(syncNavigationDock).observe(container);
       window.addEventListener('resize', function () {
         if (resizeFrame) cancelAnimationFrame(resizeFrame);
         resizeFrame = requestAnimationFrame(function () {
@@ -592,6 +756,7 @@
       window.addEventListener('hashchange', function () { requestAnimationFrame(syncSemantic); });
       apply();
       pinControls();
+      requestAnimationFrame(syncNavigationDock);
       requestAnimationFrame(syncSemantic);
 
       return {
