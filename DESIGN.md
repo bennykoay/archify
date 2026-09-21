@@ -1,7 +1,7 @@
 # DESIGN.md — Archify chart design system
 
 **For whom:** any agent or person drawing an Archify chart, and Commander Ben.
-**Author:** Benji (read-only consultant). **Date:** 2026-09-17. **Version:** 0.1.0.
+**Author:** Benji (read-only consultant). **Date:** 2026-09-21. **Version:** 0.1.1.
 **Token source:** `archify/renderers/shared/system-tokens.mjs` v1.2.0.
 
 **Bottom line:** This file is the law for how an Archify chart looks. It names
@@ -325,15 +325,15 @@ Never hand-place cards.
 
 ## 🔬 10. Conformance — which check enforces which clause
 
-This is the part most design systems cannot offer. **Nineteen checks already
-run against every chart.** A clause with a check is enforced. A clause without
-one is only a wish.
+This is the part most design systems cannot offer. **Twenty-one checks already
+run against every chart** (18 geometry, 3 colour). A clause with a check is
+enforced. A clause without one is only a wish.
 
 | Clause | Enforced by |
 |---|---|
 | Frame holds its members | A7. |
-| Frames do not cross each other | **Nothing.** |
-| A frame is at least half filled | **Nothing.** |
+| Frames do not cross each other | A16. |
+| A frame is at least half filled | A17, container frames only. |
 | A frame title is not stacked on a neighbour | **Nothing.** |
 | Wire keeps clear of a frame edge | A9. |
 | Gaps inside a frame are balanced | A14. |
@@ -351,8 +351,16 @@ one is only a wish.
 | Surfaces separate without a border | P2. |
 | Painted colour matches its token | P3. |
 
-**Three of the frame clauses above have no check.** That is why eleven crossing
-frames and six half-empty frames have never been reported by the gate table.
+**One frame clause above still has no check:** a frame title stacked on a
+neighbour. A16 and A17 now close the other two.
+
+A17 judges container frames only. Lanes, exception-lanes and stages are
+routing corridors — you pass through them, you do not fill them — and they
+measured 6-18% fill against a floor borrowed from A6's container leg. That
+borrowing was the defect, not the charts. Corridor-kind frames now answer NA.
+On container charts A17 still discriminates: einvoice-order-flow-v3 reports
+frame "MD" at 42.5% fill against the 50% floor, and A16 on the same chart
+reports "Sales" crossing "Accounting" at 7348.21px2.
 
 **Seven elements have no check at all:** E5, E7, E9, E10, E12, E13, and telling
 E17 from E15. Those clauses are wishes until someone builds the check.

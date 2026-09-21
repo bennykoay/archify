@@ -1453,27 +1453,39 @@ if (isWorkflow) {
       : (pairs.length ? `no crossing: ${pairs.length} pair(s), ${nestedCount} nested (containment, not damage)` : 'no frame pairs measured')),
   });
 }
-// A17 FRAME_FILL (SEE-016, asserted both kinds): per held frame,
+// A17 FRAME_FILL (SEE-016, asserted containers only): per held container frame,
 // member-card-covered area / frame area, named frame + percentage. Floor 0.50
 // = the A6 INK_OCCUPANCY container leg (same quantity, same population: one
 // floor across both checks; the A6 global leg already prices page-level waste
-// so per-frame half does not double-charge). A frame holding no cards answers
-// NA for that frame; no held frame at all answers NA, never PASS.
+// so per-frame half does not double-charge). Category-error fix: lanes are
+// routing corridors, not content containers — lane-held frames measured 7-17%
+// fill and failed 18/18, while containers at 42-59% discriminate correctly;
+// the 0.50 floor was borrowed from A6 and that borrowing is the defect for
+// corridors. Widened beyond lane/exception-lane to stage: dataflow stage frames
+// measure 6-18% fill (5/5 FAIL on dataflow-product-analytics), the same signature
+// as lanes, because a pipeline stage is routed through, not filled.
+// Corridor-kind held frames are skipped (NA); container frames judged as
+// before. A frame holding no cards answers NA for that frame; no held
+// container frame at all answers NA, never PASS.
 {
   const fillRows = geom.a17rows || [];
-  const judged = fillRows.filter((r) => r.kids && r.kids.length);
+  const CORRIDOR_KINDS = new Set(['lane', 'exception-lane', 'stage']);
+  const corridorSkipped = fillRows.filter((r) => CORRIDOR_KINDS.has(r.kind));
+  const judged = fillRows.filter((r) => r.kids && r.kids.length && !CORRIDOR_KINDS.has(r.kind));
   const thin = judged.filter((r) => r.fill != null && r.fill < 0.5);
   const worstFill = [...judged].sort((a, b) => ((a.fill ?? 1) - (b.fill ?? 1)))[0] || null;
   const popA17 = judged.length;
   A.push({
     id: 'A17', name: 'FRAME_FILL', asserted: true,
-    threshold: 'member-card-covered area / frame area >= 0.50 per held frame (floor = A6 0.50 container leg; empty frame answers NA)',
+    threshold: 'member-card-covered area / frame area >= 0.50 per held container frame (floor = A6 0.50 container leg; empty frame answers NA; lane frame answers NA \u2014 lanes are routing corridors)',
     verdict: popA17 === 0 ? 'NA' : (thin.length ? 'FAIL' : 'PASS'),
-    measured: { population: popA17, frames: fillRows.length, judged: judged.length, violations: thin.length, worstFrame: worstFill ? worstFill.frame : null, worstFill: worstFill ? worstFill.fill : null, rows: fillRows.map((r) => ({ frame: r.frame, kids: r.kids, fill: r.fill, pct: r.pct })) },
+    measured: { population: popA17, frames: fillRows.length, judged: judged.length, violations: thin.length, worstFrame: worstFill ? worstFill.frame : null, worstFill: worstFill ? worstFill.fill : null, rows: fillRows.map((r) => ({ frame: r.frame, kids: r.kids, fill: r.fill, pct: r.pct })), corridorSkipped: corridorSkipped.length, corridorFrames: corridorSkipped.map((r) => r.frame) },
     elements: thin.slice(0, 4).map((r) => ({ frame: r.frame, pct: r.pct })),
     coords: thin.slice(0, 4).map((r) => ({ frame: r.frame, box: r.box, pct: r.pct })),
     reason: popA17 === 0
-      ? 'no measurable population (N=0): no frame holds a card'
+      ? (corridorSkipped.length
+        ? `corridor frame: fill floor does not apply — lanes and stages are routing corridors (${corridorSkipped.length} corridor-held frame(s) skipped)`
+        : 'no measurable population (N=0): no frame holds a card')
       : (thin.length
       ? `frame "${thin[0].frame}" fill ${thin[0].pct}% < 50% (${thin[0].kids.length} card(s): ${thin[0].kids.join(', ')})`
       : (worstFill ? `all ${judged.length} held frame(s) fill >= 50% (thinnest "${worstFill.frame}" ${worstFill.pct}%)` : 'no held frames measured')),

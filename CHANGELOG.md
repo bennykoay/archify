@@ -3,6 +3,23 @@
 All notable changes are documented here. Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Fixed
+- **A17 FRAME_FILL category error (OSM-BENJI-095).** The 0.50 fill floor was
+  borrowed from A6's container leg and applied to every held frame, including
+  routing corridors. Lanes, exception-lanes and stages are passed through, not
+  filled: they measured 6-18% and failed by construction (loop-open/pilot/full
+  6 lane frames each; dataflow-product-analytics 5/5 stage frames). A17 now
+  judges container kinds only (`region`, `group`, `security-group`, `segment`)
+  and answers NA for corridor kinds, reported as `corridorSkipped`/
+  `corridorFrames`. Container discrimination is unchanged and verified:
+  einvoice-order-flow-v3 FAIL 1 violation ("MD" 42.5%), chart2-orom FAIL 4,
+  cnc-bus FAIL 1 — identical verdicts before and after the fix, so the check is
+  narrowed, not disabled.
+- **DESIGN.md 0.1.1.** Conformance table corrected: "Frames do not cross each
+  other" now maps to A16 and "A frame is at least half filled" to A17
+  (containers only); both previously read **Nothing.** Check count corrected
+  from nineteen to twenty-one (18 geometry, 3 colour). Unchecked frame clauses
+  restated from three to one (frame title stacked on a neighbour).
 ### Added
 - **SYS-003 ELK adopt (machine-drawn, zero hand geometry).** `elkjs` via npm, UNMODIFIED (never edit elkjs source; behaviour in OUR wrapper `archify/renderers/shared/layout-engine.mjs`, thin interface `layoutArchitectureStructure`, seam: only that module imports `elkjs`). E-invoice structure-only `design-explore/sys003-einvoice-structure.architecture.json` (SHA `1e80f9cc`, 12 components, 13 edges, 6 boundaries, zero `pos`/`via`/`channelX`/`channelY`/`labelAt`/`route`/`fromSide`/`toSide`) draws A1 PASS (pill-aware titles, no transit, 6 pills, 13 paths), A10 PASS (actual tips, worst gap 6.33px, refX answer: measures tip, not line end, 1.8px beyond, before 8.13 line end), A11 PASS (13==13, edge conservation), A7 PASS (via 1920, 1080<=1080), A8 PASS (4 distinctX, ratio 0.82). A9 FAIL (floor4 spread2, worstFloor0 crossings via overlapping frames, worstSpread30.25 Accounting bottom, 8.25 Client; ceiling probe pad 30->0 gives no gain, frames not lever; book OPEN, elkjs PARTIAL, choice NOT reopened since A1/A10/A11 PASS). A4 FAIL (reject 46.65px>24, 1px parallel corridors, no 4px clearance, book OPEN). A6 FAIL (book, predicted). O1a FAIL (0.69, 10.32px<15, book). Org proof `design-explore/sys003-org-structure.architecture.json` (SHA `3e06265a`, 8 nodes, 7 edges, 0 boundaries, zero geometry, zero new layout code, no `if type==='org'` branching) draws A1/A9/A10/A11/O1a/A8 PASS, A6 FAIL (book, predicted), A7 FAIL (overflow 43px at 1920, extra row for IC sink leftmost, book OPEN). Schema REJECTS `pos` + five channels (`via`, `channelX`, `channelY`, `labelAt`, `route!=='auto'`) across all four renderers with clear `Authored geometry is banned (SYS-003)` errors, never silent ignore (six demos PASS). Amendments: A (spread 36px/3x floor, <2 qualified NA, floor stays 12, 6->2 fails), B (A11 edge conservation, gates N5 silent drops), C (renderer targets above floors: clearance 16 vs 12, tip max(8,5x stroke) vs 6, tokens keep floors), D (refX answered: actual tip, 1.8px beyond, not 9px, before/after 8.13->6.33). Corpus re-run BOOKED (CALIBRATION.md ## SYS-003, re-pins: e-invoice (ELK layout changed, goldens need updating), org (new, need baselining), all architecture (engine change affects all, goldens need re-pinning)).
 
