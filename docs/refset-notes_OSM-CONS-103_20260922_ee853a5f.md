@@ -56,12 +56,6 @@ Kept: (b) corridor-vs-container split with NA verdicts (A17). (c) UNUSED trackin
 
 Candidates for 0.1.2: signal-rank estate, reader-job E-aliases, width-mapped wires. Decision lands in the Step 3 gate report.
 
-
-## 🔑 Hash appendix (codes only, not prose)
-
-
-
-
 ## 🔑 Hash appendix
 
 - R1 `t1-minard-march.png` sha `8d48041171daa9d9a29bb97a7c69855f863b286d55f752779fd2bf3c25b41da6` src `https://upload.wikimedia.org/wikipedia/commons/2/29/Minard.png. ..`
