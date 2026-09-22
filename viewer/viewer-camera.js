@@ -667,8 +667,8 @@
         if (!navigation) return;
         var rect = container.getBoundingClientRect();
         var margin = window.innerWidth <= 720 ? 8 : 16;
-        var docked = !mobileScrollMode() && rect.height > window.innerHeight * 1.5 &&
-          rect.top < window.innerHeight - margin && rect.bottom > window.innerHeight - margin;
+        var docked = !mobileScrollMode() && rect.top < window.innerHeight - margin &&
+          rect.bottom > window.innerHeight - margin;
         var changed = navigation.hasAttribute('data-viewport-docked') !== docked;
         navigation.toggleAttribute('data-viewport-docked', docked);
         if (docked) {
@@ -713,9 +713,12 @@
       inBtn.addEventListener('click', function () { zoom(state.scale + 0.25); });
       outBtn.addEventListener('click', function () { zoom(state.scale - 0.25); });
       resetBtn.addEventListener('click', reset);
+      if (!container.hasAttribute('tabindex')) container.setAttribute('tabindex', '-1');
       container.addEventListener('pointerdown', function (event) {
-        if (mobileScrollMode() || event.button !== 2 || cameraControlTarget(event.target)) return;
+        var directPointerPan = (event.pointerType === 'touch' || event.pointerType === 'pen') && event.button === 0;
+        if (mobileScrollMode() || (event.button !== 2 && !directPointerPan) || cameraControlTarget(event.target)) return;
         event.preventDefault();
+        try { container.focus({ preventScroll: true }); } catch (_) { container.focus(); }
         if (container.classList.contains('is-wheel-moving')) finishWheelGesture(true);
         stopKeyboardPan();
         interruptCamera();
@@ -741,6 +744,7 @@
       container.addEventListener('wheel', function (event) {
         if (mobileScrollMode() || cameraControlTarget(event.target)) return;
         event.preventDefault();
+        try { container.focus({ preventScroll: true }); } catch (_) { container.focus(); }
         var nextWheelMode = event.ctrlKey || event.metaKey ? 'zoom' : 'pan';
         var startingWheel = !container.classList.contains('is-wheel-moving') || wheelMode !== nextWheelMode;
         if (startingWheel) {
@@ -780,8 +784,10 @@
         if (startingWheel && wheelMode === 'zoom') flushInteractionApply();
       }, { passive: false });
       window.addEventListener('keydown', function (event) {
+        var activeTarget = document.activeElement;
         if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || mobileScrollMode() ||
-            drag || keyboardInputTarget(event.target) || !diagramInViewport()) return;
+            drag || keyboardInputTarget(event.target) || !container.contains(activeTarget) ||
+            cameraControlTarget(activeTarget) || !diagramInViewport()) return;
         if (!/^Arrow(Left|Right|Up|Down)$/.test(event.key)) return;
         event.preventDefault();
         keyboardDirections[event.key] = true;
