@@ -46,9 +46,9 @@
       }
       function renderCards() {
         var visible = recipes.filter(function (recipe) { return activeType === 'all' || recipe.type === activeType; });
-        document.getElementById('cards').innerHTML = visible.map(function (raw) {
+        document.getElementById('cards').innerHTML = visible.map(function (raw, index) {
           var recipe = local(raw);
-          return '<button class="card" type="button" data-recipe="'+recipe.id+'" style="--type-color:'+colors[recipe.type]+'"><span class="card-type">'+escapeHtml(recipe.type)+'</span><h3>'+escapeHtml(recipe.title)+'</h3><p class="card-question">'+escapeHtml(recipe.question)+'</p><p class="card-summary">'+escapeHtml(recipe.summary)+'</p><span class="card-foot"><span>'+escapeHtml(recipe.presentation.preset)+' · '+escapeHtml(recipe.presentation.motion)+'</span><span>'+escapeHtml(recipe.proof ? t('proofReady') : t('open'))+' ↗</span></span></button>';
+          return '<button class="card spot" type="button" data-recipe="'+recipe.id+'" style="--type-color:'+colors[recipe.type]+';--i:'+index+'"><span class="card-type">'+escapeHtml(recipe.type)+'</span><h3>'+escapeHtml(recipe.title)+'</h3><p class="card-question">'+escapeHtml(recipe.question)+'</p><p class="card-summary">'+escapeHtml(recipe.summary)+'</p><span class="card-foot"><span>'+escapeHtml(recipe.presentation.preset)+' · '+escapeHtml(recipe.presentation.motion)+'</span><span>'+escapeHtml(recipe.proof ? t('proofReady') : t('open'))+' ↗</span></span></button>';
         }).join('');
       }
       function renderResult(rawRecipe, confidence, alternatives) {

@@ -40,6 +40,9 @@
       'f8-h':'Anticipate and share the exact story moment','f8-p':'Story Horizon distinguishes the exact next stop, while Semantic Story Carrier shows whether its one authored relationship is a call, data, event, security, or state transition. Pin any beat or share the same stable moment.','f8-tag':'FOLLOW · ANTICIPATE · SHARE',
       'export-label':'Export formats',
       'exp-png':'Transparent · 4× native','exp-jpg':'Theme bg · 4× native','exp-webp':'Small · 4× native','exp-svg':'Vector · dual-theme','exp-webm':'Motion · browser-native','exp-clip-fmt':'Clipboard','exp-clip':'Copy PNG · instant paste',
+      'label-cinema':'Live Document',
+      'cinema-h':'Not a picture.<br><em>A living document.</em>',
+      'cinema-sub':'The artifact below is generated from versioned IR and passed nine structural checks — and it stays alive: scrub the story, switch the theme, export at 4×.',
       'label-palette':'Design System',
       'palette-h2':'A semantic color language for infrastructure.',
       'palette-body':'Seven component types. Each with coordinated dark and light variants that switch together via the theme toggle.',
@@ -100,6 +103,9 @@
       'f8-h':'跟随并分享精确故事时刻','f8-p':'Story Horizon 指出唯一下一站，Semantic Story Carrier 则说明这条真实关系传递的是调用、数据、事件、安全还是状态变化；任意 beat 都可钉住或稳定分享。','f8-tag':'跟随 · 钉住 · 分享',
       'export-label':'导出格式',
       'exp-png':'透明底 · 4× 分辨率','exp-jpg':'主题背景 · 4× 分辨率','exp-webp':'体积小 · 4× 分辨率','exp-svg':'矢量 · 双主题','exp-webm':'动态 · 浏览器原生','exp-clip-fmt':'剪贴板','exp-clip':'复制 PNG · 即时粘贴',
+      'label-cinema':'活文档',
+      'cinema-h':'不是一张图。<br><em>是一份活的文档。</em>',
+      'cinema-sub':'下方成品由版本化 IR 生成并通过九项结构检查——而且它是活的：拖动故事线、切换主题、4× 导出。',
       'label-palette':'设计系统',
       'palette-h2':'为基础设施而生的语义色彩系统。',
       'palette-body':'七种组件类型，各有深色与浅色协调变体，随主题切换同步变换。',
@@ -235,15 +241,36 @@
     document.getElementById('code-zh').style.display = lang === 'zh' ? '' : 'none';
   }
 
+  /* ══ Pinned types showcase — chapter in the middle band drives the frame ══ */
+  const typeChapters = [...document.querySelectorAll('.type-chapter')];
+  const typeShots = [...document.querySelectorAll('.types-shot')];
+  const typesCurrent = document.getElementById('types-current');
+  const typesTag = document.getElementById('types-tag');
+  let activeType = 'arch';
+  function updateTypesTag() {
+    const ch = typeChapters.find(c => c.dataset.type === activeType);
+    if (ch && typesTag) typesTag.textContent = lang === 'zh' ? ch.dataset.tagZh : ch.dataset.tag;
+  }
+  function setActiveType(key) {
+    if (key === activeType) return;
+    activeType = key;
+    typeChapters.forEach(c => c.classList.toggle('active', c.dataset.type === key));
+    typeShots.forEach(sh => sh.classList.toggle('active', sh.dataset.shot === key));
+    const ch = typeChapters.find(c => c.dataset.type === key);
+    if (ch && typesCurrent) typesCurrent.textContent = ch.dataset.num;
+    updateTypesTag();
+  }
+  if ('IntersectionObserver' in window && typeChapters.length) {
+    const tObs = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) setActiveType(en.target.dataset.type); });
+    }, { rootMargin: '-42% 0px -42% 0px' });
+    typeChapters.forEach(c => tObs.observe(c));
+  }
+
+  const _applyLang = applyLang;
+  applyLang = function (l) { _applyLang(l); updateTypesTag(); };
+
   btnLang.addEventListener('click', () => applyLang(lang === 'en' ? 'zh' : 'en'));
   applyLang(lang);
 
-  /* ══ Intersection observer ══ */
-  if ('IntersectionObserver' in window) {
-    const obs = new IntersectionObserver(es => {
-      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-    }, { threshold:.12, rootMargin:'0px 0px -40px 0px' });
-    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
-  } else {
-    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
-  }
+
