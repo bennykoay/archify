@@ -667,9 +667,11 @@
         if (!navigation) return;
         var rect = container.getBoundingClientRect();
         var margin = window.innerWidth <= 720 ? 8 : 16;
-        var docked = !mobileScrollMode() && rect.top < window.innerHeight - margin &&
-          rect.bottom > window.innerHeight - margin;
-        var changed = navigation.hasAttribute('data-viewport-docked') !== docked;
+        var viewportEdge = window.innerHeight - margin;
+        var wasDocked = navigation.hasAttribute('data-viewport-docked');
+        var docked = !mobileScrollMode() && rect.top < viewportEdge &&
+          (rect.bottom > viewportEdge || (wasDocked && rect.bottom > 0));
+        var changed = wasDocked !== docked;
         navigation.toggleAttribute('data-viewport-docked', docked);
         if (docked) {
           var visibleRight = Math.min(rect.right, window.innerWidth);
@@ -678,6 +680,12 @@
           navigation.style.removeProperty('--archify-nav-viewport-right');
         }
         if (changed && Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
+      }
+      function resetNavigationDockLatch() {
+        if (!navigation) return;
+        navigation.removeAttribute('data-viewport-docked');
+        navigation.style.removeProperty('--archify-nav-viewport-right');
+        syncNavigationDock();
       }
       function onScroll() {
         pinControls();
@@ -786,8 +794,7 @@
       window.addEventListener('keydown', function (event) {
         var activeTarget = document.activeElement;
         if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || mobileScrollMode() ||
-            drag || keyboardInputTarget(event.target) || !container.contains(activeTarget) ||
-            cameraControlTarget(activeTarget) || !diagramInViewport()) return;
+            drag || keyboardInputTarget(event.target) || activeTarget !== container || !diagramInViewport()) return;
         if (!/^Arrow(Left|Right|Up|Down)$/.test(event.key)) return;
         event.preventDefault();
         keyboardDirections[event.key] = true;
@@ -804,6 +811,11 @@
       window.addEventListener('blur', stopKeyboardPan);
       container.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('scroll', syncNavigationDock, { passive: true });
+      window.addEventListener('afterprint', function () {
+        requestAnimationFrame(function () {
+          requestAnimationFrame(resetNavigationDockLatch);
+        });
+      });
       if (window.ResizeObserver) new ResizeObserver(syncNavigationDock).observe(container);
       window.addEventListener('resize', function () {
         if (resizeFrame) cancelAnimationFrame(resizeFrame);

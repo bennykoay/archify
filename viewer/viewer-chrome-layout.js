@@ -145,7 +145,11 @@
       function measure() {
         frame = 0;
         if (probingBaseline) return null;
-        if (!eligible()) return clear({ preserveBaseline: !cameraAtBaseline() });
+        if (!eligible()) {
+          var temporaryViewerMode = html.getAttribute('data-embed') === 'true' ||
+            Boolean(window.matchMedia && window.matchMedia('print').matches);
+          return clear({ preserveBaseline: temporaryViewerMode || !cameraAtBaseline() });
+        }
 
         /* Camera transforms enlarge and translate authored paint inside the
            fixed, clipped root SVG viewport. They must not redefine the

@@ -1080,7 +1080,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     .diagram-nav[data-viewport-docked] {
       position: fixed;
       right: var(--archify-nav-viewport-right, 1rem);
-      bottom: 1rem;
+      bottom: 0.5rem;
     }
     .diagram-nav::-webkit-scrollbar { display: none; }
     .diagram-nav button,
@@ -6240,6 +6240,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         // canvas upscaling.
         clone.setAttribute('width', vb.width * scale);
         clone.setAttribute('height', vb.height * scale);
+        // Keep copied Viewer layout rules from overriding the export's size.
+        clone.style.width = vb.width * scale + 'px';
+        clone.style.height = vb.height * scale + 'px';
+        clone.style.minWidth = '0';
         clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
         // Only the SVG-relevant rules: semantic classes, markers, and the
@@ -11539,7 +11543,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function measure() {
         frame = 0;
         if (probingBaseline) return null;
-        if (!eligible()) return clear({ preserveBaseline: !cameraAtBaseline() });
+        if (!eligible()) {
+          var temporaryViewerMode = html.getAttribute('data-embed') === 'true' ||
+            Boolean(window.matchMedia && window.matchMedia('print').matches);
+          return clear({ preserveBaseline: temporaryViewerMode || !cameraAtBaseline() });
+        }
 
         /* Camera transforms enlarge and translate authored paint inside the
            fixed, clipped root SVG viewport. They must not redefine the
@@ -12374,9 +12382,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (!navigation) return;
         var rect = container.getBoundingClientRect();
         var margin = window.innerWidth <= 720 ? 8 : 16;
-        var docked = !mobileScrollMode() && rect.height > window.innerHeight * 1.5 &&
-          rect.top < window.innerHeight - margin && rect.bottom > window.innerHeight - margin;
-        var changed = navigation.hasAttribute('data-viewport-docked') !== docked;
+        var viewportEdge = window.innerHeight - margin;
+        var wasDocked = navigation.hasAttribute('data-viewport-docked');
+        var docked = !mobileScrollMode() && rect.top < viewportEdge &&
+          (rect.bottom > viewportEdge || (wasDocked && rect.bottom > 0));
+        var changed = wasDocked !== docked;
         navigation.toggleAttribute('data-viewport-docked', docked);
         if (docked) {
           var visibleRight = Math.min(rect.right, window.innerWidth);
@@ -12385,6 +12395,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           navigation.style.removeProperty('--archify-nav-viewport-right');
         }
         if (changed && Archify.radar && typeof Archify.radar.sync === 'function') Archify.radar.sync();
+      }
+      function resetNavigationDockLatch() {
+        if (!navigation) return;
+        navigation.removeAttribute('data-viewport-docked');
+        navigation.style.removeProperty('--archify-nav-viewport-right');
+        syncNavigationDock();
       }
       function onScroll() {
         pinControls();
@@ -12420,9 +12436,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       inBtn.addEventListener('click', function () { zoom(state.scale + 0.25); });
       outBtn.addEventListener('click', function () { zoom(state.scale - 0.25); });
       resetBtn.addEventListener('click', reset);
+      if (!container.hasAttribute('tabindex')) container.setAttribute('tabindex', '-1');
       container.addEventListener('pointerdown', function (event) {
-        if (mobileScrollMode() || event.button !== 2 || cameraControlTarget(event.target)) return;
+        var directPointerPan = (event.pointerType === 'touch' || event.pointerType === 'pen') && event.button === 0;
+        if (mobileScrollMode() || (event.button !== 2 && !directPointerPan) || cameraControlTarget(event.target)) return;
         event.preventDefault();
+        try { container.focus({ preventScroll: true }); } catch (_) { container.focus(); }
         if (container.classList.contains('is-wheel-moving')) finishWheelGesture(true);
         stopKeyboardPan();
         interruptCamera();
@@ -12448,6 +12467,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       container.addEventListener('wheel', function (event) {
         if (mobileScrollMode() || cameraControlTarget(event.target)) return;
         event.preventDefault();
+        try { container.focus({ preventScroll: true }); } catch (_) { container.focus(); }
         var nextWheelMode = event.ctrlKey || event.metaKey ? 'zoom' : 'pan';
         var startingWheel = !container.classList.contains('is-wheel-moving') || wheelMode !== nextWheelMode;
         if (startingWheel) {
@@ -12487,8 +12507,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (startingWheel && wheelMode === 'zoom') flushInteractionApply();
       }, { passive: false });
       window.addEventListener('keydown', function (event) {
+        var activeTarget = document.activeElement;
         if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || mobileScrollMode() ||
-            drag || keyboardInputTarget(event.target) || !diagramInViewport()) return;
+            drag || keyboardInputTarget(event.target) || activeTarget !== container || !diagramInViewport()) return;
         if (!/^Arrow(Left|Right|Up|Down)$/.test(event.key)) return;
         event.preventDefault();
         keyboardDirections[event.key] = true;
@@ -12505,6 +12526,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       window.addEventListener('blur', stopKeyboardPan);
       container.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('scroll', syncNavigationDock, { passive: true });
+      window.addEventListener('afterprint', function () {
+        requestAnimationFrame(function () {
+          requestAnimationFrame(resetNavigationDockLatch);
+        });
+      });
       if (window.ResizeObserver) new ResizeObserver(syncNavigationDock).observe(container);
       window.addEventListener('resize', function () {
         if (resizeFrame) cancelAnimationFrame(resizeFrame);

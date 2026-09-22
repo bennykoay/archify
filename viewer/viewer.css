@@ -912,7 +912,7 @@ svg {
 .diagram-nav[data-viewport-docked] {
   position: fixed;
   right: var(--archify-nav-viewport-right, 1rem);
-  bottom: 1rem;
+  bottom: 0.5rem;
 }
 .diagram-nav::-webkit-scrollbar { display: none; }
 .diagram-nav button,
