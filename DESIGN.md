@@ -1,7 +1,7 @@
 # DESIGN.md — Archify chart design system
 
 **For whom:** any agent or person drawing an Archify chart, and Commander Ben.
-**Author:** Benji (read-only consultant). **Date:** 2026-09-21. **Version:** 0.1.1.
+**Author:** Benji (read-only consultant). **Date:** 2026-09-22. **Version:** 0.1.2.
 **Token source:** `archify/renderers/shared/system-tokens.mjs` v1.2.0.
 
 **Bottom line:** This file is the law for how an Archify chart looks. It names
@@ -18,7 +18,7 @@ Archify draws **engineering diagrams, not posters**. The mood is a quiet
 instrument panel: dark by default, calm surfaces, one bright thing at a time.
 
 - **Calm ground, loud signal.** Surfaces are near-neutral. Colour is spent on
-  wires, node kinds and warnings, never on decoration.
+  wires, node kinds and warnings, never on decoration. Ranked signal wins ties: safety over status over info, with fixed estate per rank (PFD lesson, ref 17).
 - **Flat, not glossy.** Depth comes from surface lightness, never from shadow.
 - **Dense but never cramped.** Every shape keeps its stated clearance.
 - **Apple HIG is the parent system.** Card width, gutters and type sizes are
@@ -158,6 +158,7 @@ Archify draws eighteen elements. Each is listed with what it is and its rule.
 | E7 | **Node stripe** | A 4px bar on the card's left edge, coloured by node kind. |
 | E8 | **Security group** | Marks a guarded cluster. Defined but not currently drawn. |
 | E9 | **Grid** | An alignment aid. Must never be visible in a delivered chart. |
+| E9a | **Reader-job alias** | Each E-entry answers a reader job (HIG lesson, ref 16): E2 "where am I", E6 "what is it", E11 "which wire", E14 "so what". Renderer nouns stay canonical; aliases guide new clauses. |
 
 ### E1 in full — a frame has four rules, not one
 
@@ -219,6 +220,7 @@ never fail rule 1. The rule it cannot fail was the only rule written down.
 |---|---|---|
 | E15 | **Plain wire** | `--arrow`, 1.5px. Head matches the line. |
 | E16 | **Strong wire** | `--arrow-emphasis`, 1.8px. Head matches the line. |
+| E16a | **Flow wire** | Width maps a number (Minard lesson, ref 1): thickness means quantity at a stated scale. Never vary width for style. |
 | E17 | **Dashed wire** | Must differ from E15 by more than its dashes. |
 | E18 | **Arrowhead** | 10 by 7. Points within 30 degrees of the way the wire travels. |
 
