@@ -21,7 +21,7 @@ import TraceField from '../components/TraceField.astro';
       <div>
         <div class="lead-label fade-up" data-i18n="eyebrow">Question-first diagramming</div>
         <h1 class="fade-up mask d1" data-split data-i18n-html="headline">Choose the question.<br>Get the <em>right diagram.</em></h1>
-        <p class="lede fade-up d2" data-i18n="lede">Describe what your audience needs to understand. Archify recommends one bounded visual recipe—plus the evidence it must contain, when not to use it, and a prompt you can copy.</p>
+        <p class="lede fade-up d2" data-i18n="lede">Describe what your audience needs to understand. Get one bounded recipe — evidence, anti-patterns, a copy-ready prompt.</p>
         <p class="hero-typed fade-up d3" aria-hidden="true" data-typed="explain the cache-miss path to a new hire|prove the payment flow is idempotent|show which services touch PII|walk the rollout order before the review" data-typed-zh="向新同事讲清缓存未命中的路径|证明支付流程是幂等的|标出哪些服务碰 PII|评审前走一遍发布顺序"><span class="typed-prompt">›</span> <span class="typed-text">explain the cache-miss path</span><span class="typed-caret"></span></p>
       </div>
       <div class="metrics spot fade-up d3" aria-label="Guide metrics">
@@ -33,7 +33,7 @@ import TraceField from '../components/TraceField.astro';
 
     <section class="chooser spot fade-up" aria-labelledby="chooser-title">
       <div class="chooser-head">
-        <div><h2 id="chooser-title" data-i18n="chooserTitle">What must the diagram explain?</h2><p data-i18n="chooserBody">Write a situation, not a diagram type. Specific system facts produce a stronger recommendation.</p></div>
+        <div><h2 id="chooser-title" data-i18n="chooserTitle">What must the diagram explain?</h2><p data-i18n="chooserBody">Write a situation, not a diagram type.</p></div>
         <span class="kbd">⌘ / Ctrl + Enter</span>
       </div>
       <textarea id="scenario" data-i18n-placeholder="placeholder" placeholder="Example: Show an API request with JWT auth, a Redis cache miss, database fallback, and async tracing."></textarea>
@@ -48,7 +48,7 @@ import TraceField from '../components/TraceField.astro';
     <section class="library" id="library">
       <div class="section-head fade-up mask">
         <div><div class="lead-label" data-i18n="libraryEyebrow">Recipe library</div><h2 data-i18n="libraryTitle">Eleven small, opinionated starting points.</h2></div>
-        <p data-i18n="libraryBody">Each recipe answers one technical question. That boundary keeps the result legible, reviewable, and honest about missing evidence.</p>
+        <p data-i18n="libraryBody">Each recipe answers one question — bounded, legible, honest about missing evidence.</p>
       </div>
       <div class="filters" id="filters" aria-label="Filter recipes"></div>
       <div class="cards" id="cards"></div>
