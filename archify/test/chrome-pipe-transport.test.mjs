@@ -71,3 +71,40 @@ test('Chrome pipe EOF fails the pending first command without waiting for proces
     await browser.close();
   }
 });
+
+test('visual inspection gives slow local and UNC navigation a bounded load window', async () => {
+  const child = chromeChild();
+  const browser = new ChromeVisualBrowser('/fake/chrome', {
+    env: {},
+    getuid: () => 1001,
+    spawnImpl: () => child,
+    pageLoadTimeoutMs: 45_000,
+  });
+  const startup = browser.sessionPromise.catch(() => {});
+  let observedTimeout;
+  browser.sessionPromise = Promise.resolve('session-1');
+  browser.cdp.waitFor = (method, sessionId, timeoutMs) => {
+    assert.equal(method, 'Page.loadEventFired');
+    assert.equal(sessionId, 'session-1');
+    observedTimeout = timeoutMs;
+    return Promise.resolve({});
+  };
+  browser.cdp.send = async (method) => {
+    if (method === 'Page.navigate') return { errorText: 'synthetic stop after navigation' };
+    return {};
+  };
+  try {
+    await assert.rejects(browser.inspect({
+      artifactPath: 'C:\\slow-share\\diagram.html',
+      width: 1440,
+      height: 900,
+      theme: 'light',
+      screenshotPath: null,
+      writeScreenshot: false,
+    }), /synthetic stop after navigation/);
+    assert.equal(observedTimeout, 45_000);
+  } finally {
+    await browser.close();
+    await startup;
+  }
+});
