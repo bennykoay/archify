@@ -4214,7 +4214,11 @@
        on its wire (R4); it never erases it. Cards keep --mask via .c-mask. */
     rect.c-label-backing[data-wire="a-security"] { fill: color-mix(in srgb, var(--security-stroke) 22%, var(--label-mask, var(--mask))); stroke: var(--security-stroke); stroke-width: 1; }
     rect.c-label-backing[data-wire="a-emphasis"] { fill: color-mix(in srgb, var(--arrow-emphasis) 22%, var(--label-mask, var(--mask))); stroke: var(--arrow-emphasis); stroke-width: 1; }
-    rect.c-label-backing[data-wire="a-default"], rect.c-label-backing[data-wire="a-dashed"] { fill: color-mix(in srgb, var(--arrow) 22%, var(--label-mask, var(--mask))); stroke: var(--arrow); stroke-width: 1; }
+    rect.c-label-backing[data-wire="a-default"] { fill: color-mix(in srgb, var(--arrow) 22%, var(--label-mask, var(--mask))); stroke: var(--arrow); stroke-width: 1; }
+    /* E12 dashed: a dashed wire rides --database-stroke (R10 colour split), so its
+       backing rides the same token — never --arrow. Shared rule above was the
+       10/12 wireMatch cause (backing rgb(142,142,147) vs wire rgb(175,82,222)). */
+    rect.c-label-backing[data-wire="a-dashed"] { fill: color-mix(in srgb, var(--database-stroke) 22%, var(--label-mask, var(--mask))); stroke: var(--database-stroke); stroke-width: 1; }
 
     /* Stable semantic exploration hooks emitted by every renderer. */
     svg [data-node-id] {

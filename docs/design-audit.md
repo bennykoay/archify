@@ -4,7 +4,7 @@
 **Author:** Benji (read-only consultant). **Date:** 2026-09-17.
 **Version:** 0.2.0 — draft. The law is `DESIGN.md`; the picture version is `design.html`.
 
-**Bottom line:** Archify draws **18 elements**. **4 carry a name.** **7 have no check watching them.** Of the 12 rules below, **6 pass**. Every element was found in a real chart and photographed, so each row can be judged by eye, not by my description of it.
+**Bottom line:** Archify draws **18 elements**. **18 carry a name.** Of the 12 rules below, **6 pass**. Every element was found in a real chart and photographed, so each row can be judged by eye, not by my description of it.
 
 ## ⚖️ How a verdict is decided
 
@@ -144,16 +144,14 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 - **Seen in.** Architecture, Sequence
 - **Verdict: MEASURED (FAIL — aid renders in delivery).**
 
-**E10 Edge label backing** — `edge-label-mask`
+**E10 Edge label backing** — `edge-label-backing`
 
 - **Good (T4).** Tinted from the wire it belongs to. Carries a border in that colour.
-- **Ours.** Measured by E10 EDGE_LABEL_BACKING: einvoice-structure 0/2 tinted FAIL
-  (backing `rgb(255,255,255)` == card fill, border none vs wire `rgb(255,59,48)`);
-  maka 0/3 FAIL; v3 0/2 FAIL. Flat card fill, no wire tie, no border.
+- **Ours.** Measured by E10 EDGE_LABEL_BACKING: sys003-after2 2/2 tinted + 2/2 wireMatched PASS (complete=true, sha8 1377f262). Committed v3 still 0/2 FAIL. That file pre-dates V1 (sha8 f832abb9, not re-renderable, see v3 note).
 - **Drawn at.** all five renderers
 - **Owned by.** E10
 - **Seen in.** Architecture, Workflow, Dataflow, Lifecycle
-- **Verdict: MEASURED (FAIL — flat card fill, borderless).**
+- **Verdict: MEASURED (PASS on fresh renders; committed v3 file pre-dates the fix).**
 
 **E11 Edge label text** — `segment-label`
 
@@ -164,15 +162,14 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 - **Seen in.** Architecture, Workflow, Dataflow, Lifecycle
 - **Verdict: FAIL.**
 
-**E12 Message label backing** — `message-label-mask`
+**E12 Message label backing** — `message-label-backing`
 
 - **Good (T4).** Same rule as E10, on a sequence message.
-- **Ours.** Measured by E12 MESSAGE_LABEL_BACKING: cache-miss sequence 0/12
-  tinted FAIL (backing `rgb(255,255,255)` == card fill, borderless on all 12).
+- **Ours.** Measured by E12 MESSAGE_LABEL_BACKING: probe-seq2 12/12 tinted + 12/12 wireMatched PASS (complete=true, sha8 c3c9a077). Ruler fix, tranche-2: overlay-clone exclusion, in-group authored path, dashed backing on --database-stroke.
 - **Drawn at.** render-sequence.mjs:344
 - **Owned by.** E12
 - **Seen in.** none of the five sampled charts
-- **Verdict: MEASURED (FAIL — flat card fill, borderless).**
+- **Verdict: MEASURED (PASS — 12/12 wireMatched).**
 
 **E13 Activation bar** — `activation-bar`
 
@@ -214,13 +211,11 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **E17 Dashed wire** — `a-dashed`
 
 - **Good (T1).** Meaning never rests on one visual signal alone.
-- **Ours.** Measured by E17 DASHED_WIRE: loop-closed-full 1/1 dashes-only FAIL
-  (`rgb(142,142,147)` 1.4 same head); loop-open 2/2 FAIL; maka 2/2 PASS
-  (dashed `rgb(124,58,237)` vs plain `rgb(148,163,184)`).
+- **Ours.** Measured by E17 DASHED_WIRE: guard-loop2 PASS, 1 dashed differs by more than dashes. Plain rgb(142,142,147)|1.4 vs dashed rgb(175,82,222)|1.4 (complete=true, sha8 2a0b1d4b). Probe-seq2 2/2 PASS carried. Maka 2/2 PASS carried.
 - **Drawn at.** all five renderers
 - **Owned by.** E17 tells it from E15
 - **Seen in.** Workflow, Sequence, Dataflow
-- **Verdict: MEASURED (mixed: loop charts FAIL, maka PASS).**
+- **Verdict: MEASURED (PASS — colour split ships).**
 
 **E18 Arrowhead** — `m-default and three twins`
 
@@ -235,25 +230,25 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 
 | # | Rule | Tier | Verdict |
 |---|---|---|---|
-| R1 | Every element has a name | T4 | **FAIL** |
+| R1 | Every element has a name | T4 | **PASS** |
 | R2 | One colour token does one job | T4 | **FAIL** |
-| R3 | A backing that belongs to a line is tinted from that line | T4 | **FAIL** |
-| R4 | A backing on a line must not erase the line | T4 | **FAIL** |
+| R3 | A backing that belongs to a line is tinted from that line | T4 | **PASS** |
+| R4 | A backing on a line must not erase the line | T4 | **PASS** |
 | R5 | A border may separate, but may never carry the meaning | T2 | **PASS** |
 | R6 | Painted colour matches the declared token | T2 | **PASS** |
 | R7 | Touching surfaces tell apart | T2 | **PASS** |
 | R8 | The same element is drawn the same way everywhere | T4 | **FAIL** |
 | R9 | Corner radius says what a shape is | T3 | **PASS** |
-| R10 | A wire is told apart by more than one trick | T1 | **FAIL** |
+| R10 | A wire is told apart by more than one trick | T1 | **PASS** |
 | R11 | Every head points the way its wire travels | T2 | **PASS** |
 | R12 | Text is big enough to read at desk size | T2 | **PASS** |
 
 **R1 — Every element has a name**
 
 - **Good (T4).** A rule cannot be written, and a check cannot be built, for a shape with no name.
-- **Ours.** Four names out of eighteen. No S2 check names shapes, so no feed reaches this rule.
-- **Ruling NAME-14.** Name the fourteen unnamed elements. This waits on the Commander. Verdict holds FAIL.
-- **Verdict: FAIL.**
+- **Ours.** 18 names out of eighteen. `archify/renderers/shared/element-helpers.mjs` maps E1–E18 (+ E9a reader-job, E16a flow-wire aliases). All 5 renderers emit `data-element` on cards, backings, wires and texts. `data-element-alias` keeps segment-label + message-label-backing alias. Fresh renders carry names: sys003-after2 6, guard-loop2 4, probe-seq2 6 (grep data-element, 2026-09-23).
+- **Ruling NAME-14.** Landed tranche-1; adopted by build. Measurement feeds this rule. Verdict flips PASS.
+- **Verdict: PASS.**
 
 **R2 — One colour token does one job**
 
@@ -266,18 +261,15 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **R3 — A backing that belongs to a line is tinted from that line**
 
 - **Good (T4).** A backing on a wire is tinted from that wire, so the eye reads the two as one.
-- **Ours.** E10 is flat --mask with no tie to its wire. Four variants mocked; V1 recommended.
-- S2 measures it live. E10 after-file 0/2 tinted FAIL. E12 sequence 0/12 FAIL. Maka 0/3 FAIL.
-- Backings paint rgb(255,255,255), the card fill, with no border. Measurement feeds this rule. Verdict holds FAIL.
-- **Verdict: FAIL.**
+- **Ours.** E10 sys003-after2 2/2 tinted PASS (fill color(srgb 1 0.830902 0.821412) vs card rgb(255,255,255)). E12 probe-seq2 12/12 tinted + 12/12 wireMatched PASS (complete=true, sha8 c3c9a077). V1 tint ships in template per data-wire: 22% color-mix + 1px wire-colour border.
+- Measurement feeds this rule. Verdict flips PASS.
+- **Verdict: PASS.**
 
 **R4 — A backing on a line must not erase the line**
 - **Good (T4).** The wire stays continuous. The backing sits on it.
-- **Ours.** The backing exists to erase it. template.html:5551 says so.
-- Line 5551 has reflowed since. The wording now sits at template.html:5222.
-- It reads opaque mask rect (.c-mask) to hide arrows underneath. The habit is documented intent.
-- S2 confirms the effect. E10/E12 backings are flat and opaque. Measurement feeds this rule. Verdict holds FAIL.
-- **Verdict: FAIL.**
+- **Ours.** Erase intent removed (grep 'hide arrows underneath' → 0). E10 2/2 bordered + wireMatched; E12 12/12 bordered + wireMatched — the backing sits on its wire, never erases it.
+- Measurement feeds this rule. Verdict flips PASS.
+- **Verdict: PASS.**
 
 **R5 — A border may separate, but may never carry the meaning**
 
@@ -315,11 +307,9 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **R10 — A wire is told apart by more than one trick**
 
 - **Good (T1).** Meaning never rests on a single visual signal.
-- **Ours.** E17 and E15 share one colour and one head shape.
-- S2 measures it live. Loop-closed-full 1/1 dashes-only FAIL. Maka 2/2 colour split PASS.
-- Same dashes, rgb(142,142,147) each side, on loop. Different colour, rgb(124,58,237) on rgb(148,163,184), on maka.
-- Measurement feeds this rule. Verdict holds FAIL while loop charts ship single-signal wires.
-- **Verdict: FAIL.**
+- **Ours.** Template .a-dashed/.m-dashed ride --database-stroke (colour split per maka). Loop guard-loop2: E17 PASS, 1 dashed differs by more than dashes. Plain rgb(142,142,147)|1.4 vs dashed rgb(175,82,222)|1.4, singleSignalOnly 0/1 (complete=true, sha8 2a0b1d4b). Maka 2/2 PASS carried.
+- Measurement feeds this rule. Verdict flips PASS.
+- **Verdict: PASS.**
 
 **R11 — Every head points the way its wire travels**
 

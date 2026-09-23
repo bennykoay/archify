@@ -1025,8 +1025,18 @@ const PAGE_FN = String.raw`(function () {
   // ---- S2 E10/E12 shared wire + card-fill references ----
   // Delivered sequence paths carry data-composition-edge-from (not data-edge-from),
   // so wire lookup spans both populations; paths[] itself is untouched.
+  // E12-ANALYSIS 2026-09-23: runtime relationship overlays clone each wire via
+  // relationshipHitGeometry(), which strips data-edge-* but keeps
+  // data-composition-edge-*, so the clone (translucent frontend-stroke focus
+  // rail, e.g. color(srgb 0 0.478431 1/0.34)) overwrote the authored wire
+  // (e.g. rgb(142,142,147)) in this map and every E12 wireMatch failed.
+  // Only authored geometry answers: a composition path counts iff it carries
+  // data-edge-from itself or sits inside a g[data-edge-from] message group.
   var compPaths = {};
   Array.prototype.slice.call(main.querySelectorAll('path[data-composition-edge-from]')).forEach(function (p) {
+    var authored = false;
+    try { authored = !!p.getAttribute('data-edge-from') || !!(p.closest && p.closest('g[data-edge-from]')); } catch (_) {}
+    if (!authored) return;
     var kk = (p.getAttribute('data-composition-edge-from') || '') + '>' + (p.getAttribute('data-composition-edge-to') || '');
     compPaths[kk] = p;
     var cid = p.getAttribute('data-composition-edge-id') || '';
@@ -1083,7 +1093,14 @@ const PAGE_FN = String.raw`(function () {
   Array.prototype.slice.call(main.querySelectorAll('g[data-edge-from]')).forEach(function (g) {
     if (!g.querySelector('path')) return;
     var key2 = g.getAttribute('data-edge-key') || ((g.getAttribute('data-edge-from') || '') + '>' + (g.getAttribute('data-edge-to') || ''));
-    var w2 = wireStrokeOf(key2);
+    // E12 wire: the authored path lives INSIDE this same group (overlay clones
+    // sit in .relationship-hit-overlay, never here), so read it directly.
+    // Map lookup is the fallback for groups whose path carries no composition id.
+    var ownPath = null;
+    try { ownPath = g.querySelector('path[data-composition-edge-from]') || g.querySelector('path'); } catch (_) {}
+    var w2 = { stroke: '', found: false };
+    if (ownPath) { try { w2 = { stroke: String(getComputedStyle(ownPath).stroke || ''), found: true }; } catch (_) {} }
+    if (!w2.found || !w2.stroke) w2 = wireStrokeOf(key2);
     if (!w2.found && g.getAttribute('data-edge-id')) w2 = wireStrokeOf('id:' + g.getAttribute('data-edge-id'));
     Array.prototype.slice.call(g.querySelectorAll('g[data-detail="context"]')).forEach(function (inner) {
       var r0 = inner.querySelector('rect');
@@ -1092,11 +1109,13 @@ const PAGE_FN = String.raw`(function () {
       try { bb2 = R(r0); } catch (_) {}
       if (!bb2 || bb2.w <= 0 || bb2.h <= 0) return;
       var t0 = inner.querySelector('text');
-      var bf2 = '', bs2 = '', rx2 = '';
+      var bf2 = '', bs2 = '', rx2 = '', dw = '';
       try { var cs3 = getComputedStyle(r0); bf2 = String(cs3.fill || ''); bs2 = String(cs3.stroke || ''); } catch (_) {}
       try { rx2 = r0.getAttribute('rx') || ''; } catch (_) {}
+      try { dw = r0.getAttribute('data-wire') || ''; } catch (_) {}
       e12rows.push({ label: t0 ? (t0.textContent || '').trim() : (g.getAttribute('data-edge-label') || ''),
-        key: key2, rx: rx2, fill: bf2, stroke: bs2, wire: w2.stroke, wireFound: w2.found,
+        key: key2, rx: rx2, fill: bf2, stroke: bs2, wire: w2.stroke, wireFound: w2.found, dataWire: dw,
+        wireClass: ownPath ? (ownPath.getAttribute('class') || '') : '',
         tinted: bf2 !== '' && bf2 !== cardFillRef,
         bordered: bs2 !== '' && bs2 !== 'none',
         wireMatch: bs2 !== '' && bs2 !== 'none' && bs2 === w2.stroke,
@@ -1816,9 +1835,8 @@ if (isWorkflow) {
   const worstE12 = bad[0] || null;
   A.push({
     id: 'E12', name: 'MESSAGE_LABEL_BACKING', asserted: true,
-    threshold: 'every sequence message label backing tinted from its own wire (fill != card fill) and bordered in the wire colour (stroke == own wire stroke; no message backing answers NA)',
     verdict: rows.length === 0 ? 'NA' : (bad.length ? 'FAIL' : 'PASS'),
-    measured: { population: rows.length, messages: rows.length, tinted: rows.filter((r) => r.tinted).length, wireMatched: rows.filter((r) => r.wireMatch).length, bordered: rows.filter((r) => r.bordered).length, violations: bad.length, cardFillRef: geom.cardFillRef || null, rows: rows.map((r) => ({ label: r.label, key: r.key, rx: r.rx, fill: r.fill, stroke: r.stroke, wire: r.wire, tinted: r.tinted, wireMatch: r.wireMatch })) },
+    measured: { population: rows.length, messages: rows.length, tinted: rows.filter((r) => r.tinted).length, wireMatched: rows.filter((r) => r.wireMatch).length, bordered: rows.filter((r) => r.bordered).length, violations: bad.length, cardFillRef: geom.cardFillRef || null, rows: rows.map((r) => ({ label: r.label, key: r.key, rx: r.rx, fill: r.fill, stroke: r.stroke, wire: r.wire, dataWire: r.dataWire || null, wireClass: r.wireClass || null, tinted: r.tinted, wireMatch: r.wireMatch })) },
     elements: bad.slice(0, 4).map((r) => ({ label: r.label, key: r.key })),
     coords: bad.slice(0, 4).map((r) => ({ label: r.label, backBox: r.backBox })),
     reason: rows.length === 0
