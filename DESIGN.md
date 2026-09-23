@@ -372,15 +372,15 @@ frame "MD" at 42.5% fill against the 50% floor, and A16 on the same chart
 reports "Sales" crossing "Accounting" at 7348.21px2.
 
 **All seven standing element wishes now have checks:** E5, E7, E9, E10, E12, E13
-and E17-vs-E15, built 2026-09-23 in the S2 ruler (25 geometry assertions:
-A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a). The clauses stand as written — every
+and E17-vs-E15. Built 2026-09-23 in the S2 ruler: 25 geometry assertions
+(A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a). The clauses stand as written. Every
 check below earned its clause without changing it, so DESIGN holds at 0.1.2.
-First runs: E5 PASS on loop charts (pilot lane-4 FAIL), E7 PASS on einvoice
-architecture but FAIL on workflow/sequence/maka, E9 FAIL everywhere (grid aid
-renders in delivery), E10/E12 FAIL (flat card fill, borderless), E13 PASS on
-the sequence chart, E17 FAIL on loop charts but PASS on maka.
+First runs: E5 PASS on loop charts (pilot lane-4 FAIL). E7 PASSes on einvoice
+architecture. It FAILs on workflow, sequence and maka. E9 FAILs everywhere: the
+grid aid renders in delivery. E10/E12 FAIL on flat card fill, borderless. E13
+PASSes on the sequence chart. E17 FAILs on loop charts but PASSes on maka.
 
-**The audit was measured on an older ruler.** `docs/design-audit.md` was measured on a 16-check ruler while today's ruler emits 25 assertions (A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a), so every FAIL/PASS/GAP tally in the audit predates A16, A17 and the S2 seven.
+**The audit was measured on an older ruler.** `docs/design-audit.md` was measured on a 16-check ruler. Today's ruler emits 25 assertions (A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a). So every FAIL/PASS/GAP tally in the audit predates A16, A17 and the S2 seven.
 
 That audit reports 15 FAIL / 2 GAP / 11 PASS, which omits 2 UNUSED (E8 security-group, E9 grid) — 30 items, 28 accounted.
 
