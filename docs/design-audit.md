@@ -4,7 +4,7 @@
 **Author:** Benji (read-only consultant). **Date:** 2026-09-17.
 **Version:** 0.2.0 — draft. The law is `DESIGN.md`; the picture version is `design.html`.
 
-**Bottom line:** Archify draws **18 elements**. **18 carry a name.** Of the 12 rules below, **6 pass**. Every element was found in a real chart and photographed, so each row can be judged by eye, not by my description of it.
+**Bottom line:** Archify draws **18 elements**. **18 carry a name.** Of the 12 rules below, **10 pass**. Every element was found in a real chart and photographed, so each row can be judged by eye, not by my description of it.
 
 ## ⚖️ How a verdict is decided
 
