@@ -376,9 +376,11 @@ and E17-vs-E15. Built 2026-09-23 in the S2 ruler: 25 geometry assertions
 (A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a). The clauses stand as written. Every
 check below earned its clause without changing it, so DESIGN holds at 0.1.2.
 First runs: E5 PASS on loop charts (pilot lane-4 FAIL). E7 PASSes on einvoice
-architecture. It FAILs on workflow, sequence and maka. E9 FAILs everywhere: the
-grid aid renders in delivery. E10/E12 FAIL on flat card fill, borderless. E13
-PASSes on the sequence chart. E17 FAILs on loop charts but PASSes on maka.
+architecture. It FAILs on workflow, sequence and maka. E9 answers NA on fresh
+renders (post-strip 2026-09-23: no grid rect delivered; committed v3 keeps one
+painted rect as the pre-strip exception). E10/E12 FAIL on flat card fill,
+borderless. E13 PASSes on the sequence chart. E17 FAILs on loop charts but
+PASSes on maka.
 
 **The audit was measured on an older ruler.** `docs/design-audit.md` was measured on a 16-check ruler. Today's ruler emits 25 assertions (A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a). So every FAIL/PASS/GAP tally in the audit predates A16, A17 and the S2 seven.
 

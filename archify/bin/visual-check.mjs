@@ -500,10 +500,23 @@ export class ChromeVisualBrowser {
     }
 
     if (screenshotPath) {
+      // Full-page capture: tall charts scroll past the viewport (loop 2071px
+      // vs 900px inner). Clamp to the CDP clip limit; metrics already carry
+      // scrollWidth/scrollHeight so containment verdicts are unchanged.
+      const fullWidth = Math.max(width, Math.ceil(Number(metrics.scrollWidth) || width));
+      const fullHeight = Math.max(height, Math.ceil(Number(metrics.scrollHeight) || height));
+      const MAX_CLIP = 16383;
       const capture = await this.cdp.send('Page.captureScreenshot', {
         format: 'png',
         fromSurface: true,
-        captureBeyondViewport: false,
+        captureBeyondViewport: true,
+        clip: {
+          x: 0,
+          y: 0,
+          width: Math.min(fullWidth, MAX_CLIP),
+          height: Math.min(fullHeight, MAX_CLIP),
+          scale: 1,
+        },
       }, sessionId, 20000);
       if (!capture.data) throw new Error('Chrome returned an empty screenshot.');
       fs.writeFileSync(screenshotPath, Buffer.from(capture.data, 'base64'));
