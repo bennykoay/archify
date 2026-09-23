@@ -952,6 +952,201 @@ const PAGE_FN = String.raw`(function () {
       pct: fill == null ? null : Math.round(fill * 10000) / 100,
       box: { x: r2(fbox.x), y: r2(fbox.y), w: r2(fbox.w), h: r2(fbox.h) } };
   });
+  // ---- S2 E5 LANE_HEADER (page-side): every lane/segment frame names its lane ----
+  // Header sources: workflow lane text.t-dim (direct svg child, inside its lane)
+  // and sequence g[segment-label] groups (mounted just above their segment).
+  // Distinctness = header text fill differs from the lane rect fill (computed).
+  var cssFillOf = function (el) { try { return String(getComputedStyle(el).fill || ''); } catch (_) { return ''; } };
+  var segLabels = Array.prototype.slice.call(main.querySelectorAll('g[data-graph-role="segment-label"]')).map(function (g) {
+    var t = g.querySelector('text');
+    return { el: g, label: t ? (t.textContent || '').trim() : '', box: R(g), fill: t ? cssFillOf(t) : '' };
+  }).filter(function (s) { return s.box.w > 0 && s.box.h > 0; });
+  var laneKindSet = { lane: 1, 'exception-lane': 1, segment: 1 };
+  var e5rows = boundaryRects.filter(function (bd) { return laneKindSet[bd.kind]; }).map(function (bd) {
+    var fbox = bd.box;
+    var match = null;
+    if (bd.kind === 'segment') {
+      var bestGap = Infinity;
+      segLabels.forEach(function (s) {
+        var hOverlap = Math.min(s.box.right, fbox.right) - Math.max(s.box.left, fbox.left);
+        if (hOverlap <= 0) return;
+        var gap = fbox.top - s.box.bottom;
+        if (gap >= -4 && gap <= 40 && gap < bestGap) { bestGap = gap; match = s; }
+      });
+    } else {
+      laneHeaders.forEach(function (h) {
+        if (h.box.cy >= fbox.top - 1 && h.box.cy <= fbox.bottom + 1 && h.box.cx >= fbox.left - 60 && h.box.cx <= fbox.right + 60) {
+          if (!match) match = h;
+        }
+      });
+    }
+    var laneFill = cssFillOf(bd.el);
+    var headFill = match ? (match.fill || cssFillOf(match.el)) : '';
+    return { frame: frameName(bd), kind: bd.kind,
+      header: match ? match.label : '',
+      matched: !!match, named: match ? match.label.length > 0 : false,
+      distinct: match ? (headFill !== '' && headFill !== laneFill) : false,
+      headFill: headFill, laneFill: laneFill,
+      box: { x: r2(fbox.x), y: r2(fbox.y), w: r2(fbox.w), h: r2(fbox.h) } };
+  });
+  // ---- S2 E7 NODE_STRIPE (page-side): 4px left-edge bar coloured by node kind ----
+  var e7rows = Array.prototype.slice.call(main.querySelectorAll('g[data-node-id]')).map(function (g) {
+    var id = g.getAttribute('data-node-id') || '';
+    var kind7 = g.getAttribute('data-node-kind') || '';
+    var card = g.querySelector('rect:not(.c-mask)') || g.querySelector('rect');
+    var ac = g.querySelector('rect.c-accent') || g.querySelector('rect[data-accent-kind]');
+    var cb = null, ab = null, aw = NaN, ax = NaN, cx0 = NaN;
+    try { cb = card ? R(card) : null; } catch (_) {}
+    try { ab = ac ? R(ac) : null; } catch (_) {}
+    try { aw = ac ? parseFloat(ac.getAttribute('width') || '') : NaN; } catch (_) {}
+    try { ax = ac ? parseFloat(ac.getAttribute('x') || '') : NaN; } catch (_) {}
+    try { cx0 = card ? parseFloat(card.getAttribute('x') || '') : NaN; } catch (_) {}
+    var ak = '';
+    try { ak = ac ? (ac.getAttribute('data-accent-kind') || '') : ''; } catch (_) {}
+    return { node: id, kind: kind7, has: !!ac,
+      w: isFinite(aw) ? aw : null, leftOk: (isFinite(ax) && isFinite(cx0)) ? (Math.abs(ax - cx0) <= 1) : false,
+      kindOk: ac ? (ak ? (kind7 ? ak === kind7 : true) : false) : false,
+      accentKind: ak,
+      cardBox: cb ? { x: r2(cb.x), y: r2(cb.y), w: r2(cb.w), h: r2(cb.h) } : null,
+      barBox: ab ? { x: r2(ab.x), y: r2(ab.y), w: r2(ab.w), h: r2(ab.h) } : null };
+  });
+  // ---- S2 E9 GRID (page-side): alignment aid must never render in delivery ----
+  var gridPattern = false;
+  try { gridPattern = !!document.getElementById('grid'); } catch (_) {}
+  var gridRects = Array.prototype.slice.call(main.querySelectorAll('rect[fill="url(#grid)"]')).map(function (r) {
+    var b = null;
+    try { b = R(r); } catch (_) {}
+    var disp = '', vis = '', op = '';
+    try { var cs = getComputedStyle(r); disp = String(cs.display || ''); vis = String(cs.visibility || ''); op = String(cs.opacity || ''); } catch (_) {}
+    var rendered = b && b.w > 0 && b.h > 0 && disp !== 'none' && vis !== 'hidden' && vis !== 'collapse' && parseFloat(op) !== 0;
+    return { box: b ? { x: r2(b.x), y: r2(b.y), w: r2(b.w), h: r2(b.h) } : null,
+      display: disp, visibility: vis, opacity: op, rendered: !!rendered };
+  });
+  // ---- S2 E10/E12 shared wire + card-fill references ----
+  // Delivered sequence paths carry data-composition-edge-from (not data-edge-from),
+  // so wire lookup spans both populations; paths[] itself is untouched.
+  var compPaths = {};
+  Array.prototype.slice.call(main.querySelectorAll('path[data-composition-edge-from]')).forEach(function (p) {
+    var kk = (p.getAttribute('data-composition-edge-from') || '') + '>' + (p.getAttribute('data-composition-edge-to') || '');
+    compPaths[kk] = p;
+    var cid = p.getAttribute('data-composition-edge-id') || '';
+    if (cid) compPaths['id:' + cid] = p;
+  });
+  var pathElByKey = {};
+  paths.forEach(function (p) {
+    var kk = p.getAttribute('data-edge-key') || ((p.getAttribute('data-edge-from') || '') + '>' + (p.getAttribute('data-edge-to') || ''));
+    pathElByKey[kk] = p;
+  });
+  var cardFillRef = '';
+  try {
+    var refCard = main.querySelector('g[data-node-id] rect.c-mask') || main.querySelector('g[data-node-id] rect:not(.c-mask)') || main.querySelector('g[data-node-id] rect');
+    if (refCard) cardFillRef = cssFillOf(refCard);
+  } catch (_) {}
+  var wireStrokeOf = function (key) {
+    var p = compPaths[key] || pathElByKey[key] || null;
+    if (!p) return { stroke: '', found: false };
+    var s = '';
+    try { s = String(getComputedStyle(p).stroke || ''); } catch (_) {}
+    return { stroke: s, found: true };
+  };
+  // ---- S2 E10 EDGE_LABEL_BACKING (page-side): direct-child rect backing only ----
+  // Sequence message groups carry data-edge-label on the OUTER g (no direct rect);
+  // those answer E12, never E10 (isMsg split keeps both populations disjoint).
+  var e10rows = edgeLabels.map(function (e) {
+    var backs = [];
+    try {
+      var ch = e.el.children;
+      for (var i = 0; i < ch.length; i++) { if (ch[i].tagName === 'rect') backs.push(ch[i]); }
+    } catch (_) {}
+    var isMsg = false;
+    try { isMsg = !!e.el.querySelector('path'); } catch (_) {}
+    var b0 = backs[0] || null;
+    var bb = null;
+    try { bb = b0 ? R(b0) : null; } catch (_) {}
+    var bf = '', bs = '', rx = '';
+    if (b0) {
+      try { var cs2 = getComputedStyle(b0); bf = String(cs2.fill || ''); bs = String(cs2.stroke || ''); } catch (_) {}
+      try { rx = b0.getAttribute('rx') || ''; } catch (_) {}
+    }
+    var w = wireStrokeOf(e.key || (e.from + '>' + e.to));
+    return { label: e.label, key: e.key || (e.from + '>' + e.to), isMsg: isMsg,
+      has: !!b0, rx: rx, fill: bf, stroke: bs, wire: w.stroke, wireFound: w.found,
+      tinted: b0 ? (bf !== '' && bf !== cardFillRef) : false,
+      bordered: b0 ? (bs !== '' && bs !== 'none') : false,
+      wireMatch: b0 ? (bs !== '' && bs !== 'none' && bs === w.stroke) : false,
+      labelBox: { x: r2(e.box.x), y: r2(e.box.y), w: r2(e.box.w), h: r2(e.box.h) },
+      backBox: bb ? { x: r2(bb.x), y: r2(bb.y), w: r2(bb.w), h: r2(bb.h) } : null };
+  });
+  // Sequence edge groups are g[data-edge-from] wrapping one path + label rect;
+  // inner g[data-detail] has no edge attrs, so E12 walks from the outer group.
+  var e12rows = [];
+  Array.prototype.slice.call(main.querySelectorAll('g[data-edge-from]')).forEach(function (g) {
+    if (!g.querySelector('path')) return;
+    var key2 = g.getAttribute('data-edge-key') || ((g.getAttribute('data-edge-from') || '') + '>' + (g.getAttribute('data-edge-to') || ''));
+    var w2 = wireStrokeOf(key2);
+    if (!w2.found && g.getAttribute('data-edge-id')) w2 = wireStrokeOf('id:' + g.getAttribute('data-edge-id'));
+    Array.prototype.slice.call(g.querySelectorAll('g[data-detail="context"]')).forEach(function (inner) {
+      var r0 = inner.querySelector('rect');
+      if (!r0) return;
+      var bb2 = null;
+      try { bb2 = R(r0); } catch (_) {}
+      if (!bb2 || bb2.w <= 0 || bb2.h <= 0) return;
+      var t0 = inner.querySelector('text');
+      var bf2 = '', bs2 = '', rx2 = '';
+      try { var cs3 = getComputedStyle(r0); bf2 = String(cs3.fill || ''); bs2 = String(cs3.stroke || ''); } catch (_) {}
+      try { rx2 = r0.getAttribute('rx') || ''; } catch (_) {}
+      e12rows.push({ label: t0 ? (t0.textContent || '').trim() : (g.getAttribute('data-edge-label') || ''),
+        key: key2, rx: rx2, fill: bf2, stroke: bs2, wire: w2.stroke, wireFound: w2.found,
+        tinted: bf2 !== '' && bf2 !== cardFillRef,
+        bordered: bs2 !== '' && bs2 !== 'none',
+        wireMatch: bs2 !== '' && bs2 !== 'none' && bs2 === w2.stroke,
+        backBox: { x: r2(bb2.x), y: r2(bb2.y), w: r2(bb2.w), h: r2(bb2.h) } });
+    });
+  });
+  // ---- S2 E13 ACTIVATION_BAR (page-side): 10px-wide busy-span bars, mask+fill pairs ----
+  var actGroups = {};
+  Array.prototype.slice.call(main.querySelectorAll('rect')).forEach(function (r) {
+    if (r.getAttribute('width') !== '10') return;
+    var b3 = null;
+    try { b3 = R(r); } catch (_) {}
+    if (!b3 || b3.w <= 0 || b3.h <= 0) return;
+    var cls3 = '', rx3 = '', h3 = NaN;
+    try { cls3 = r.getAttribute('class') || ''; } catch (_) {}
+    try { rx3 = r.getAttribute('rx') || ''; } catch (_) {}
+    try { h3 = parseFloat(r.getAttribute('height') || ''); } catch (_) {}
+    var k = Math.round(b3.x) + ':' + Math.round(b3.y);
+    if (!actGroups[k]) actGroups[k] = [];
+    actGroups[k].push({ wAttr: 10, h: isFinite(h3) ? h3 : b3.h, rx: rx3, cls: cls3,
+      box: { x: r2(b3.x), y: r2(b3.y), w: r2(b3.w), h: r2(b3.h) } });
+  });
+  var e13rows = Object.keys(actGroups).map(function (k) {
+    var rs = actGroups[k];
+    var hasMask = rs.some(function (r) { return String(r.cls).split(' ').indexOf('c-mask') > -1; });
+    var hasFill = rs.some(function (r) { return String(r.cls).split(' ').indexOf('c-mask') === -1; });
+    return { at: k, count: rs.length, h: Math.round(rs[0].h * 100) / 100,
+      wide10: rs[0].wAttr === 10, tall: rs[0].h > 0, paired: hasMask && hasFill,
+      rx: rs[0].rx, cls: rs.map(function (r) { return r.cls; }).join('+'), box: rs[0].box };
+  });
+  // ---- S2 E17 DASHED_VS_PLAIN (page-side): dashed must differ by more than dashes ----
+  var allWires = paths.slice();
+  Object.keys(compPaths).forEach(function (k) { if (allWires.indexOf(compPaths[k]) === -1) allWires.push(compPaths[k]); });
+  var wireRows = allWires.map(function (p) {
+    var cls = String(p.getAttribute('class') || '');
+    var parts = cls.split(' ');
+    var role = parts.indexOf('a-dashed') > -1 ? 'dashed' : (parts.indexOf('a-default') > -1 ? 'plain' : (parts.indexOf('a-emphasis') > -1 ? 'strong' : (parts.indexOf('a-security') > -1 ? 'security' : 'other')));
+    var sw = '';
+    try { sw = p.getAttribute('stroke-width') || ''; } catch (_) {}
+    var cst = '', dash = '', me = '';
+    try { cst = String(getComputedStyle(p).stroke || ''); } catch (_) {}
+    try { dash = String(getComputedStyle(p).strokeDasharray || p.getAttribute('stroke-dasharray') || ''); } catch (_) {}
+    try { me = p.getAttribute('marker-end') || ''; } catch (_) {}
+    var mf = '';
+    try {
+      var mm = me.match(/#([^)'"]+)/);
+      if (mm) { var mk = document.getElementById(mm[1]); var poly = mk ? mk.querySelector('polygon') : null; if (poly) mf = String(getComputedStyle(poly).fill || ''); }
+    } catch (_) {}
+    return { role: role, cls: cls, sw: sw, stroke: cst, dash: dash, marker: me, markerFill: mf };
+  }).filter(function (r) { return r.role === 'plain' || r.role === 'dashed'; });
   return {
     laneHeaderCount: laneHeaders.length,
     laneRectCount: laneRects.length,
@@ -976,9 +1171,11 @@ const PAGE_FN = String.raw`(function () {
     a15rows: a15rows,
     a16pairs: a16pairs,
     a17rows: a17rows,
-    viewBox: vb, content: content, contentComposed: contentComposed, contentRendered: contentRendered, distinctX: distinctX.sort(function (a, b) { return a - b; }),
-    inkArea: Math.round(inkArea * 100) / 100, globalInkRatio: isFinite(globalInkRatio) ? Math.round(globalInkRatio * 10000) / 10000 : null,
-    oScale: r2(oScale), diagramW: r2(diagramW), o1rows: o1rows
+    e5rows: e5rows,
+    e7rows: e7rows,
+    gridPattern: gridPattern, gridRects: gridRects,
+    e10rows: e10rows, e12rows: e12rows, e13rows: e13rows, wireRows: wireRows,
+    cardFillRef: cardFillRef,
   };
 })`;
 let geom;
@@ -1517,10 +1714,174 @@ if (isWorkflow) {
     reason: worst ? (fail ? `"${worst.text}" (${worst.detail}) ${worst.projectedPx}px < ${pxFloor[worst.detail]}px floor` : `all details above px+contrast floors (worst "${worst.text}" ${worst.projectedPx}px)`) : 'no text measured',
   });
 }
+// E5 LANE_HEADER (S2, asserted lane/segment charts): every lane-kind frame names
+// its lane and the header reads distinct from the lane body. Population = lane,
+// exception-lane and segment frames (the corridor kinds A17 skips as NA: a lane
+// is routed through, but it must still be NAMED). Non-lane charts answer NA,
+// never PASS. A17 untouched (it judges fill; E5 judges the name).
+{
+  const rows = geom.e5rows || [];
+  const bad = rows.filter((r) => !(r.matched && r.named && r.distinct));
+  const worstE5 = bad[0] || null;
+  A.push({
+    id: 'E5', name: 'LANE_HEADER', asserted: true,
+    threshold: 'every lane/segment frame carries a non-empty header whose text fill differs from its lane fill (non-lane chart answers NA)',
+    verdict: rows.length === 0 ? 'NA' : (bad.length ? 'FAIL' : 'PASS'),
+    measured: { population: rows.length, frames: rows.length, matched: rows.filter((r) => r.matched).length, named: rows.filter((r) => r.named).length, distinct: rows.filter((r) => r.distinct).length, violations: bad.length, rows: rows.map((r) => ({ frame: r.frame, kind: r.kind, header: r.header, matched: r.matched, named: r.named, distinct: r.distinct })) },
+    elements: bad.slice(0, 4).map((r) => ({ frame: r.frame, header: r.header || '(none)' })),
+    coords: bad.slice(0, 4).map((r) => ({ frame: r.frame, box: r.box })),
+    reason: rows.length === 0
+      ? 'no measurable population (N=0): no lane/segment frame to name'
+      : (bad.length
+      ? `lane "${worstE5.frame}" header ${!worstE5.matched ? 'missing' : (!worstE5.named ? 'empty' : 'indistinct from lane body')} (matched ${rows.filter((r) => r.matched).length}/${rows.length}, distinct ${rows.filter((r) => r.distinct).length}/${rows.length})`
+      : `all ${rows.length} lane frame(s) named and distinct from lane body`),
+  });
+}
+// E7 NODE_STRIPE (S2, asserted node charts): a 4px bar on the card's left edge,
+// coloured by node kind (accent-kind matches the node's own kind). No nodes
+// answers NA, never PASS. Workflow/sequence/lifecycle nodes carry no bar today
+// and fail here by measurement, not by exemption: the clause names the card's
+// left edge, not the architecture renderer.
+{
+  const rows = geom.e7rows || [];
+  const bad = rows.filter((r) => !(r.has && r.w === 4 && r.leftOk && r.kindOk));
+  const worstE7 = bad[0] || null;
+  A.push({
+    id: 'E7', name: 'NODE_STRIPE', asserted: true,
+    threshold: 'every node carries a 4px bar on its card left edge (|bar.x-card.x|<=1) with accent-kind matching its node kind (no nodes answers NA)',
+    verdict: rows.length === 0 ? 'NA' : (bad.length ? 'FAIL' : 'PASS'),
+    measured: { population: rows.length, nodes: rows.length, barred: rows.filter((r) => r.has).length, widthOk: rows.filter((r) => r.w === 4).length, leftOk: rows.filter((r) => r.leftOk).length, kindOk: rows.filter((r) => r.kindOk).length, violations: bad.length, rows: rows.map((r) => ({ node: r.node, kind: r.kind, has: r.has, w: r.w, leftOk: r.leftOk, kindOk: r.kindOk, accentKind: r.accentKind })) },
+    elements: bad.slice(0, 4).map((r) => ({ node: r.node, kind: r.kind, accentKind: r.accentKind || '(none)' })),
+    coords: bad.slice(0, 4).map((r) => ({ node: r.node, cardBox: r.cardBox, barBox: r.barBox })),
+    reason: rows.length === 0
+      ? 'no measurable population (N=0): no nodes to stripe'
+      : (bad.length
+      ? `node "${worstE7.node}" stripe ${!worstE7.has ? 'missing (no accent bar)' : (worstE7.w !== 4 ? `width ${worstE7.w} != 4px` : (!worstE7.leftOk ? 'not on card left edge' : `kind "${worstE7.accentKind}" != node kind "${worstE7.kind}"`))} (${rows.filter((r) => r.has).length}/${rows.length} barred)`
+      : `all ${rows.length} node(s) carry a 4px kind-coloured left-edge bar`),
+  });
+}
+// E9 GRID (S2, asserted all kinds): the alignment aid must never render in a
+// delivered chart. The <pattern id="grid"> def may exist (defined != drawn);
+// a rect painted with fill="url(#grid)" at positive size and visible display
+// is the aid rendering. No grid rect at all answers NA (nothing delivered to
+// judge), never PASS.
+{
+  const rects = geom.gridRects || [];
+  const rendered = rects.filter((r) => r.rendered);
+  const worstE9 = rendered[0] || null;
+  A.push({
+    id: 'E9', name: 'GRID', asserted: true,
+    threshold: 'no rect painted with fill="url(#grid)" renders in delivery (pattern def alone is not rendering; no grid rect answers NA)',
+    verdict: rects.length === 0 ? 'NA' : (rendered.length ? 'FAIL' : 'PASS'),
+    measured: { population: rects.length, gridRects: rects.length, patternDefined: !!geom.gridPattern, rendered: rendered.length },
+    elements: rendered.slice(0, 4).map((r) => ({ fill: 'url(#grid)', opacity: r.opacity })),
+    coords: rendered.slice(0, 4).map((r) => ({ box: r.box })),
+    reason: rects.length === 0
+      ? 'no measurable population (N=0): no grid rect delivered'
+      : (rendered.length
+      ? `grid aid renders in delivery (${rendered.length} painted rect(s), first ${worstE9.box ? `${worstE9.box.w}x${worstE9.box.h}` : 'unsized'})`
+      : `grid aid defined but not rendered (${rects.length} rect(s) hidden)`),
+  });
+}
+// E10 EDGE_LABEL_BACKING (S2, asserted label charts): a label backing belongs
+// to its wire — tinted from that wire (fill differs from the node-card fill)
+// and bordered in the wire's own colour (stroke == own wire stroke, rx 3).
+// Sequence message groups (outer g carries a path) answer E12, never E10, so
+// the two populations stay disjoint. No non-message label backing answers NA.
+{
+  const rows = (geom.e10rows || []).filter((r) => !r.isMsg);
+  const backed = rows.filter((r) => r.has);
+  const bad = backed.filter((r) => !(r.tinted && r.wireMatch));
+  const worstE10 = bad[0] || null;
+  A.push({
+    id: 'E10', name: 'EDGE_LABEL_BACKING', asserted: true,
+    threshold: 'every non-message label backing tinted from its own wire (fill != card fill) and bordered in the wire colour (stroke == own wire stroke; no non-message backing answers NA)',
+    verdict: backed.length === 0 ? 'NA' : (bad.length ? 'FAIL' : 'PASS'),
+    measured: { population: backed.length, labels: backed.length, tinted: backed.filter((r) => r.tinted).length, wireMatched: backed.filter((r) => r.wireMatch).length, bordered: backed.filter((r) => r.bordered).length, violations: bad.length, cardFillRef: geom.cardFillRef || null, rows: backed.map((r) => ({ label: r.label, key: r.key, rx: r.rx, fill: r.fill, stroke: r.stroke, wire: r.wire, tinted: r.tinted, wireMatch: r.wireMatch })) },
+    elements: bad.slice(0, 4).map((r) => ({ label: r.label, key: r.key })),
+    coords: bad.slice(0, 4).map((r) => ({ label: r.label, labelBox: r.labelBox, backBox: r.backBox })),
+    reason: backed.length === 0
+      ? 'no measurable population (N=0): no non-message label backing'
+      : (bad.length
+      ? `label "${worstE10.label}" backing ${!worstE10.tinted ? `flat card fill (${worstE10.fill || 'unread'})` : `border ${worstE10.stroke || 'none'} != wire ${worstE10.wire || 'unread'}`} (tinted ${backed.filter((r) => r.tinted).length}/${backed.length}, wire-matched ${backed.filter((r) => r.wireMatch).length}/${backed.length})`
+      : `all ${backed.length} label backing(s) tinted and bordered from their own wire`),
+  });
+}
+// E12 MESSAGE_LABEL_BACKING (S2, asserted sequence charts): same rule as E10,
+// on a sequence message label backing (nested label rect inside the message
+// edge group). Non-sequence charts carry no message groups and answer NA.
+{
+  const rows = geom.e12rows || [];
+  const bad = rows.filter((r) => !(r.tinted && r.wireMatch));
+  const worstE12 = bad[0] || null;
+  A.push({
+    id: 'E12', name: 'MESSAGE_LABEL_BACKING', asserted: true,
+    threshold: 'every sequence message label backing tinted from its own wire (fill != card fill) and bordered in the wire colour (stroke == own wire stroke; no message backing answers NA)',
+    verdict: rows.length === 0 ? 'NA' : (bad.length ? 'FAIL' : 'PASS'),
+    measured: { population: rows.length, messages: rows.length, tinted: rows.filter((r) => r.tinted).length, wireMatched: rows.filter((r) => r.wireMatch).length, bordered: rows.filter((r) => r.bordered).length, violations: bad.length, cardFillRef: geom.cardFillRef || null, rows: rows.map((r) => ({ label: r.label, key: r.key, rx: r.rx, fill: r.fill, stroke: r.stroke, wire: r.wire, tinted: r.tinted, wireMatch: r.wireMatch })) },
+    elements: bad.slice(0, 4).map((r) => ({ label: r.label, key: r.key })),
+    coords: bad.slice(0, 4).map((r) => ({ label: r.label, backBox: r.backBox })),
+    reason: rows.length === 0
+      ? 'no measurable population (N=0): no sequence message backing'
+      : (bad.length
+      ? `message "${worstE12.label}" backing ${!worstE12.tinted ? `flat card fill (${worstE12.fill || 'unread'})` : `border ${worstE12.stroke || 'none'} != wire ${worstE12.wire || 'unread'}`} (tinted ${rows.filter((r) => r.tinted).length}/${rows.length}, wire-matched ${rows.filter((r) => r.wireMatch).length}/${rows.length})`
+      : `all ${rows.length} message backing(s) tinted and bordered from their own wire`),
+  });
+}
+// E13 ACTIVATION_BAR (S2, asserted sequence/lifecycle charts): the busy-span
+// bar is 10px wide, positive height, and drawn as a mask+fill pair at one
+// station (renderer contract render-sequence.mjs:349: mask rect + class rect,
+// both width 10). No 10px bars answers NA, never PASS.
+{
+  const rows = geom.e13rows || [];
+  const bad = rows.filter((r) => !(r.wide10 && r.tall && r.paired));
+  const worstE13 = bad[0] || null;
+  A.push({
+    id: 'E13', name: 'ACTIVATION_BAR', asserted: true,
+    threshold: 'every activation bar 10px wide, positive height, mask+fill pair at one station (no 10px bars answers NA)',
+    verdict: rows.length === 0 ? 'NA' : (bad.length ? 'FAIL' : 'PASS'),
+    measured: { population: rows.length, bars: rows.length, wide10: rows.filter((r) => r.wide10).length, paired: rows.filter((r) => r.paired).length, violations: bad.length, rows: rows.map((r) => ({ at: r.at, h: r.h, rx: r.rx, cls: r.cls, paired: r.paired })) },
+    elements: bad.slice(0, 4).map((r) => ({ at: r.at, cls: r.cls })),
+    coords: bad.slice(0, 4).map((r) => ({ at: r.at, box: r.box })),
+    reason: rows.length === 0
+      ? 'no measurable population (N=0): no activation bar delivered'
+      : (bad.length
+      ? `activation bar at ${worstE13.at} ${!worstE13.wide10 ? 'not 10px wide' : (!worstE13.tall ? 'zero height' : `unpaired (${worstE13.cls || 'unclassed'})`)} (paired ${rows.filter((r) => r.paired).length}/${rows.length})`
+      : `all ${rows.length} activation bar(s) 10px wide with mask+fill pair`),
+  });
+}
+// E17-vs-E15 DASHED_WIRE (S2, asserted charts carrying both): a dashed wire
+// must differ from a plain wire by MORE than its dashes — stroke colour,
+// stroke width, or head fill must also differ (DESIGN Don't: meaning never
+// rests on a single signal). Either population missing answers NA, never
+// PASS. A12 untouched (it judges head direction, never wire identity).
+{
+  const wires = geom.wireRows || [];
+  const plains = wires.filter((r) => r.role === 'plain');
+  const dashed = wires.filter((r) => r.role === 'dashed');
+  const sig = (r) => `${r.stroke}|${r.sw}|${r.markerFill}`;
+  const plainSigs = new Set(plains.map(sig));
+  const singleSignalOnly = dashed.filter((d) => plainSigs.has(sig(d)));
+  const worstE17 = singleSignalOnly[0] || null;
+  const popE17 = (plains.length && dashed.length) ? dashed.length : 0;
+  A.push({
+    id: 'E17', name: 'DASHED_WIRE', asserted: true,
+    threshold: 'every dashed wire differs from every plain wire by more than dash pattern (stroke colour, stroke width, or head fill must also differ; either population missing answers NA)',
+    verdict: (plains.length === 0 || dashed.length === 0) ? 'NA' : (singleSignalOnly.length ? 'FAIL' : 'PASS'),
+    measured: { population: popE17, plain: plains.length, dashed: dashed.length, singleSignalOnly: singleSignalOnly.length, plainSig: plains.length ? sig(plains[0]) : null, dashedSig: dashed.length ? sig(dashed[0]) : null },
+    elements: singleSignalOnly.slice(0, 4).map((r) => ({ cls: r.cls, dash: r.dash })),
+    coords: [],
+    reason: (plains.length === 0 || dashed.length === 0)
+      ? `no measurable population (plain ${plains.length}, dashed ${dashed.length}): needs both to compare`
+      : (singleSignalOnly.length
+      ? `dashed wire differs by dashes only (${singleSignalOnly.length}/${dashed.length}: ${worstE17.stroke || 'unread'} ${worstE17.sw || ''} head ${worstE17.markerFill || 'unread'})`
+      : `all ${dashed.length} dashed wire(s) differ by more than dashes`),
+  });
+}
 
-const complete = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'O1a'].every((id) => A.some((a) => a.id === id && a.verdict));
+const complete = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'E5', 'E7', 'E9', 'E10', 'E12', 'E13', 'E17', 'O1a'].every((id) => A.some((a) => a.id === id && a.verdict));
 const out = {
-  tool: 'geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15 + SEE-016 A16/A17)',
+  tool: 'geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15 + SEE-016 A16/A17 + S2 E5/E7/E9/E10/E12/E13/E17)',
   artifact: { path: html, sha256: shaFull, sha8: shaFull.slice(0, 8), bytes: artifactBytes.length },
   viewport: { width: VW, height: VH },
   kind,

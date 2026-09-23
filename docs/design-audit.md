@@ -42,19 +42,19 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 | E2 | Frame title | `structural-frame-label` | Yes. | A2. | **FAIL** |
 | E3 | Frame title backing | `structural-frame-label-mask` | Yes. | P3. | **GAP** |
 | E4 | Lane box | `c-lane` | No. | A3. | **PASS** |
-| E5 | Lane header | `lane-header-mask` | No. | nothing. | **FAIL** |
+| E5 | Lane header | `lane-header-mask` | No. | E5. | **MEASURED** |
 | E6 | Node card | `node-card-mask` | No. | A2, A8, P1. | **PASS** |
-| E7 | Node stripe | `node-accent-bar` | No. | nothing. | **FAIL** |
+| E7 | Node stripe | `node-accent-bar` | No. | E7. | **MEASURED** |
 | E8 | Security group | `security-group` | No. | P1. | **UNUSED** |
-| E9 | Grid | `grid` | No. | nothing. | **UNUSED** |
-| E10 | Edge label backing | `edge-label-mask` | No. | nothing. | **FAIL** |
+| E9 | Grid | `grid` | No. | E9. | **MEASURED** |
+| E10 | Edge label backing | `edge-label-mask` | No. | E10. | **MEASURED** |
 | E11 | Edge label text | `segment-label` | Yes. | A3, A4, A15. | **FAIL** |
-| E12 | Message label backing | `message-label-mask` | No. | nothing. | **FAIL** |
-| E13 | Activation bar | `activation-bar` | No. | nothing. | **FAIL** |
+| E12 | Message label backing | `message-label-mask` | No. | E12. | **MEASURED** |
+| E13 | Activation bar | `activation-bar` | No. | E13. | **MEASURED** |
 | E14 | Node sublabel | `node-sublabel` | No. | A3, A15. | **GAP** |
 | E15 | Plain wire | `a-default` | No. | A9, A11, A12. | **PASS** |
 | E16 | Strong wire | `a-emphasis` | No. | A9, A11, A12. | **PASS** |
-| E17 | Dashed wire | `a-dashed` | No. | nothing tells it from E15. | **FAIL** |
+| E17 | Dashed wire | `a-dashed` | No. | E17 tells it from E15. | **MEASURED** |
 | E18 | Arrowhead | `m-default and three twins` | No. | A5, A10, A12. | **PASS** |
 
 ### Each element in full
@@ -94,15 +94,15 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 - **Owned by.** A3
 - **Seen in.** Workflow, Sequence, Dataflow
 - **Verdict: PASS.**
-
+-
 **E5 Lane header** — `lane-header-mask`
-
 - **Good (T4).** Names its lane. Distinct from the lane body.
-- **Ours.** Flat var(--mask), no border, no name. No check measures it.
+- **Ours.** Measured by E5 LANE_HEADER: loop-closed-full 6/6 named+distinct PASS
+  (loop-open 6/6 PASS; loop-closed-pilot 4/6 matched — lane-4 header missing FAIL).
 - **Drawn at.** render-workflow.mjs:682
-- **Owned by.** nothing
+- **Owned by.** E5
 - **Seen in.** Sequence
-- **Verdict: FAIL.**
+- **Verdict: MEASURED (mixed: loop charts PASS except loop-closed-pilot lane-4 FAIL).**
 
 **E6 Node card** — `node-card-mask`
 
@@ -116,11 +116,13 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **E7 Node stripe** — `node-accent-bar`
 
 - **Good (T4).** Carries the node's kind as colour. Never the only signal of kind.
-- **Ours.** Drawn in architecture only. No check measures it.
+- **Ours.** Measured by E7 NODE_STRIPE: sys003-einvoice-structure 12/12 PASS
+  (4px, left edge, accent-kind == node kind); einvoice-order-flow-v3 12/12 PASS;
+  loop-closed-full 0/9 barred FAIL; cache-miss sequence 0/7 FAIL; maka 0/12 FAIL.
 - **Drawn at.** render-architecture.mjs:1080
-- **Owned by.** nothing
+- **Owned by.** E7
 - **Seen in.** Architecture
-- **Verdict: FAIL.**
+- **Verdict: MEASURED (architecture PASS, other kinds FAIL — stripe ships in one renderer only).**
 
 **E8 Security group** — `security-group`
 
@@ -134,20 +136,24 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **E9 Grid** — `grid`
 
 - **Good (T4).** Alignment aid. Should not be visible in a delivered chart.
-- **Ours.** Matches an element that renders completely empty. Sheet shows a blank cell.
+- **Ours.** Measured by E9 GRID: every probed chart renders one painted
+  `fill="url(#grid)"` rect (loop-closed-full 1346x1682.5, sequence 1345.99x1247.5,
+  einvoice-structure 929.98x421.66) — the aid ships in delivery. FAIL everywhere probed.
 - **Drawn at.** template.html CSS
-- **Owned by.** nothing
+- **Owned by.** E9
 - **Seen in.** Architecture, Sequence
-- **Verdict: UNUSED.**
+- **Verdict: MEASURED (FAIL — aid renders in delivery).**
 
 **E10 Edge label backing** — `edge-label-mask`
 
 - **Good (T4).** Tinted from the wire it belongs to. Carries a border in that colour.
-- **Ours.** Flat var(--mask), identical to a node card, no tie to its wire, no border.
+- **Ours.** Measured by E10 EDGE_LABEL_BACKING: einvoice-structure 0/2 tinted FAIL
+  (backing `rgb(255,255,255)` == card fill, border none vs wire `rgb(255,59,48)`);
+  maka 0/3 FAIL; v3 0/2 FAIL. Flat card fill, no wire tie, no border.
 - **Drawn at.** all five renderers
-- **Owned by.** nothing
+- **Owned by.** E10
 - **Seen in.** Architecture, Workflow, Dataflow, Lifecycle
-- **Verdict: FAIL.**
+- **Verdict: MEASURED (FAIL — flat card fill, borderless).**
 
 **E11 Edge label text** — `segment-label`
 
@@ -161,20 +167,22 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **E12 Message label backing** — `message-label-mask`
 
 - **Good (T4).** Same rule as E10, on a sequence message.
-- **Ours.** Sequence draws messages differently. E10's rule does not reach it.
+- **Ours.** Measured by E12 MESSAGE_LABEL_BACKING: cache-miss sequence 0/12
+  tinted FAIL (backing `rgb(255,255,255)` == card fill, borderless on all 12).
 - **Drawn at.** render-sequence.mjs:344
-- **Owned by.** nothing
+- **Owned by.** E12
 - **Seen in.** none of the five sampled charts
-- **Verdict: FAIL.**
+- **Verdict: MEASURED (FAIL — flat card fill, borderless).**
 
 **E13 Activation bar** — `activation-bar`
 
 - **Good (T4).** Shows how long a participant is busy.
-- **Ours.** Drawn with the same c-mask class as a label box. No check measures it.
+- **Ours.** Measured by E13 ACTIVATION_BAR: cache-miss sequence 6/6 PASS
+  (10px wide, mask+fill pair at each station). Other charts carry no bars (NA).
 - **Drawn at.** render-sequence.mjs:354
-- **Owned by.** nothing
+- **Owned by.** E13
 - **Seen in.** Sequence, Lifecycle
-- **Verdict: FAIL.**
+- **Verdict: MEASURED (PASS where delivered).**
 
 **E14 Node sublabel** — `node-sublabel`
 
@@ -206,11 +214,13 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **E17 Dashed wire** — `a-dashed`
 
 - **Good (T1).** Meaning never rests on one visual signal alone.
-- **Ours.** Shares --arrow and the same head shape as E15. Dashes are the only difference.
+- **Ours.** Measured by E17 DASHED_WIRE: loop-closed-full 1/1 dashes-only FAIL
+  (`rgb(142,142,147)` 1.4 same head); loop-open 2/2 FAIL; maka 2/2 PASS
+  (dashed `rgb(124,58,237)` vs plain `rgb(148,163,184)`).
 - **Drawn at.** all five renderers
-- **Owned by.** nothing tells it from E15
+- **Owned by.** E17 tells it from E15
 - **Seen in.** Workflow, Sequence, Dataflow
-- **Verdict: FAIL.**
+- **Verdict: MEASURED (mixed: loop charts FAIL, maka PASS).**
 
 **E18 Arrowhead** — `m-default and three twins`
 

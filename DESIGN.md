@@ -327,8 +327,8 @@ Never hand-place cards.
 
 ## 🔬 10. Conformance — which check enforces which clause
 
-This is the part most design systems cannot offer. **Twenty-one checks already
-run against every chart** (18 geometry, 3 colour). A clause with a check is
+This is the part most design systems cannot offer. **Twenty-eight checks already
+run against every chart** (25 geometry, 3 colour). A clause with a check is
 enforced. A clause without one is only a wish.
 
 | Clause | Enforced by |
@@ -348,6 +348,13 @@ enforced. A clause without one is only a wish.
 | Head points the way of travel | A12. |
 | Head seats on its target | A5, A10. |
 | Every wire drawn once | A11. |
+| Lane names its lane, distinct from body | E5. |
+| Node stripe 4px left-edge, kind-coloured | E7. |
+| Grid never renders in delivery | E9. |
+| Label backing tinted+bordered from own wire | E10. |
+| Message backing tinted+bordered from own wire | E12. |
+| Activation bar 10px busy-span pair | E13. |
+| Dashed wire differs by more than dashes | E17. |
 | Type floors hold | O1a. |
 | Touching surfaces separate | P1. |
 | Surfaces separate without a border | P2. |
@@ -364,12 +371,16 @@ On container charts A17 still discriminates: einvoice-order-flow-v3 reports
 frame "MD" at 42.5% fill against the 50% floor, and A16 on the same chart
 reports "Sales" crossing "Accounting" at 7348.21px2.
 
-**Seven elements have no check at all:** E5, E7, E9, E10, E12, E13, and telling
-E17 from E15. Those clauses are wishes until someone builds the check.
+**All seven standing element wishes now have checks:** E5, E7, E9, E10, E12, E13
+and E17-vs-E15, built 2026-09-23 in the S2 ruler (25 geometry assertions:
+A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a). The clauses stand as written — every
+check below earned its clause without changing it, so DESIGN holds at 0.1.2.
+First runs: E5 PASS on loop charts (pilot lane-4 FAIL), E7 PASS on einvoice
+architecture but FAIL on workflow/sequence/maka, E9 FAIL everywhere (grid aid
+renders in delivery), E10/E12 FAIL (flat card fill, borderless), E13 PASS on
+the sequence chart, E17 FAIL on loop charts but PASS on maka.
 
-**The audit was measured on an older ruler.** `docs/design-audit.md` was measured on a 16-check ruler while today's ruler emits 18 assertions (A1-A17 + O1a), so every FAIL/PASS/GAP tally in the audit predates A16 and A17.
-
-That audit reports 15 FAIL / 2 GAP / 11 PASS, which omits 2 UNUSED (E8 security-group, E9 grid) — 30 items, 28 accounted.
+**The audit was measured on an older ruler.** `docs/design-audit.md` was measured on a 16-check ruler while today's ruler emits 25 assertions (A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a), so every FAIL/PASS/GAP tally in the audit predates A16, A17 and the S2 seven.
 
 ## 📚 Companion files
 
