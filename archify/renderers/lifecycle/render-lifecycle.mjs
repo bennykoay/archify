@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { esc, renderDefinitions, renderSemanticSigil, textUnits } from '../shared/utils.mjs';
+import { CARD_RX, ELEMENT, cardMaskRect, labelBackingRect, wireClassForVariant, wireElementForVariant } from '../shared/element-helpers.mjs';
 import { animateAttr, focusEdgeAttrs, focusNodeAttrs, focusNodeTitle, loadDiagramWithBrandMarks, writeDiagram, svgAccessibleText, svgRootAttrs } from '../shared/cli.mjs';
 import { throwDiagnosticProblems } from '../shared/diagnostics.mjs';
 import { resolveLegend, renderLegend as renderResolvedLegend } from '../shared/legend.mjs';
@@ -456,8 +457,8 @@ function renderState(state) {
   const passport = { kind: state.type, sublabel: state.sublabel, tag: state.tag, context: laneLabels.get(state.lane) || 'Lifecycle state', ...brandMetadataFor(state) };
   return `        <g ${focusNodeAttrs(state.id, state.label, passport)}>
           ${focusNodeTitle(state.label, passport)}
-          <rect x="${state.x}" y="${state.y}" width="${state.width}" height="${state.height}" rx="7" class="c-mask"/>
-          <rect x="${state.x}" y="${state.y}" width="${state.width}" height="${state.height}" rx="7" class="${fill}"${animateAttr(lifecycle.meta, 'node', stateSteps.get(state.id))} stroke-width="1.5"/>
+          ${cardMaskRect(state.x, state.y, state.width, state.height)}
+          <rect x="${state.x}" y="${state.y}" width="${state.width}" height="${state.height}" rx="${CARD_RX}" class="${fill}" data-element="${ELEMENT.E6_NODE_CARD}"${animateAttr(lifecycle.meta, 'node', stateSteps.get(state.id))} stroke-width="1.5"/>
           ${renderSemanticSigil(state.type, { x: hasBrand ? state.x + 6 : state.x + state.width - 17, y: state.y + 6 })}${brand ? `\n          ${brand}` : ''}${step}
           <text data-node-label${hasSub ? ' data-detail-anchor' : ''} x="${state.cx}" y="${state.y + 21}" class="t-primary" font-size="${labelFontSize}" font-weight="600" text-anchor="middle">${esc(state.label)}</text>${sub}${tag}
         </g>`;
@@ -467,7 +468,7 @@ function renderTransitionPath(transition, index) {
   const [cls, marker] = arrowClassMap[transition.variant || 'default'] || arrowClassMap.default;
   const routed = pathFor(transition);
   const strokeWidth = transition.width || (transition.variant === 'emphasis' ? 2 : 1.1);
-  return `        <path ${focusEdgeAttrs(transition.from, transition.to, transition.label, index, transition.id)} data-composition-points="${routePointsValue(routed.points)}" d="${routed.d}" class="${cls}"${animateAttr(lifecycle.meta, 'edge', index)} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
+  return `        <path ${focusEdgeAttrs(transition.from, transition.to, transition.label, index, transition.id)} data-element="${wireElementForVariant(transition.variant)}" data-composition-points="${routePointsValue(routed.points)}" d="${routed.d}" class="${cls}"${animateAttr(lifecycle.meta, 'edge', index)} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
 }
 
 function renderTransitionLabel(transition, index) {
@@ -477,12 +478,13 @@ function renderTransitionLabel(transition, index) {
   const longestLine = Math.max(textUnits(transition.label), textUnits(transition.note || ''));
   const labelW = Math.max(32, longestLine * 4.9 + 12);
   const labelH = transition.note ? 27 : 16;
+  const wire = wireClassForVariant(transition.variant);
   const note = transition.note
     ? `\n        <text data-detail="fine" x="${lx}" y="${ly + 11}" class="t-dim" font-size="7" text-anchor="middle">${esc(transition.note)}</text>`
     : '';
-  return `        <g data-detail="context" ${focusEdgeAttrs(transition.from, transition.to, transition.label, index, transition.id)}>
-          <rect x="${lx - labelW / 2}" y="${ly - 11}" width="${labelW}" height="${labelH}" rx="4" class="c-mask"/>
-          <text x="${lx}" y="${ly}" class="${variantAccent(transition.variant)}" font-size="8" text-anchor="middle">${esc(transition.label)}</text>${note}
+  return `        <g data-detail="context" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}" data-element-alias="${ELEMENT.E11_ALIAS_SEGMENT_LABEL}" ${focusEdgeAttrs(transition.from, transition.to, transition.label, index, transition.id)}>
+          ${labelBackingRect(lx - labelW / 2, ly - 11, labelW, labelH, wire, ELEMENT.E10_EDGE_LABEL_BACKING)}
+          <text x="${lx}" y="${ly}" class="${variantAccent(transition.variant)}" font-size="8" text-anchor="middle" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}">${esc(transition.label)}</text>${note}
         </g>`;
 }
 

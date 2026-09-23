@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { esc, renderDefinitions, renderSemanticSigil, textUnits } from '../shared/utils.mjs';
+import { CARD_RX, ELEMENT, cardMaskRect, labelBackingRect, wireClassForVariant, wireElementForVariant } from '../shared/element-helpers.mjs';
 import { animateAttr, focusEdgeAttrs, focusNodeAttrs, focusNodeTitle, loadDiagramWithBrandMarks, writeDiagram, svgAccessibleText, svgRootAttrs } from '../shared/cli.mjs';
 import { throwDiagnosticProblems } from '../shared/diagnostics.mjs';
 import { resolveLegend, renderLegend as renderResolvedLegend } from '../shared/legend.mjs';
@@ -678,9 +679,10 @@ function renderPhase(phase) {
   const span = spanForCols(phase.fromCol, phase.toCol, 46);
   const accent = variantAccent(phase.variant);
   const [lineClass] = arrowClassMap[phase.variant || 'default'] || arrowClassMap.default;
-  return `        <line x1="${span.x}" y1="35" x2="${span.x + span.width}" y2="35" class="${lineClass}" stroke-width="1.1"/>
-        <rect x="${span.x}" y="27" width="${span.width}" height="16" rx="4" class="c-mask"/>
-        <text x="${span.cx}" y="39" class="${accent}" font-size="8" font-weight="600" text-anchor="middle">${esc(phase.label)}</text>`;
+  const wire = wireClassForVariant(phase.variant);
+  return `        <line x1="${span.x}" y1="35" x2="${span.x + span.width}" y2="35" class="${lineClass}" data-element="${wireElementForVariant(phase.variant)}" stroke-width="1.1"/>
+        ${labelBackingRect(span.x, 27, span.width, 16, wire, ELEMENT.E10_EDGE_LABEL_BACKING)}
+        <text x="${span.cx}" y="39" class="${accent}" font-size="8" font-weight="600" text-anchor="middle" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}">${esc(phase.label)}</text>`;
 }
 
 function renderGroup(group, index) {
@@ -711,8 +713,8 @@ function renderNode(node) {
   const passport = { kind: node.type, sublabel: node.sublabel, tag: node.tag, context: nodeContext(node), ...brandMetadataFor(node) };
   return `        <g ${focusNodeAttrs(node.id, node.label, passport)}>
           ${focusNodeTitle(node.label, passport)}
-          <rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="6" class="c-mask"/>
-          <rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="6" class="${fill}"${animateAttr(workflow.meta, 'node', nodeStep(node))} stroke-width="1.5"/>
+          ${cardMaskRect(node.x, node.y, node.width, node.height)}
+          <rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="${CARD_RX}" class="${fill}" data-element="${ELEMENT.E6_NODE_CARD}"${animateAttr(workflow.meta, 'node', nodeStep(node))} stroke-width="1.5"/>
           ${renderSemanticSigil(node.type, { x: node.x + 6, y: node.y + 6 })}${brand ? `\n          ${brand}` : ''}
           <text data-node-label${hasSub ? ' data-detail-anchor' : ''} x="${node.cx}" y="${node.y + 21}" class="t-primary" font-size="${labelFontSize}" font-weight="600" text-anchor="middle">${esc(node.label)}</text>${sub}${tag}
         </g>`;
@@ -722,7 +724,7 @@ function renderEdgePath(edge, index) {
   const [cls, marker] = arrowClassMap[edge.variant || 'default'] || arrowClassMap.default;
   const routed = pathFor(edge);
   const strokeWidth = edge.width || (edge.variant === 'emphasis' ? 1.8 : 1.4);
-  return `        <path ${focusEdgeAttrs(edge.from, edge.to, edge.label, index, edge.id)} data-composition-points="${routePointsValue(routed.points)}" d="${routed.d}" class="${cls}"${animateAttr(workflow.meta, 'edge', edgeSteps.get(edge))} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
+  return `        <path ${focusEdgeAttrs(edge.from, edge.to, edge.label, index, edge.id)} data-element="${wireElementForVariant(edge.variant)}" data-composition-points="${routePointsValue(routed.points)}" d="${routed.d}" class="${cls}"${animateAttr(workflow.meta, 'edge', edgeSteps.get(edge))} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
 }
 
 function renderEdgeLabel(edge, index) {
@@ -730,9 +732,10 @@ function renderEdgeLabel(edge, index) {
   const routed = pathFor(edge);
   const [lx, ly] = workflowEdgeLabelPoint(edge, routed.points);
   const labelW = Math.max(30, textUnits(edge.label) * 4.8 + 10);
-  return `        <g data-detail="context" ${focusEdgeAttrs(edge.from, edge.to, edge.label, index, edge.id)}>
-          <rect x="${lx - labelW / 2}" y="${ly - 10}" width="${labelW}" height="14" rx="3" class="c-mask"/>
-          <text x="${lx}" y="${ly}" class="${variantAccent(edge.variant)}" font-size="8" text-anchor="middle">${esc(edge.label)}</text>
+  const wire = wireClassForVariant(edge.variant);
+  return `        <g data-detail="context" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}" data-element-alias="${ELEMENT.E11_ALIAS_SEGMENT_LABEL}" ${focusEdgeAttrs(edge.from, edge.to, edge.label, index, edge.id)}>
+          ${labelBackingRect(lx - labelW / 2, ly - 10, labelW, 14, wire, ELEMENT.E10_EDGE_LABEL_BACKING)}
+          <text x="${lx}" y="${ly}" class="${variantAccent(edge.variant)}" font-size="8" text-anchor="middle" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}">${esc(edge.label)}</text>
         </g>`;
 }
 

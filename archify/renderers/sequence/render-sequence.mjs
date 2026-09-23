@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { esc, renderDefinitions, renderSemanticSigil, textUnits } from '../shared/utils.mjs';
+import { CARD_RX, ELEMENT, cardMaskRect, labelBackingRect, wireClassForVariant, wireElementForVariant } from '../shared/element-helpers.mjs';
 import { animateAttr, focusEdgeAttrs, focusNodeAttrs, focusNodeTitle, loadDiagramWithBrandMarks, writeDiagram, svgAccessibleText, svgRootAttrs } from '../shared/cli.mjs';
 import { throwDiagnosticProblems } from '../shared/diagnostics.mjs';
 import { resolveLegend, renderLegend as renderResolvedLegend } from '../shared/legend.mjs';
@@ -315,8 +316,8 @@ function renderParticipant(participant) {
   const passport = { kind: participant.type, sublabel: participant.sublabel, context: 'Sequence participant', ...brandMetadataFor(participant) };
   return `        <g ${focusNodeAttrs(participant.id, participant.label, passport)}>
           ${focusNodeTitle(participant.label, passport)}
-          <rect x="${participant.x}" y="${layout.topY}" width="${layout.participantW}" height="${layout.participantH}" rx="6" class="c-mask"/>
-          <rect x="${participant.x}" y="${layout.topY}" width="${layout.participantW}" height="${layout.participantH}" rx="6" class="${fill}"${animateAttr(sequence.meta, 'node', participant.index)} stroke-width="1.5"/>
+          ${cardMaskRect(participant.x, layout.topY, layout.participantW, layout.participantH)}
+          <rect x="${participant.x}" y="${layout.topY}" width="${layout.participantW}" height="${layout.participantH}" rx="${CARD_RX}" class="${fill}" data-element="${ELEMENT.E6_NODE_CARD}"${animateAttr(sequence.meta, 'node', participant.index)} stroke-width="1.5"/>
           ${renderSemanticSigil(participant.type, { x: participant.x + 6, y: layout.topY + 6 })}${brand ? `\n          ${brand}` : ''}
           <text data-node-label${hasSub ? ' data-detail-anchor' : ''} x="${participant.cx}" y="${layout.topY + 22}" class="t-primary" font-size="${labelFontSize}" font-weight="600" text-anchor="middle">${esc(participant.label)}</text>${sub}
         </g>`;
@@ -367,9 +368,10 @@ function messageLabel(message, x1, x2) {
       : message.variant === 'return'
         ? 't-muted'
         : 't-backend';
-  return `        <g data-detail="context">
-          <rect x="${center - labelW / 2}" y="${y - 10}" width="${labelW}" height="${layout.labelH}" rx="3" class="c-mask"/>
-          <text x="${center}" y="${y}" class="${accent}" font-size="9" text-anchor="middle">${esc(message.label)}</text>
+  const wire = wireClassForVariant(message.variant === 'return' ? 'default' : message.variant);
+  return `        <g data-detail="context" data-element="${ELEMENT.E12_MESSAGE_LABEL_BACKING}" data-element-alias="${ELEMENT.E12_MESSAGE_LABEL_BACKING}">
+          ${labelBackingRect(center - labelW / 2, y - 10, labelW, layout.labelH, wire, ELEMENT.E12_MESSAGE_LABEL_BACKING)}
+          <text x="${center}" y="${y}" class="${accent}" font-size="9" text-anchor="middle" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}">${esc(message.label)}</text>
         </g>`;
 }
 
@@ -382,7 +384,7 @@ function renderMessage(message, index) {
     ? `\n        <text data-detail="fine" x="${Math.min(start, end) + 12}" y="${message.y + 18}" class="t-dim" font-size="7">${esc(message.note)}</text>`
     : '';
   return `        <g ${focusEdgeAttrs(message.from, message.to, message.label, index, message.id)}>
-          <path data-composition-edge-from="${esc(message.from)}" data-composition-edge-to="${esc(message.to)}"${message.id ? ` data-composition-edge-id="${esc(message.id)}"` : ''} data-composition-points="${routePointsValue([[start, message.y], [end, message.y]])}" d="M ${start} ${message.y} L ${end} ${message.y}" class="${cls}"${animateAttr(sequence.meta, 'edge', index)} stroke-width="${strokeWidth}"${dash} marker-end="url(#${marker})"/>
+          <path data-composition-edge-from="${esc(message.from)}" data-composition-edge-to="${esc(message.to)}"${message.id ? ` data-composition-edge-id="${esc(message.id)}"` : ''} data-element="${wireElementForVariant(message.variant === 'return' ? 'default' : message.variant)}" data-composition-points="${routePointsValue([[start, message.y], [end, message.y]])}" d="M ${start} ${message.y} L ${end} ${message.y}" class="${cls}"${animateAttr(sequence.meta, 'edge', index)} stroke-width="${strokeWidth}"${dash} marker-end="url(#${marker})"/>
 ${messageLabel(message, start, end)}${note}
         </g>`;
 }

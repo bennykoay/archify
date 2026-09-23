@@ -113,6 +113,9 @@
       /* Opaque mask color used behind semi-transparent component fills
          so the arrows drawn underneath are properly hidden. */
       --mask: #2c2c2e;
+      /* R2 SPLIT-MASK: label backings own --label-mask (default card-equal;
+         R3 tints it per wire, so one token never does two jobs). */
+      --label-mask: #2c2c2e;
 
       --frontend-fill:    rgba(255, 255, 255, 0.04);
       --frontend-stroke:  #0a84ff;
@@ -166,6 +169,7 @@
       --arrow-emphasis: #007aff;
 
       --mask: #ffffff;
+      --label-mask: #ffffff;
 
       --frontend-fill:    rgba(255, 255, 255, 0.04);
       --frontend-stroke:  #007aff;
@@ -240,6 +244,7 @@
       --arrow-emphasis: #0a84ff;
 
       --mask: #1c1c1e;
+      --label-mask: #1c1c1e;
 
       /* OSM-SEE-008: kind washes follow the opaque card mask (was hand-written
          4% white/red over it, delivering #242426 against declared #1c1c1e). */
@@ -294,6 +299,7 @@
       --arrow-emphasis: #007aff;
 
       --mask: #ffffff;
+      --label-mask: #ffffff;
 
       --frontend-fill:    rgba(255, 255, 255, 0.04);
       --frontend-stroke:  #007aff;
@@ -347,6 +353,7 @@
       --arrow-emphasis: #34d399;
 
       --mask: #0f172a;
+      --label-mask: #0f172a;
 
       --frontend-fill:    rgba(8, 51, 68, 0.4);
       --frontend-stroke:  #22d3ee;
@@ -387,6 +394,7 @@
       --arrow-emphasis: #059669;
 
       --mask: #ffffff;
+      --label-mask: #ffffff;
 
       --frontend-fill:    rgba(34, 211, 238, 0.15);
       --frontend-stroke:  #0891b2;
@@ -4038,6 +4046,9 @@
        ========================================================== */
     .c-grid       { stroke: var(--grid); fill: none; }
     .c-mask       { fill: var(--mask); stroke: none; }
+    /* R2 SPLIT-MASK: label backings own --label-mask (default: card-equal so the
+       split ships with no visual change; R3 tints it per wire below). */
+    .c-label-backing { fill: var(--label-mask, var(--mask)); stroke: none; }
 
     .c-frontend   { fill: var(--frontend-fill);   stroke: var(--frontend-stroke); }
     .c-backend    { fill: var(--backend-fill);    stroke: var(--backend-stroke); }
@@ -4188,13 +4199,22 @@
     .a-default   { stroke: var(--arrow); fill: none; }
     .a-emphasis  { stroke: var(--arrow-emphasis); fill: none; }
     .a-security  { stroke: var(--security-stroke); fill: none; stroke-dasharray: 5,5; }
-    .a-dashed    { stroke: var(--arrow); fill: none; stroke-dasharray: 4,4; }
+    /* R10: a dashed wire differs by more than dashes — colour split per maka:
+       dashed rides --database-stroke, plain rides --arrow (second signal). */
+    .a-dashed    { stroke: var(--database-stroke); fill: none; stroke-dasharray: 4,4; }
 
     /* Arrowhead markers reference these */
     .m-default   { fill: var(--arrow); }
     .m-emphasis  { fill: var(--arrow-emphasis); }
     .m-security  { fill: var(--security-stroke); }
-    .m-dashed    { fill: var(--arrow); }
+    .m-dashed    { fill: var(--database-stroke); }
+
+    /* R3 V1 tint + border: label backings tinted 22% from their own wire with a
+       1px border in the wire's colour (Benji V1 RECOMMENDED). The backing sits
+       on its wire (R4); it never erases it. Cards keep --mask via .c-mask. */
+    rect.c-label-backing[data-wire="a-security"] { fill: color-mix(in srgb, var(--security-stroke) 22%, var(--label-mask, var(--mask))); stroke: var(--security-stroke); stroke-width: 1; }
+    rect.c-label-backing[data-wire="a-emphasis"] { fill: color-mix(in srgb, var(--arrow-emphasis) 22%, var(--label-mask, var(--mask))); stroke: var(--arrow-emphasis); stroke-width: 1; }
+    rect.c-label-backing[data-wire="a-default"], rect.c-label-backing[data-wire="a-dashed"] { fill: color-mix(in srgb, var(--arrow) 22%, var(--label-mask, var(--mask))); stroke: var(--arrow); stroke-width: 1; }
 
     /* Stable semantic exploration hooks emitted by every renderer. */
     svg [data-node-id] {
@@ -5219,9 +5239,11 @@
         <!-- =================================================================
              COMPONENT EXAMPLES — use CSS classes, not inline fill/stroke
              (so theme toggle works). Each box pattern:
-               1. opaque mask rect (.c-mask) to hide arrows underneath
+               1. opaque mask rect (.c-mask) under the card surface
                2. styled rect (.c-<type>) with 1.5px stroke
                3. text (.t-primary / .t-muted)
+             R4: label backings sit on their wire; they never erase it. The wire
+             stays continuous beneath its own label (see .c-label-backing).
              ================================================================= -->
 
         <!-- External/Generic Component -->

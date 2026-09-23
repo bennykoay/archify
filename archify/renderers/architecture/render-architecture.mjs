@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { esc, renderDefinitions, renderSemanticSigil, textUnits } from '../shared/utils.mjs';
+import { CARD_RX, ELEMENT, cardMaskRect, labelBackingRect, wireClassForVariant, wireElementForVariant } from '../shared/element-helpers.mjs';
 import { animateAttr, focusEdgeAttrs, focusNodeAttrs, focusNodeTitle, loadDiagramWithBrandMarks, writeDiagram, svgAccessibleText, svgRootAttrs } from '../shared/cli.mjs';
 import { componentBox, boundaryBox, connectionPath } from '../shared/layout-report.mjs';
 import { throwDiagnosticProblems } from '../shared/diagnostics.mjs';
@@ -1041,20 +1042,22 @@ function renderBoundaryLabel(b, index) {
         </g>`;
 }
 
+
 function renderConnectionPath(conn, index) {
   const [cls, marker] = arrowClassMap[conn.variant || 'default'] || arrowClassMap.default;
   const routed = pathFor(conn);
   const strokeWidth = conn.width || (conn.variant === 'emphasis' ? 1.8 : 1.5);
-  return `        <path ${focusEdgeAttrs(conn.from, conn.to, conn.label, index, conn.id)} data-composition-points="${routePointsValue(routed.points)}" d="${routed.d}" class="${cls}"${animateAttr(arch.meta, 'edge', index)} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
+  return `        <path ${focusEdgeAttrs(conn.from, conn.to, conn.label, index, conn.id)} data-element="${wireElementForVariant(conn.variant)}" data-composition-points="${routePointsValue(routed.points)}" d="${routed.d}" class="${cls}"${animateAttr(arch.meta, 'edge', index)} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
 }
 
 function renderConnectionLabel(conn, index) {
   if (!conn.label) return '';
   const [lx, ly] = labelPoint(conn, pathFor(conn).points);
   const w = Math.max(30, textUnits(conn.label) * 4.8 + 10);
-  return `        <g data-detail="context" ${focusEdgeAttrs(conn.from, conn.to, conn.label, index, conn.id)}>
-          <rect x="${lx - w / 2}" y="${ly - 10}" width="${w}" height="14" rx="3" class="c-mask"/>
-          <text x="${lx}" y="${ly}" class="t-muted" font-size="${SYSTEM_TOKENS.type.edge}" text-anchor="middle">${esc(conn.label)}</text>
+  const wire = wireClassForVariant(conn.variant);
+  return `        <g data-detail="context" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}" data-element-alias="${ELEMENT.E11_ALIAS_SEGMENT_LABEL}" ${focusEdgeAttrs(conn.from, conn.to, conn.label, index, conn.id)}>
+          ${labelBackingRect(lx - w / 2, ly - 10, w, 14, wire, ELEMENT.E10_EDGE_LABEL_BACKING)}
+          <text x="${lx}" y="${ly}" class="t-muted" font-size="${SYSTEM_TOKENS.type.edge}" text-anchor="middle" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}">${esc(conn.label)}</text>
         </g>`;
 }
 
@@ -1075,9 +1078,9 @@ function renderComponent(c) {
   const passport = { kind: c.type, sublabel: c.sublabel, tag: c.tag, context: componentContext(c), ...brandMetadataFor(c) };
   return `        <g ${focusNodeAttrs(c.id, c.label, passport)}>
           ${focusNodeTitle(c.label, passport)}
-          <rect x="${c.x}" y="${c.y}" width="${c.width}" height="${c.height}" rx="6" class="c-mask"/>
-          <rect x="${c.x}" y="${c.y}" width="${c.width}" height="${c.height}" rx="6" class="${fill}"${animateAttr(arch.meta, 'node', componentSteps.get(c.id))} stroke-width="1.5"/>
-          <rect x="${c.x}" y="${c.y + 5}" width="4" height="${Math.max(c.height - 10, 12)}" rx="2" class="c-accent" data-accent-kind="${esc(c.type)}"/>
+          ${cardMaskRect(c.x, c.y, c.width, c.height)}
+          <rect x="${c.x}" y="${c.y}" width="${c.width}" height="${c.height}" rx="${CARD_RX}" class="${fill}" data-element="${ELEMENT.E6_NODE_CARD}"${animateAttr(arch.meta, 'node', componentSteps.get(c.id))} stroke-width="1.5"/>
+          <rect x="${c.x}" y="${c.y + 5}" width="4" height="${Math.max(c.height - 10, 12)}" rx="2" class="c-accent" data-accent-kind="${esc(c.type)}" data-element="${ELEMENT.E7_NODE_STRIPE}"/>
           ${/* O4: sigil shapes dropped (redundant with accent bar); empty shell keeps data attrs the pinned animation/brand-marks tests count. Full removal needs test-edit approval. */''}${renderSemanticSigil(c.type, { x: c.x + 6, y: c.y + 6 }).replace(/>[\s\S]*<\/g>\s*$/, '></g>')}${brand ? `\n          ${brand}` : ''}
           <text data-node-label${hasSub ? ' data-detail-anchor' : ''} x="${cx}" y="${labelY}" class="t-primary" font-size="${labelFontSize}" font-weight="600" text-anchor="middle">${esc(c.label)}</text>${sub}${tag}
         </g>`;

@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { esc, renderDefinitions, renderSemanticSigil, textUnits } from '../shared/utils.mjs';
+import { CARD_RX, ELEMENT, cardMaskRect, labelBackingRect, wireClassForVariant, wireElementForVariant } from '../shared/element-helpers.mjs';
 import { animateAttr, focusEdgeAttrs, focusNodeAttrs, focusNodeTitle, loadDiagramWithBrandMarks, writeDiagram, svgAccessibleText, svgRootAttrs } from '../shared/cli.mjs';
 import { throwDiagnosticProblems } from '../shared/diagnostics.mjs';
 import { resolveLegend, renderLegend as renderResolvedLegend } from '../shared/legend.mjs';
@@ -384,8 +385,8 @@ function renderNode(node) {
   const passport = { kind: node.type, sublabel: node.sublabel, tag: node.tag, context, ...brandMetadataFor(node) };
   return `        <g ${focusNodeAttrs(node.id, node.label, passport)}>
           ${focusNodeTitle(node.label, passport)}
-          <rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="6" class="c-mask"/>
-          <rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="6" class="${fill}"${animateAttr(dataflow.meta, 'node', nodeSteps.get(node.id))} stroke-width="1.5"/>
+          ${cardMaskRect(node.x, node.y, node.width, node.height)}
+          <rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="${CARD_RX}" class="${fill}" data-element="${ELEMENT.E6_NODE_CARD}"${animateAttr(dataflow.meta, 'node', nodeSteps.get(node.id))} stroke-width="1.5"/>
           ${renderSemanticSigil(node.type, { x: node.x + 6, y: node.y + 6 })}${brand ? `\n          ${brand}` : ''}
           <text data-node-label${hasSub ? ' data-detail-anchor' : ''} x="${node.cx}" y="${node.y + 21}" class="t-primary" font-size="${labelFontSize}" font-weight="600" text-anchor="middle">${esc(node.label)}</text>${sub}${tag}
         </g>`;
@@ -395,19 +396,20 @@ function renderFlowPath(flow, index) {
   const [cls, marker] = arrowClassMap[flow.variant || 'default'] || arrowClassMap.default;
   const routed = pathFor(flow);
   const strokeWidth = flow.width || (flow.variant === 'emphasis' ? 1.8 : 1.4);
-  return `        <path ${focusEdgeAttrs(flow.from, flow.to, flow.label, index, flow.id)} data-composition-points="${routePointsValue(routed.points)}" d="${routed.d}" class="${cls}"${animateAttr(dataflow.meta, 'edge', index)} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
+  return `        <path ${focusEdgeAttrs(flow.from, flow.to, flow.label, index, flow.id)} data-element="${wireElementForVariant(flow.variant)}" data-composition-points="${routePointsValue(routed.points)}" d="${routed.d}" class="${cls}"${animateAttr(dataflow.meta, 'edge', index)} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
 }
 
 function renderFlowLabel(flow, index) {
   const routed = pathFor(flow);
   const [lx, ly] = labelPoint(flow, routed.points);
   const { width: labelW, height: labelH } = flowLabelSize(flow);
+  const wire = wireClassForVariant(flow.variant);
   const classification = flow.classification
     ? `\n        <text data-detail="fine" x="${lx}" y="${ly + 11}" class="t-dim" font-size="7" text-anchor="middle">${esc(flow.classification)}</text>`
     : '';
-  return `        <g data-detail="context" ${focusEdgeAttrs(flow.from, flow.to, flow.label, index, flow.id)}>
-          <rect x="${lx - labelW / 2}" y="${ly - 11}" width="${labelW}" height="${labelH}" rx="4" class="c-mask"/>
-          <text x="${lx}" y="${ly}" class="${variantAccent(flow.variant)}" font-size="8" text-anchor="middle">${esc(flow.label)}</text>${classification}
+  return `        <g data-detail="context" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}" data-element-alias="${ELEMENT.E11_ALIAS_SEGMENT_LABEL}" ${focusEdgeAttrs(flow.from, flow.to, flow.label, index, flow.id)}>
+          ${labelBackingRect(lx - labelW / 2, ly - 11, labelW, labelH, wire, ELEMENT.E10_EDGE_LABEL_BACKING)}
+          <text x="${lx}" y="${ly}" class="${variantAccent(flow.variant)}" font-size="8" text-anchor="middle" data-element="${ELEMENT.E11_EDGE_LABEL_TEXT}">${esc(flow.label)}</text>${classification}
         </g>`;
 }
 
