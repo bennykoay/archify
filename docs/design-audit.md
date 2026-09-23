@@ -4,7 +4,7 @@
 **Author:** Benji (read-only consultant). **Date:** 2026-09-17.
 **Version:** 0.2.0 — draft. The law is `DESIGN.md`; the picture version is `design.html`.
 
-**Bottom line:** Archify draws **18 elements**. **18 carry a name.** Of the 12 rules below, **10 pass**. Every element was found in a real chart and photographed, so each row can be judged by eye, not by my description of it.
+**Bottom line:** Archify draws **18 elements**. **18 carry a name.** Of the 12 rules below, **11 pass**. Every element was found in a real chart and photographed, so each row can be judged by eye, not by my description of it.
 
 ## ⚖️ How a verdict is decided
 
@@ -237,7 +237,7 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 | R5 | A border may separate, but may never carry the meaning | T2 | **PASS** |
 | R6 | Painted colour matches the declared token | T2 | **PASS** |
 | R7 | Touching surfaces tell apart | T2 | **PASS** |
-| R8 | The same element is drawn the same way everywhere | T4 | **FAIL** |
+| R8 | The same element is drawn the same way everywhere | T4 | **PASS** |
 | R9 | Corner radius says what a shape is | T3 | **PASS** |
 | R10 | A wire is told apart by more than one trick | T1 | **PASS** |
 | R11 | Every head points the way its wire travels | T2 | **PASS** |
@@ -292,11 +292,9 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **R8 — The same element is drawn the same way everywhere**
 
 - **Good (T4).** Five drawings of one shape share one corner radius and one height source.
-- **Ours.** E10 radius 3,4,4,3,3. E6 radius 6,6,7,6,6. Lifecycle is the odd one.
-- Radii sit in the renderers, not the template. Lifecycle cards and labels use rx 7 and 4.
-- Other renderers use 6 and 3. One shared label helper would end the drift.
-- **Ruling ONE-HELPER.** One drawing helper per element. This waits on the Commander. Verdict holds FAIL.
-- **Verdict: FAIL.**
+- **Ours.** One helper per element ships. CARD_RX=6 and LABEL_RX=3 live in element-helpers.mjs. cardMaskRect and labelBackingRect are the single source. Grep rx="7" in archify/renderers/ finds 0 hits. Lifecycle renders rx 6 and 3 (tranche-1 probe: 10x rx 6 c-mask, 0x rx7).
+- **Ruling ONE-HELPER.** Landed tranche-1; adopted by build. Measurement feeds this rule. Verdict flips PASS.
+- **Verdict: PASS.**
 
 **R9 — Corner radius says what a shape is**
 
