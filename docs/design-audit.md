@@ -4,7 +4,7 @@
 **Author:** Benji (read-only consultant). **Date:** 2026-09-17.
 **Version:** 0.2.0 — draft. The law is `DESIGN.md`; the picture version is `design.html`.
 
-**Bottom line:** Archify draws **18 elements**. **18 carry a name.** Of the 12 rules below, **11 pass**. Every element was found in a real chart and photographed, so each row can be judged by eye, not by my description of it.
+**Bottom line:** Archify draws **18 elements**. **18 carry a name.** Of the 12 rules below, **12 pass**. Every element was found in a real chart and photographed, so each row can be judged by eye, not by my description of it.
 
 ## ⚖️ How a verdict is decided
 
@@ -134,15 +134,12 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 - **Verdict: UNUSED.**
 
 **E9 Grid** — `grid`
-
 - **Good (T4).** Alignment aid. Should not be visible in a delivered chart.
-- **Ours.** Measured by E9 GRID: every probed chart renders one painted
-  `fill="url(#grid)"` rect (loop-closed-full 1346x1682.5, sequence 1345.99x1247.5,
-  einvoice-structure 929.98x421.66) — the aid ships in delivery. FAIL everywhere probed.
-- **Drawn at.** template.html CSS
+- **Ours.** Measured by E9 GRID: no probed chart paints a grid rect (fresh cache-miss renders sys003-after, cache-miss sequence, loop-closed-full: `fill="url(#grid)"` grep 0 in delivery HTML, E9 NA on all three, complete=true). The `<pattern id="grid">` def still exists (defined != drawn). Committed v3 still paints one rect (929.98x563.63, sha8 f832abb9, pre-strip file, see v3 note).
+- **Drawn at.** all five renderers (pattern def in shared/utils.mjs; painted rect removed from the delivery path)
 - **Owned by.** E9
-- **Seen in.** Architecture, Sequence
-- **Verdict: MEASURED (FAIL — aid renders in delivery).**
+- **Seen in.** none of the five freshly rendered charts
+- **Verdict: MEASURED (PASS on fresh renders — aid defined but not rendered; committed v3 file pre-dates the strip).**
 
 **E10 Edge label backing** — `edge-label-backing`
 
@@ -231,7 +228,7 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 | # | Rule | Tier | Verdict |
 |---|---|---|---|
 | R1 | Every element has a name | T4 | **PASS** |
-| R2 | One colour token does one job | T4 | **FAIL** |
+| R2 | One colour token does one job | T4 | **PASS** |
 | R3 | A backing that belongs to a line is tinted from that line | T4 | **PASS** |
 | R4 | A backing on a line must not erase the line | T4 | **PASS** |
 | R5 | A border may separate, but may never carry the meaning | T2 | **PASS** |
@@ -253,10 +250,9 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **R2 — One colour token does one job**
 
 - **Good (T4).** Two jobs on one token means no value can be correct.
-- **Ours.** --mask fills E6 node cards and E10 edge label backings. SEE-008 booked the trap.
-- S2 confirms it live: E10 backings paint rgb(255,255,255), the card fill, on 2/2 after-file labels.
-- **Ruling SPLIT-MASK.** Split one card token and one label token. This waits on the Commander. Verdict holds FAIL.
-- **Verdict: FAIL.**
+- **Ours.** Cards keep --mask (.c-mask, card-only: cardMaskRect + one E13 mask rect). Label backings own --label-mask (.c-label-backing: E10/E12 labelBackingRect + frame-title and segment-label rects). --label-mask ships in all 7 token blocks (14 hits), default card-equal so the split lands with no visual change. Live: E10 sys003-after 2/2 backings paint color(srgb 1 0.830902 0.821412) vs card rgb(255,255,255); E12 cache-miss 12/12 wireMatched (complete=true). Grep: `class="c-mask"` in archify/renderers/ is the single E13 mask line; no label rect rides --mask.
+- **Ruling SPLIT-MASK.** Landed tranche-3; adopted by build. Measurement feeds this rule. Verdict flips PASS.
+- **Verdict: PASS.**
 
 **R3 — A backing that belongs to a line is tinted from that line**
 
@@ -333,7 +329,7 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 | E6 Node card | Yes. | Yes. | Yes. | Yes. | Yes. |
 | E7 Node stripe | Yes. | No. | No. | No. | No. |
 | E8 Security group | No. | No. | No. | No. | No. |
-| E9 Grid | Yes. | No. | Yes. | No. | No. |
+| E9 Grid | No. | No. | No. | No. | No. |
 | E10 Edge label backing | Yes. | Yes. | No. | Yes. | Yes. |
 | E11 Edge label text | Yes. | Yes. | No. | Yes. | Yes. |
 | E12 Message label backing | No. | No. | No. | No. | No. |

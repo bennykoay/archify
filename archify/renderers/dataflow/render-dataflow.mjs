@@ -448,8 +448,7 @@ function renderSvg() {
 ${svgAccessibleText(dataflow.meta, 'data-flow diagram')}
 ${renderDefinitions()}
 
-        <!-- Background Grid -->
-        <rect width="100%" height="100%" fill="url(#grid)" />
+        <!-- E9: alignment aid stays defined (pattern #grid) but never painted in delivery. -->
 
         <!-- Data Stages -->
 ${dataflow.stages.map(renderStage).join('\n\n')}

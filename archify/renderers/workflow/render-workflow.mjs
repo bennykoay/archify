@@ -775,8 +775,7 @@ function renderSvg() {
 ${svgAccessibleText(workflow.meta, 'workflow diagram')}
 ${renderDefinitions()}
 
-        <!-- Background Grid -->
-        <rect width="100%" height="100%" fill="url(#grid)" />
+        <!-- E9: alignment aid stays defined (pattern #grid) but never painted in delivery. -->
 
         <!-- Swimlanes -->
 ${workflow.lanes.map(renderLane).join('\n\n')}

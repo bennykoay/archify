@@ -1037,7 +1037,7 @@ function renderBoundaryFrame(b, index) {
 function renderBoundaryLabel(b, index) {
   const labelCls = b.kind === 'security-group' ? 't-security' : 't-muted';
   return `        <g data-graph-role="structural-frame-label" data-composition-frame-id="${index}" data-composition-frame-kind="${esc(b.kind || 'boundary')}" data-composition-frame-label="${esc(b.label)}">
-          <rect data-graph-role="structural-frame-label-mask" x="${b.title.x}" y="${b.title.y}" width="${b.title.width}" height="${b.title.height}" rx="3" class="c-mask"/>
+          <rect data-graph-role="structural-frame-label-mask" x="${b.title.x}" y="${b.title.y}" width="${b.title.width}" height="${b.title.height}" rx="3" class="c-label-backing"/>
           <text data-boundary-label x="${b.title.x + 4}" y="${b.title.y + b.title.baselineOffset}" class="${labelCls}" font-size="${b.title.fontSize}" font-weight="600">${esc(b.label)}</text>
         </g>`;
 }
@@ -1124,8 +1124,7 @@ function renderSvg() {
 ${svgAccessibleText(arch.meta, 'architecture diagram')}
 ${renderDefinitions()}
 
-        <!-- Background Grid -->
-        <rect width="100%" height="100%" fill="url(#grid)" />
+        <!-- E9: alignment aid stays defined (pattern #grid) but never painted in delivery. -->
 
         <!-- Boundaries (behind everything) -->
 ${boundaries.map(renderBoundaryFrame).join('\n\n')}

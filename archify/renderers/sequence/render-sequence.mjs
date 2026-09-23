@@ -342,7 +342,7 @@ function renderSegmentLabel(segment, index) {
     label.y -= 22;
   }
   return `        <g data-graph-role="segment-label" data-segment-id="${index}">
-          <rect x="${label.x}" y="${label.y}" width="${label.width}" height="${label.height}" rx="3" class="c-mask"/>
+          <rect x="${label.x}" y="${label.y}" width="${label.width}" height="${label.height}" rx="3" class="c-label-backing"/>
           <text x="${label.x + 6}" y="${label.y + 13}" class="t-dim" font-size="9" font-weight="600">${esc(segment.label)}</text>
         </g>`;
 }
@@ -420,8 +420,7 @@ function renderSvg() {
 ${svgAccessibleText(sequence.meta, 'sequence diagram')}
 ${renderDefinitions()}
 
-        <!-- Background Grid -->
-        <rect width="100%" height="100%" fill="url(#grid)" />
+        <!-- E9: alignment aid stays defined (pattern #grid) but never painted in delivery. -->
 
         <!-- Time Segments -->
 ${asArray(sequence.segments).map(renderSegment).join('\n\n')}
