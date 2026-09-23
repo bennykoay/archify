@@ -251,25 +251,32 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 **R1 — Every element has a name**
 
 - **Good (T4).** A rule cannot be written, and a check cannot be built, for a shape with no name.
-- **Ours.** Four names out of eighteen.
+- **Ours.** Four names out of eighteen. No S2 check names shapes, so no feed reaches this rule.
+- **Ruling NAME-14.** Name the fourteen unnamed elements. This waits on the Commander. Verdict holds FAIL.
 - **Verdict: FAIL.**
 
 **R2 — One colour token does one job**
 
 - **Good (T4).** Two jobs on one token means no value can be correct.
 - **Ours.** --mask fills E6 node cards and E10 edge label backings. SEE-008 booked the trap.
+- S2 confirms it live: E10 backings paint rgb(255,255,255), the card fill, on 2/2 after-file labels.
+- **Ruling SPLIT-MASK.** Split one card token and one label token. This waits on the Commander. Verdict holds FAIL.
 - **Verdict: FAIL.**
 
 **R3 — A backing that belongs to a line is tinted from that line**
 
 - **Good (T4).** A backing on a wire is tinted from that wire, so the eye reads the two as one.
 - **Ours.** E10 is flat --mask with no tie to its wire. Four variants mocked; V1 recommended.
+- S2 measures it live. E10 after-file 0/2 tinted FAIL. E12 sequence 0/12 FAIL. Maka 0/3 FAIL.
+- Backings paint rgb(255,255,255), the card fill, with no border. Measurement feeds this rule. Verdict holds FAIL.
 - **Verdict: FAIL.**
 
 **R4 — A backing on a line must not erase the line**
-
 - **Good (T4).** The wire stays continuous. The backing sits on it.
 - **Ours.** The backing exists to erase it. template.html:5551 says so.
+- Line 5551 has reflowed since. The wording now sits at template.html:5222.
+- It reads opaque mask rect (.c-mask) to hide arrows underneath. The habit is documented intent.
+- S2 confirms the effect. E10/E12 backings are flat and opaque. Measurement feeds this rule. Verdict holds FAIL.
 - **Verdict: FAIL.**
 
 **R5 — A border may separate, but may never carry the meaning**
@@ -294,6 +301,9 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 
 - **Good (T4).** Five drawings of one shape share one corner radius and one height source.
 - **Ours.** E10 radius 3,4,4,3,3. E6 radius 6,6,7,6,6. Lifecycle is the odd one.
+- Radii sit in the renderers, not the template. Lifecycle cards and labels use rx 7 and 4.
+- Other renderers use 6 and 3. One shared label helper would end the drift.
+- **Ruling ONE-HELPER.** One drawing helper per element. This waits on the Commander. Verdict holds FAIL.
 - **Verdict: FAIL.**
 
 **R9 — Corner radius says what a shape is**
@@ -306,6 +316,9 @@ T1 rows are written from memory, offline, and stay UNVERIFIED until fetched.
 
 - **Good (T1).** Meaning never rests on a single visual signal.
 - **Ours.** E17 and E15 share one colour and one head shape.
+- S2 measures it live. Loop-closed-full 1/1 dashes-only FAIL. Maka 2/2 colour split PASS.
+- Same dashes, rgb(142,142,147) each side, on loop. Different colour, rgb(124,58,237) on rgb(148,163,184), on maka.
+- Measurement feeds this rule. Verdict holds FAIL while loop charts ship single-signal wires.
 - **Verdict: FAIL.**
 
 **R11 — Every head points the way its wire travels**
