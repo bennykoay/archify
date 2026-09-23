@@ -382,6 +382,8 @@ the sequence chart, E17 FAIL on loop charts but PASS on maka.
 
 **The audit was measured on an older ruler.** `docs/design-audit.md` was measured on a 16-check ruler while today's ruler emits 25 assertions (A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a), so every FAIL/PASS/GAP tally in the audit predates A16, A17 and the S2 seven.
 
+That audit reports 15 FAIL / 2 GAP / 11 PASS, which omits 2 UNUSED (E8 security-group, E9 grid) — 30 items, 28 accounted.
+
 ## 📚 Companion files
 
 | File | What it is |
