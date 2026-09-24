@@ -2,9 +2,9 @@
   "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15 + SEE-016 A16/A17 + S2 E5/E7/E9/E10/E12/E13/E17)",
   "artifact": {
     "path": "D:\\Onesimus\\tools\\archify\\archify\\sessions\\OSM-CONS-113-JEV\\jev-archify-shadow.html",
-    "sha256": "0c69b95728e8ebd00bff0bffde04f3654b7293db7fa4ef49134e61a2da575bef",
-    "sha8": "0c69b957",
-    "bytes": 705749
+    "sha256": "7682535ab985f8824810be0d8c47838495319466b82c8637ef85fc6e110cb48b",
+    "sha8": "7682535a",
+    "bytes": 705857
   },
   "viewport": {
     "width": 1440,
@@ -60,7 +60,7 @@
         "nodes": 9,
         "violations": 0,
         "worstMinInset": 19.73,
-        "worstSpread": 0.54
+        "worstSpread": 0.04
       },
       "elements": [
         {
@@ -962,8 +962,8 @@
             "key": "0",
             "cardGap": 0.87,
             "cardWho": "spec-file",
-            "subGap": 111.84,
-            "subWho": "renderer:arch render engine",
+            "subGap": 97.66,
+            "subWho": "renderer:builds HTML from plan",
             "minGap": 0.87,
             "minWho": "spec-file",
             "minKind": "card"
@@ -973,8 +973,8 @@
             "key": "1",
             "cardGap": 0,
             "cardWho": "renderer",
-            "subGap": 114.63,
-            "subWho": "renderer:arch render engine",
+            "subGap": 101.82,
+            "subWho": "renderer:builds HTML from plan",
             "minGap": 0,
             "minWho": "renderer",
             "minKind": "card"
@@ -995,8 +995,8 @@
             "key": "3",
             "cardGap": 0.87,
             "cardWho": "e-checks",
-            "subGap": 89.87,
-            "subWho": "e-checks:E5 E7 E9 E10 E12 E13 E17",
+            "subGap": 83.08,
+            "subWho": "geometry-assert:measures boxes and wires",
             "minGap": 0.87,
             "minWho": "e-checks",
             "minKind": "card"
@@ -1007,7 +1007,7 @@
             "cardGap": 5.82,
             "cardWho": "e-checks",
             "subGap": 53.83,
-            "subWho": "e-checks:E5 E7 E9 E10 E12 E13 E17",
+            "subWho": "e-checks:7 mark checks, plain list",
             "minGap": 5.82,
             "minWho": "e-checks",
             "minKind": "card"
@@ -1018,7 +1018,7 @@
             "cardGap": 4.37,
             "cardWho": "neutral-prompt",
             "subGap": 23.64,
-            "subWho": "neutral-prompt:measures plus floors",
+            "subWho": "neutral-prompt:plain question sent to Jev",
             "minGap": 4.37,
             "minWho": "neutral-prompt",
             "minKind": "card"
@@ -1028,8 +1028,8 @@
             "key": "6",
             "cardGap": 0,
             "cardWho": "e-checks",
-            "subGap": 75.91,
-            "subWho": "e-checks:E5 E7 E9 E10 E12 E13 E17",
+            "subGap": 78.94,
+            "subWho": "e-checks:7 mark checks, plain list",
             "minGap": 0,
             "minWho": "e-checks",
             "minKind": "card"
@@ -1039,8 +1039,8 @@
             "key": "7",
             "cardGap": 7.27,
             "cardWho": "shadow-log",
-            "subGap": 115.01,
-            "subWho": "e-checks:E5 E7 E9 E10 E12 E13 E17",
+            "subGap": 109.39,
+            "subWho": "geometry-assert:measures boxes and wires",
             "minGap": 7.27,
             "minWho": "shadow-log",
             "minKind": "card"
@@ -1050,8 +1050,8 @@
             "key": "8",
             "cardGap": 7.27,
             "cardWho": "jev-api",
-            "subGap": 110.01,
-            "subWho": "shadow-log:8-row JSON verdicts",
+            "subGap": 108.44,
+            "subWho": "jev-api:score box (not wired)",
             "minGap": 7.27,
             "minWho": "jev-api",
             "minKind": "card"
@@ -1137,7 +1137,7 @@
           "vs": "card:e-checks"
         }
       ],
-      "reason": "edge label \"writes\" (0) crowds card \"spec-file\" at 0.87px (<24; card leg 0.87px vs spec-file, sub leg 111.84px vs renderer:arch render engine)"
+      "reason": "edge label \"writes\" (0) crowds card \"spec-file\" at 0.87px (<24; card leg 0.87px vs spec-file, sub leg 97.66px vs renderer:builds HTML from plan)"
     },
     {
       "id": "A16",

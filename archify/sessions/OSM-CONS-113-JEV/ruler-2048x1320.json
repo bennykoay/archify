@@ -2,9 +2,9 @@
   "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15 + SEE-016 A16/A17 + S2 E5/E7/E9/E10/E12/E13/E17)",
   "artifact": {
     "path": "D:\\Onesimus\\tools\\archify\\archify\\sessions\\OSM-CONS-113-JEV\\jev-archify-shadow.html",
-    "sha256": "0c69b95728e8ebd00bff0bffde04f3654b7293db7fa4ef49134e61a2da575bef",
-    "sha8": "0c69b957",
-    "bytes": 705749
+    "sha256": "7682535ab985f8824810be0d8c47838495319466b82c8637ef85fc6e110cb48b",
+    "sha8": "7682535a",
+    "bytes": 705857
   },
   "viewport": {
     "width": 2048,
@@ -962,8 +962,8 @@
             "key": "0",
             "cardGap": 1.22,
             "cardWho": "spec-file",
-            "subGap": 156.95,
-            "subWho": "renderer:arch render engine",
+            "subGap": 137.06,
+            "subWho": "renderer:builds HTML from plan",
             "minGap": 1.22,
             "minWho": "spec-file",
             "minKind": "card"
@@ -973,8 +973,8 @@
             "key": "1",
             "cardGap": 0,
             "cardWho": "renderer",
-            "subGap": 160.99,
-            "subWho": "renderer:arch render engine",
+            "subGap": 143.05,
+            "subWho": "renderer:builds HTML from plan",
             "minGap": 0,
             "minWho": "renderer",
             "minKind": "card"
@@ -995,8 +995,8 @@
             "key": "3",
             "cardGap": 1.22,
             "cardWho": "e-checks",
-            "subGap": 126.13,
-            "subWho": "e-checks:E5 E7 E9 E10 E12 E13 E17",
+            "subGap": 116.62,
+            "subWho": "geometry-assert:measures boxes and wires",
             "minGap": 1.22,
             "minWho": "e-checks",
             "minKind": "card"
@@ -1007,7 +1007,7 @@
             "cardGap": 8.16,
             "cardWho": "e-checks",
             "subGap": 75.96,
-            "subWho": "e-checks:E5 E7 E9 E10 E12 E13 E17",
+            "subWho": "e-checks:7 mark checks, plain list",
             "minGap": 8.16,
             "minWho": "e-checks",
             "minKind": "card"
@@ -1018,7 +1018,7 @@
             "cardGap": 6.57,
             "cardWho": "neutral-prompt",
             "subGap": 34.23,
-            "subWho": "neutral-prompt:measures plus floors",
+            "subWho": "neutral-prompt:plain question sent to Jev",
             "minGap": 6.57,
             "minWho": "neutral-prompt",
             "minKind": "card"
@@ -1028,8 +1028,8 @@
             "key": "6",
             "cardGap": 0,
             "cardWho": "e-checks",
-            "subGap": 106.68,
-            "subWho": "e-checks:E5 E7 E9 E10 E12 E13 E17",
+            "subGap": 110.93,
+            "subWho": "e-checks:7 mark checks, plain list",
             "minGap": 0,
             "minWho": "e-checks",
             "minKind": "card"
@@ -1039,8 +1039,8 @@
             "key": "7",
             "cardGap": 10.2,
             "cardWho": "shadow-log",
-            "subGap": 161.94,
-            "subWho": "e-checks:E5 E7 E9 E10 E12 E13 E17",
+            "subGap": 154.09,
+            "subWho": "geometry-assert:measures boxes and wires",
             "minGap": 10.2,
             "minWho": "shadow-log",
             "minKind": "card"
@@ -1050,8 +1050,8 @@
             "key": "8",
             "cardGap": 10.2,
             "cardWho": "jev-api",
-            "subGap": 154.33,
-            "subWho": "shadow-log:8-row JSON verdicts",
+            "subGap": 152.13,
+            "subWho": "jev-api:score box (not wired)",
             "minGap": 10.2,
             "minWho": "jev-api",
             "minKind": "card"
@@ -1137,7 +1137,7 @@
           "vs": "card:e-checks"
         }
       ],
-      "reason": "edge label \"writes\" (0) crowds card \"spec-file\" at 1.22px (<24; card leg 1.22px vs spec-file, sub leg 156.95px vs renderer:arch render engine)"
+      "reason": "edge label \"writes\" (0) crowds card \"spec-file\" at 1.22px (<24; card leg 1.22px vs spec-file, sub leg 137.06px vs renderer:builds HTML from plan)"
     },
     {
       "id": "A16",
