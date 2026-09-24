@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Jev archify shadow posture",
+    "quality_profile": "showcase",
+    "visual_preset": "apple-hig"
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 3,
+    "cellW": 250
+  },
+  "components": [
+    {
+      "id": "spec-file",
+      "type": "frontend",
+      "label": "Spec file",
+      "sublabel": "jev shadow JSON",
+      "row": 0,
+      "col": 0
+    },
+    {
+      "id": "renderer",
+      "type": "backend",
+      "label": "Renderer",
+      "sublabel": "arch render engine",
+      "row": 0,
+      "col": 1
+    },
+    {
+      "id": "delivered-html",
+      "type": "external",
+      "label": "Delivered HTML",
+      "sublabel": "standalone viewer",
+      "row": 0,
+      "col": 2
+    },
+    {
+      "id": "geometry-assert",
+      "type": "backend",
+      "label": "Geometry assert",
+      "sublabel": "checks A1 to A17",
+      "row": 1,
+      "col": 2
+    },
+    {
+      "id": "e-checks",
+      "type": "frontend",
+      "label": "E checks",
+      "sublabel": "E5 E7 E9 E10 E12 E13 E17",
+      "row": 1,
+      "col": 1
+    },
+    {
+      "id": "neutral-prompt",
+      "type": "messagebus",
+      "label": "Neutral prompt",
+      "sublabel": "measures plus floors",
+      "row": 1,
+      "col": 0
+    },
+    {
+      "id": "jev-api",
+      "type": "cloud",
+      "label": "Jev API",
+      "sublabel": "typesafe jev-latest",
+      "row": 2,
+      "col": 0
+    },
+    {
+      "id": "shadow-log",
+      "type": "database",
+      "label": "Shadow log",
+      "sublabel": "8-row JSON verdicts",
+      "row": 2,
+      "col": 1
+    },
+    {
+      "id": "future-gate",
+      "type": "external",
+      "label": "Future gate",
+      "sublabel": "skip gate, later",
+      "row": 2,
+      "col": 2
+    }
+  ],
+  "connections": [
+    {
+      "id": "spec-writes-renderer",
+      "from": "spec-file",
+      "to": "renderer",
+      "label": "writes",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "renderer-delivers-html",
+      "from": "renderer",
+      "to": "delivered-html",
+      "label": "delivers",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": -24
+    },
+    {
+      "id": "html-asserts-geometry",
+      "from": "delivered-html",
+      "to": "geometry-assert",
+      "label": "asserts",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24,
+      "labelDx": -60
+    },
+    {
+      "id": "geometry-checks-e",
+      "from": "geometry-assert",
+      "to": "e-checks",
+      "label": "checks",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "html-prompts-sidecar",
+      "from": "delivered-html",
+      "to": "neutral-prompt",
+      "label": "prompts",
+      "variant": "dashed",
+      "width": 2.5,
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "prompt-scores-jev",
+      "from": "neutral-prompt",
+      "to": "jev-api",
+      "label": "scores",
+      "variant": "dashed",
+      "width": 2.5,
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "e-compares-jev",
+      "from": "e-checks",
+      "to": "jev-api",
+      "label": "compares",
+      "variant": "dashed",
+      "width": 2.5,
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": -4,
+      "labelSegment": 1
+    },
+    {
+      "id": "geometry-logs-shadow",
+      "from": "geometry-assert",
+      "to": "shadow-log",
+      "label": "logs",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 30
+    },
+    {
+      "id": "jev-logs-shadow",
+      "from": "jev-api",
+      "to": "shadow-log",
+      "label": "logs",
+      "variant": "dashed",
+      "width": 2.5,
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 30
+    },
+    {
+      "id": "shadow-defers-gate",
+      "from": "shadow-log",
+      "to": "future-gate",
+      "label": "defers",
+      "variant": "dashed",
+      "width": 2.5,
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 30,
+      "labelDx": 0
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Frame Render",
+      "wraps": [
+        "spec-file",
+        "renderer",
+        "delivered-html"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Frame Ruler",
+      "wraps": [
+        "geometry-assert",
+        "e-checks"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Frame Sidecar",
+      "wraps": [
+        "neutral-prompt",
+        "jev-api"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Frame Log",
+      "wraps": [
+        "shadow-log"
+      ]
+    }
+  ]
+}
