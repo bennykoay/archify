@@ -2,9 +2,9 @@
   "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15 + SEE-016 A16/A17 + S2 E5/E7/E9/E10/E12/E13/E17)",
   "artifact": {
     "path": "D:\\Onesimus\\tools\\archify\\archify\\sessions\\OSM-CONS-113-JEV\\jev-archify-shadow.html",
-    "sha256": "af9e8cb99a2cf0daecef59983e37c6fd1a5b2bf436a7ddc17645d6512c886163",
-    "sha8": "af9e8cb9",
-    "bytes": 706019
+    "sha256": "89f0e1aaa77e272dee1de2f3bc26e37918c3fc808757464d189f876b33a8c927",
+    "sha8": "89f0e1aa",
+    "bytes": 706013
   },
   "viewport": {
     "width": 1440,
@@ -36,7 +36,7 @@
       "coords": [
         {
           "pt": {
-            "x": 621.98,
+            "x": 622.37,
             "y": 307.67
           },
           "pillBox": {
@@ -47,7 +47,7 @@
           }
         }
       ],
-      "reason": "route transits floating pill \"Frame Log\" (4 at 621.98,307.67 vs pill 504.7,306.21 116.67x30.55)"
+      "reason": "route transits floating pill \"Frame Log\" (4 at 622.37,307.67 vs pill 504.7,306.21 116.67x30.55)"
     },
     {
       "id": "A2",
@@ -173,7 +173,7 @@
         "population": 10,
         "edgeLabels": 10,
         "orphans": 7,
-        "worstDist": 0.93,
+        "worstDist": 0.9,
         "worstInside": 8
       },
       "elements": [
@@ -190,7 +190,7 @@
           },
           "tip": {
             "x": 274.85,
-            "y": 478.6
+            "y": 487.33
           },
           "labelBox": {
             "x": 246.63,
@@ -211,119 +211,33 @@
       "measured": {
         "population": 10,
         "tips": 10,
-        "modal": 33,
-        "outliers": 5,
+        "modal": 12,
+        "outliers": 0,
         "gaps": [
-          25.4,
-          25.4,
-          22.79,
-          22.73,
-          32.94,
-          32.69,
-          32.9,
-          23.23,
-          32.65,
-          32.65
+          11.77,
+          11.77,
+          11.78,
+          11.77,
+          11.86,
+          11.78,
+          11.84,
+          11.84,
+          11.77,
+          11.77
         ],
         "modalExemplar": {
-          "edge": "delivered-html>neutral-prompt",
-          "gap": 32.94,
+          "edge": "spec-file>renderer",
+          "gap": 11.77,
           "tip": {
-            "x": 285.03,
-            "y": 306.73
+            "x": 513.29,
+            "y": 232.02
           }
         }
       },
-      "elements": [
-        {
-          "edge": "spec-file>renderer",
-          "key": "0"
-        },
-        {
-          "edge": "renderer>delivered-html",
-          "key": "1"
-        },
-        {
-          "edge": "delivered-html>geometry-assert",
-          "key": "2"
-        },
-        {
-          "edge": "geometry-assert>e-checks",
-          "key": "3"
-        }
-      ],
-      "coords": [
-        {
-          "tip": {
-            "x": 499.67,
-            "y": 232.02
-          },
-          "pathEnd": {
-            "x": 513.72,
-            "y": 232.02
-          },
-          "targetEdge": {
-            "x": 525.07,
-            "y": 188.38,
-            "w": 363.68,
-            "h": 87.28
-          },
-          "gap": 25.4
-        },
-        {
-          "tip": {
-            "x": 921.54,
-            "y": 232.02
-          },
-          "pathEnd": {
-            "x": 935.59,
-            "y": 232.02
-          },
-          "targetEdge": {
-            "x": 946.94,
-            "y": 188.38,
-            "w": 363.68,
-            "h": 87.28
-          },
-          "gap": 25.4
-        },
-        {
-          "tip": {
-            "x": 1138.96,
-            "y": 316.88
-          },
-          "pathEnd": {
-            "x": 1138.96,
-            "y": 328.76
-          },
-          "targetEdge": {
-            "x": 946.94,
-            "y": 339.67,
-            "w": 363.68,
-            "h": 87.28
-          },
-          "gap": 22.79
-        },
-        {
-          "tip": {
-            "x": 911.48,
-            "y": 383.31
-          },
-          "pathEnd": {
-            "x": 899.66,
-            "y": 383.31
-          },
-          "targetEdge": {
-            "x": 525.07,
-            "y": 339.67,
-            "w": 363.68,
-            "h": 87.28
-          },
-          "gap": 22.73
-        }
-      ],
-      "reason": "not asserted on architecture per SEE-004 contract (wouldBe FAIL): modal 33px",
-      "wouldBe": "FAIL"
+      "elements": [],
+      "coords": [],
+      "reason": "not asserted on architecture per SEE-004 contract (wouldBe PASS): modal 12px",
+      "wouldBe": "PASS"
     },
     {
       "id": "A6",
@@ -419,7 +333,7 @@
           {
             "frame": "Frame Render",
             "floorMin": 78.56,
-            "spread": 207.84,
+            "spread": 208.15,
             "spreadQualified": null,
             "spreadNA": true,
             "qualifiedSides": [
@@ -427,15 +341,15 @@
             ],
             "p1min": {
               "top": 280.76,
-              "right": 241.26,
+              "right": 236.27,
               "bottom": 78.56,
               "left": 232.54
             },
             "p2min": {
               "top": 129.47,
               "right": 197.84,
-              "bottom": 0.57,
-              "left": 208.41
+              "bottom": 0.35,
+              "left": 208.5
             },
             "p1who": {
               "top": "3",
@@ -446,15 +360,15 @@
             "p2who": {
               "top": "0:term",
               "right": "2:term",
-              "bottom": "4:mid",
+              "bottom": "2:mid",
               "left": "4:mid"
             }
           },
           {
             "frame": "Frame Ruler",
             "floorMin": 78.56,
-            "spread": 197.5,
-            "spreadQualified": 0.26,
+            "spread": 197.69,
+            "spreadQualified": 0.37,
             "spreadNA": false,
             "qualifiedSides": [
               "bottom",
@@ -462,15 +376,15 @@
             ],
             "p1min": {
               "top": 356.92,
-              "right": 409.83,
+              "right": 401.27,
               "bottom": 78.56,
               "left": 78.56
             },
             "p2min": {
               "top": 82.92,
               "right": 197.84,
-              "bottom": 0.6,
-              "left": 0.34
+              "bottom": 0.52,
+              "left": 0.15
             },
             "p1who": {
               "top": "5",
@@ -481,28 +395,28 @@
             "p2who": {
               "top": "0:mid",
               "right": "2:term",
-              "bottom": "6:mid",
+              "bottom": "7:mid",
               "left": "4:mid"
             }
           },
           {
             "frame": "Frame Sidecar",
             "floorMin": 213.85,
-            "spread": 197.52,
+            "spread": 197.68,
             "spreadQualified": null,
             "spreadNA": true,
             "qualifiedSides": [
               "right"
             ],
             "p1min": {
-              "top": 380.04,
+              "top": 372.1,
               "right": 213.85,
-              "bottom": 248.86,
+              "bottom": 245.22,
               "left": 629.9
             },
             "p2min": {
               "top": 82.92,
-              "right": 0.33,
+              "right": 0.16,
               "bottom": 72.74,
               "left": 197.84
             },
@@ -533,7 +447,7 @@
             "p1min": {
               "top": 7.27,
               "right": 0,
-              "bottom": 258.39,
+              "bottom": 254.15,
               "left": 0
             },
             "p2min": {
@@ -585,7 +499,7 @@
           "p1min": {
             "top": 7.27,
             "right": 0,
-            "bottom": 258.39,
+            "bottom": 254.15,
             "left": 0
           }
         },
@@ -610,25 +524,25 @@
       "id": "A10",
       "name": "ARROWHEAD_DOCKING",
       "asserted": true,
-      "threshold": "actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL",
+      "threshold": "actual arrow tip (line end + (tipX-refX)*1 fixed-size head along path) outside target UNION (card+accent) at distance >=1px (MARKER-2 floor 1-2px); inside = FAIL",
       "verdict": "PASS",
       "measured": {
         "population": 10,
         "tips": 10,
         "violations": 0,
-        "worstGap": 8.73,
+        "worstGap": 2.19,
         "worstInside": false,
         "gaps": [
-          8.87,
-          8.87,
-          8.81,
-          8.82,
-          8.73,
-          8.78,
-          8.74,
-          8.74,
-          8.79,
-          8.79
+          2.2,
+          2.2,
+          2.2,
+          2.2,
+          2.19,
+          2.2,
+          2.19,
+          2.19,
+          2.2,
+          2.2
         ],
         "insideFlags": [
           false,
@@ -645,7 +559,7 @@
       },
       "elements": [],
       "coords": [],
-      "reason": "all 10 actual tips outside UNION at >=6px (worst gap 8.73px delivered-html>neutral-prompt)"
+      "reason": "all 10 actual tips outside UNION at >=1px (worst gap 2.19px delivered-html>neutral-prompt)"
     },
     {
       "id": "A11",
@@ -667,121 +581,68 @@
       "name": "ARROWHEAD_DIRECTION",
       "asserted": true,
       "threshold": "head end-tangent vs last >=15px composition leg within 30deg (shorter finals are pads; longest leg used when none qualify)",
-      "verdict": "FAIL",
+      "verdict": "PASS",
       "measured": {
         "population": 10,
-        "violations": 3,
-        "worstAngle": 90,
-        "worstEdge": "delivered-html>neutral-prompt",
+        "violations": 0,
+        "worstAngle": 0,
+        "worstEdge": "spec-file>renderer",
         "angles": [
           {
             "edge": "spec-file>renderer",
             "angle": 0,
-            "pieceLen": 32.2
+            "pieceLen": 37.5
           },
           {
             "edge": "renderer>delivered-html",
             "angle": 0,
-            "pieceLen": 32.2
+            "pieceLen": 37.5
           },
           {
             "edge": "delivered-html>geometry-assert",
             "angle": 0,
-            "pieceLen": 36.5
+            "pieceLen": 41.5
           },
           {
             "edge": "geometry-assert>e-checks",
             "angle": 0,
-            "pieceLen": 32.5
+            "pieceLen": 37.5
           },
           {
             "edge": "delivered-html>neutral-prompt",
-            "angle": 90,
-            "pieceLen": 573
+            "angle": 0,
+            "pieceLen": 19.5
           },
           {
             "edge": "neutral-prompt>jev-api",
             "angle": 0,
-            "pieceLen": 35.5
+            "pieceLen": 41.5
           },
           {
             "edge": "e-checks>jev-api",
-            "angle": 90,
-            "pieceLen": 283
+            "angle": 0,
+            "pieceLen": 19.5
           },
           {
             "edge": "geometry-assert>shadow-log",
-            "angle": 90,
-            "pieceLen": 290
+            "angle": 0,
+            "pieceLen": 26.5
           },
           {
             "edge": "jev-api>shadow-log",
             "angle": 0,
-            "pieceLen": 31.5
+            "pieceLen": 37.5
           },
           {
             "edge": "shadow-log>future-gate",
             "angle": 0,
-            "pieceLen": 31.5
+            "pieceLen": 37.5
           }
         ]
       },
-      "elements": [
-        {
-          "edge": "delivered-html>neutral-prompt",
-          "key": "4",
-          "angle": 90,
-          "pieceLen": 573
-        },
-        {
-          "edge": "e-checks>jev-api",
-          "key": "6",
-          "angle": 90,
-          "pieceLen": 283
-        },
-        {
-          "edge": "geometry-assert>shadow-log",
-          "key": "7",
-          "angle": 90,
-          "pieceLen": 290
-        }
-      ],
-      "coords": [
-        {
-          "head": {
-            "x": 285.03,
-            "y": 327.31
-          },
-          "piece": {
-            "dx": -573,
-            "dy": 0,
-            "len": 573
-          }
-        },
-        {
-          "head": {
-            "x": 295.22,
-            "y": 478.6
-          },
-          "piece": {
-            "dx": -283,
-            "dy": 0,
-            "len": 283
-          }
-        },
-        {
-          "head": {
-            "x": 706.91,
-            "y": 480.05
-          },
-          "piece": {
-            "dx": -290,
-            "dy": 0,
-            "len": 290
-          }
-        }
-      ],
-      "reason": "head delivered-html>neutral-prompt faces 90deg off its last 573px piece (>30)"
+      "elements": [],
+      "coords": [],
+      "reason": "all 10 heads face their last piece within 30deg (worst 0deg spec-file>renderer)"
     },
     {
       "id": "A13",

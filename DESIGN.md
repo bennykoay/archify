@@ -1,7 +1,7 @@
 # DESIGN.md — Archify chart design system
 
 **For whom:** any agent or person drawing an Archify chart, and Commander Ben.
-**Author:** Benji (read-only consultant). **Date:** 2026-09-22. **Version:** 0.1.2.
+**Author:** Benji (read-only consultant). **Date:** 2026-09-25. **Version:** 0.1.3.
 **Token source:** `archify/renderers/shared/system-tokens.mjs` v1.2.0.
 
 **Bottom line:** This file is the law for how an Archify chart looks. It names
@@ -241,7 +241,7 @@ Every number here is a token. None of them is a guess.
 | Frame title above members | 34 | Grouping rail |
 | Frame title below frame top | 14 | Ownership rail, 34 to 14 is about 2.4 to 1 |
 | Wire to frame edge | 16 | Target, above the 12 floor |
-| Arrowhead tip to card | 8 | Target, above the 6 floor, or 5x stroke if larger |
+| Arrowhead tip to card | 1 | Floor (MARKER-2: fixed-size 10x7 heads sit 1-2px outside cards, still outside, no pierce; was 6), target 8 above it, or 5x stroke if larger |
 | Label to any shape | 24 | Nearness floor |
 
 - **A frame asks for its own room.** It never accepts leftovers.
@@ -373,8 +373,12 @@ reports "Sales" crossing "Accounting" at 7348.21px2.
 
 **All seven standing element wishes now have checks:** E5, E7, E9, E10, E12, E13
 and E17-vs-E15. Built 2026-09-23 in the S2 ruler: 25 geometry assertions
-(A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a). The clauses stand as written. Every
-check below earned its clause without changing it, so DESIGN holds at 0.1.2.
+(A1-A17 + E5/E7/E9/E10/E12/E13/E17 + O1a). The clauses stand as written except
+the MARKER-2 floor change below, which is the 0.1.3 gate change.
+MARKER-2 (0.1.3, 2026-09-25): A10 dock floor 6px→1-2px — fixed-size
+userSpaceOnUse heads (10x7 on every wire) dock with tips 1-2px outside cards
+(still outside, no pierce); A10 asserts actual tips at >=1px. Gate change only;
+no element shape, wire width, or clearance target moved.
 First runs: E5 PASS on loop charts (pilot lane-4 FAIL). E7 PASSes on einvoice
 architecture. It FAILs on workflow, sequence and maka. E9 answers NA on fresh
 renders (post-strip 2026-09-23: no grid rect delivered; committed v3 keeps one

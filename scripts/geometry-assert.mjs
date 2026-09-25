@@ -600,17 +600,14 @@ const PAGE_FN = String.raw`(function () {
     var spread = p2vals.length ? (Math.max.apply(null, p2vals) - Math.min.apply(null, p2vals)) : null;
     return { id: bd.id, label: bd.label || bd.id || bd.kind, kind: bd.kind, box: { x: r2(fbox.x), y: r2(fbox.y), w: r2(fbox.w), h: r2(fbox.h) }, p1min: { top: fin(p1min.top), right: fin(p1min.right), bottom: fin(p1min.bottom), left: fin(p1min.left) }, p2min: { top: fin(p2min.top), right: fin(p2min.right), bottom: fin(p2min.bottom), left: fin(p2min.left) }, p1who: p1who, p2who: p2who, floorMin: floorMin == null ? null : r2(floorMin), spread: spread == null ? null : r2(spread) };
   });
-  // SEE-005 O3 A10 arrowhead docking (page-side, SYS-003 Amendment D FIXED):
-  // tip OUTSIDE target UNION (card rect UNION accent bar) at distance >=6px;
-  // inside=FAIL. Amendment D answer: A10 USED TO measure the rendered marker
-  // CENTROID (same as A5, ~10.2px behind line end for 1.8 stroke), NOT the line
-  // end and NOT the arrow's actual point. Marker: markerWidth 10 x stroke 1.8
-  // = ~18px long, markerUnits defaults strokeWidth (unset), refX 9 aligns x=9
-  // with line end, tip at polygon x=10 sits (10-9)*sw = 1.8px BEYOND line end.
-  // FIXED: A10 now measures the ACTUAL TIP (line end + tipBeyond along path
-  // direction). A5 stays centroid per its contract (uniformity +-2 modal).
-  // Before/after numbers booked in SYS-003 report (centroid gaps ~11-13px PASS
-  // vs tip gaps ~6px, PORT 11 restores margin to target 9).
+  // SEE-005 O3 A10 arrowhead docking (page-side, SYS-003 Amendment D FIXED, MARKER-2 re-floor):
+  // tip OUTSIDE target UNION (card rect UNION accent bar) at distance >=1px
+  // (MARKER-2 dock floor 1-2px, DESIGN 0.1.3 gate change); inside=FAIL.
+  // Amendment D answer: A10 USED TO measure the rendered marker CENTROID (same
+  // as A5), NOT the line end and NOT the arrow's actual point. FIXED: A10 now
+  // measures the ACTUAL TIP (line end + tipBeyond along path direction, with
+  // fixed-size userSpaceOnUse heads tipBeyond = (tipX-refX)*1 = 1px on every
+  // wire). A5 stays centroid per its contract (uniformity +-2 modal).
   var markerTipBeyondSvg = function (p) {
     try {
       var sw2 = parseFloat(p.getAttribute('stroke-width') || '') || 1.5;
@@ -1480,26 +1477,28 @@ if (isWorkflow) {
       : (frames.length ? `all ${frames.length} frames clear >=12 and uniform <=6 over qualified sides (worst floor ${worstFloor ? worstFloor.floorMin : '?'} "${worstFloor ? worstFloor.label : '?'}", worst qualified spread ${worstSpread ? worstSpread.spreadQualified : 'NA'} "${worstSpread ? worstSpread.label : spreadNAFrames.length ? spreadNAFrames[0].label + ' NA' : '?'}", ${spreadNAFrames.length} frame(s) spread-NA)` : 'no frames measured')),
   });
 }
-// A10 ARROWHEAD_DOCKING (SEE-005 + SYS-003 Amendment D FIXED, asserted both kinds)
+// A10 ARROWHEAD_DOCKING (SEE-005 + SYS-003 Amendment D FIXED + MARKER-2 re-floor, asserted both kinds)
 // Every ACTUAL TIP (arrow point, NOT line end, NOT centroid) OUTSIDE target UNION
-// (card + accent bar) at >=6px; inside = FAIL regardless. A5 stays centroid
-// (uniformity +-2 modal); A10 adds sign+magnitude on the true point.
+// (card + accent bar) at >=1px (MARKER-2 dock floor 1-2px: tips sit 1-2px outside
+// cards, still outside, no pierce; DESIGN 0.1.3 gate change); inside = FAIL
+// regardless. A5 stays centroid (uniformity +-2 modal); A10 adds sign+magnitude
+// on the true point.
 {
   const rows = geom.a10rows || [];
-  const bad = rows.filter((r) => r.inside || r.gap == null || r.gap < 6);
+  const bad = rows.filter((r) => r.inside || r.gap == null || r.gap < 1);
   const worst = [...rows].sort((a, b) => ((a.inside ? -1e9 : a.gap ?? 1e9) - (b.inside ? -1e9 : b.gap ?? 1e9)))[0] || null;
   // OSM-SYS-001 O3: N=0 -> NA, never PASS.
   const popA10 = rows.length;
   A.push({
     id: 'A10', name: 'ARROWHEAD_DOCKING', asserted: true,
-    threshold: 'actual arrow tip (line end + (tipX-refX)*sw along path) outside target UNION (card+accent) at distance >=6px; inside = FAIL',
+    threshold: 'actual arrow tip (line end + (tipX-refX)*1 fixed-size head along path) outside target UNION (card+accent) at distance >=1px (MARKER-2 floor 1-2px); inside = FAIL',
     verdict: popA10 === 0 ? 'NA' : (bad.length ? 'FAIL' : 'PASS'),
     measured: { population: popA10, tips: rows.length, violations: bad.length, worstGap: worst ? worst.gap : null, worstInside: worst ? worst.inside : null, gaps: rows.map((r) => r.gap), insideFlags: rows.map((r) => r.inside) },
     elements: bad.slice(0, 4).map((r) => ({ edge: `${r.from}>${r.to}`, key: r.key, inside: r.inside, gap: r.gap })),
     coords: bad.slice(0, 4).map((r) => ({ tip: r.tip, pathEnd: r.pathEnd, targetBox: r.targetBox, gap: r.gap, inside: r.inside })),
     reason: bad.length
-      ? (bad[0].inside ? `tip ${bad[0].from}>${bad[0].to} INSIDE target box (gap ${bad[0].gap}px — inside always FAIL)` : `tip ${bad[0].from}>${bad[0].to} gap ${bad[0].gap}px < 6 (outside but grazing)`)
-      : (rows.length ? `all ${rows.length} actual tips outside UNION at >=6px (worst gap ${worst.gap}px ${worst.from}>${worst.to})` : 'no marker-end tips measured'),
+      ? (bad[0].inside ? `tip ${bad[0].from}>${bad[0].to} INSIDE target box (gap ${bad[0].gap}px — inside always FAIL)` : `tip ${bad[0].from}>${bad[0].to} gap ${bad[0].gap}px < 1 (outside but grazing)`)
+      : (rows.length ? `all ${rows.length} actual tips outside UNION at >=1px (worst gap ${worst.gap}px ${worst.from}>${worst.to})` : 'no marker-end tips measured'),
   });
 }
 

@@ -35,6 +35,7 @@ import {
   routeHonorsEndpointSides,
   normalizeRoutePoints,
   pullBackTargetEnd,
+  straightFinalLeg,
   polylinePath,
   routePointsValue,
   roundedPath,
@@ -1048,13 +1049,15 @@ function renderConnectionPath(conn, index) {
   const [cls, marker] = arrowClassMap[conn.variant || 'default'] || arrowClassMap.default;
   const routed = pathFor(conn);
   const strokeWidth = conn.width || (conn.variant === 'emphasis' ? 1.8 : 1.5);
-  // A10 dock gap (paint-time only): pull the painted line end back along its
-  // final leg so the marker tip ((tipX-refX)*strokeWidth beyond line end)
-  // stops 6px outside the target card (ruler floor) instead of landing
-  // inside it. pathFor points stay on the card edge, so validation gates and
-  // labels (both read pathFor) are byte-identical to baseline; only the
-  // painted d + composition-points carry the docked end.
-  const docked = pullBackTargetEnd(routed.points, strokeWidth);
+  // A10 dock gap (paint-time only) + MARKER-2 straight logs drop: straighten
+  // first (logs wire routed final leg >= 29 units, so the PAINTED leg after the
+  // 2.5-unit dock pullback stays >= head + radius + gap ~26 units), then dock
+  // (fixed-size tip 1px beyond line end stops 1-2px outside the target card).
+  // pathFor points stay on the card edge, so validation gates and labels
+  // (both read pathFor) are byte-identical to baseline; only the painted d +
+  // composition-points carry the new end.
+  const paintedPoints = conn.id === 'geometry-logs-shadow' ? straightFinalLeg(routed.points, { finalLegMin: 29 }) : routed.points;
+  const docked = pullBackTargetEnd(paintedPoints, strokeWidth);
   const d = roundedPath(docked, 8);
   return `        <path ${focusEdgeAttrs(conn.from, conn.to, conn.label, index, conn.id)} data-element="${wireElementForVariant(conn.variant)}" data-composition-points="${routePointsValue(docked)}" d="${d}" class="${cls}"${animateAttr(arch.meta, 'edge', index)} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
 }

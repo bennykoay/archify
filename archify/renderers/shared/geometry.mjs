@@ -1039,15 +1039,18 @@ export function anchor(rect, side) {
       return [rect.x + rect.width, rect.cy];
   }
 }
-export function pullBackTargetEnd(points, strokeWidth, { tipX = 10, refX = 9, floor = 6 } = {}) {
+export function pullBackTargetEnd(points, strokeWidth, { tipX = 10, refX = 9, floor = 1.5 } = {}) {
+  // MARKER-2 dock floor 1-2px: pull the PAINTED line end back along its final
+  // leg so the marker tip ((tipX-refX)*1 = 1px beyond line end under fixed-size
+  // userSpaceOnUse heads) stops 1-2px outside the target card (floor default
+  // 1.5 = midpoint). Tips stay outside cards (no pierce); A10 re-floored to
+  // match (see scripts/geometry-assert.mjs). Axis-aligned final legs only
+  // (orthogonal contract); endpoints never move sideways, so side normals
+  // hold. Pure: no mutation.
   if (!Array.isArray(points) || points.length < 2) return points;
-  const sw = Number.isFinite(strokeWidth) ? strokeWidth : 1.5;
-  const pull = floor + (tipX - refX) * sw;
+  void strokeWidth;
+  const pull = floor + (tipX - refX) * 1;
   if (!(pull > 0)) return points;
-  // A10 dock gap: pull the PAINTED line end back along its final leg so the
-  // marker tip lands 6px outside the target card. Axis-aligned final legs
-  // only (orthogonal contract); endpoints never move sideways, so side
-  // normals hold. Pure: no mutation.
   const end = points[points.length - 1];
   const prev = points[points.length - 2];
   if (!Array.isArray(end) || !Array.isArray(prev) || end.length !== 2 || prev.length !== 2) return points;
@@ -1061,6 +1064,30 @@ export function pullBackTargetEnd(points, strokeWidth, { tipX = 10, refX = 9, fl
   const uy = dy / len;
   const next = [end[0] - ux * pull, end[1] - uy * pull];
   return [...points.slice(0, -1), next];
+}
+// MARKER-2 straight logs drop: lengthen the final vertical leg to >= head
+// length + corner radius + gap (~26 units: 10 head + 8 radius + ~8 approach)
+// so the elbow-to-tip run reads straight at zoom; with finalLegMin unset the
+// route passes through unchanged. Axis-aligned legs only; pure, no mutation.
+export function straightFinalLeg(points, { finalLegMin = 0, cornerRadius = 8 } = {}) {
+  if (!Array.isArray(points) || points.length < 3) return points;
+  if (!(finalLegMin > 0)) return points;
+  const end = points[points.length - 1];
+  const prev = points[points.length - 2];
+  if (!Array.isArray(end) || !Array.isArray(prev) || end.length !== 2 || prev.length !== 2) return points;
+  const dx = end[0] - prev[0];
+  const dy = end[1] - prev[1];
+  const vertical = dx === 0 && dy !== 0;
+  const horizontal = dy === 0 && dx !== 0;
+  if (!vertical && !horizontal) return points;
+  const len = Math.hypot(dx, dy);
+  if (len >= finalLegMin) return points;
+  void cornerRadius;
+  const need = finalLegMin - len;
+  const ux = dx / len;
+  const uy = dy / len;
+  const shifted = points.slice(0, -1).map((p) => (Array.isArray(p) && p.length === 2 ? [p[0] - ux * need, p[1] - uy * need] : p));
+  return [...shifted, end];
 }
 const PORT_OUTWARD_VECTOR = {
   left: [-1, 0],

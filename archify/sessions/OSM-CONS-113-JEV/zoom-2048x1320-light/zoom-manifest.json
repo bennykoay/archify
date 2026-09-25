@@ -1,0 +1,282 @@
+{
+  "input": "D:\\Onesimus\\tools\\archify\\archify\\sessions\\OSM-CONS-113-JEV\\jev-archify-shadow.html",
+  "viewport": [
+    2048,
+    1320
+  ],
+  "theme": "light",
+  "scale": 4,
+  "boxCss": 120,
+  "crops": [
+    {
+      "file": "head-00-spec-file-to-renderer.png",
+      "kind": "head",
+      "from": "spec-file",
+      "to": "renderer",
+      "key": "0",
+      "id": "spec-writes-renderer",
+      "sw": "1.8",
+      "marker": "arrowhead-emphasis",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 328.5,
+        "y": 110
+      },
+      "tipScreen": {
+        "x": 739.4545288085938,
+        "y": 318.5018615722656
+      },
+      "clipCss": {
+        "x": 679,
+        "y": 258,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "head-01-renderer-to-delivered-html.png",
+      "kind": "head",
+      "from": "renderer",
+      "to": "delivered-html",
+      "key": "1",
+      "id": "renderer-delivers-html",
+      "sw": "1.8",
+      "marker": "arrowhead-emphasis",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 618.5,
+        "y": 110
+      },
+      "tipScreen": {
+        "x": 1331.3231201171875,
+        "y": 318.5018615722656
+      },
+      "clipCss": {
+        "x": 1271,
+        "y": 258,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "head-02-delivered-html-to-geometry-assert.png",
+      "kind": "head",
+      "from": "delivered-html",
+      "to": "geometry-assert",
+      "key": "2",
+      "id": "html-asserts-geometry",
+      "sw": "1.5",
+      "marker": "arrowhead",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 752,
+        "y": 182.5
+      },
+      "tipScreen": {
+        "x": 1603.7867431640625,
+        "y": 466.468994140625
+      },
+      "clipCss": {
+        "x": 1543,
+        "y": 406,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "head-03-geometry-assert-to-e-checks.png",
+      "kind": "head",
+      "from": "geometry-assert",
+      "to": "e-checks",
+      "key": "3",
+      "id": "geometry-checks-e",
+      "sw": "1.5",
+      "marker": "arrowhead",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 581.5,
+        "y": 214
+      },
+      "tipScreen": {
+        "x": 1255.808837890625,
+        "y": 530.7581787109375
+      },
+      "clipCss": {
+        "x": 1195,
+        "y": 470,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "head-04-delivered-html-to-neutral-prompt.png",
+      "kind": "head",
+      "from": "delivered-html",
+      "to": "neutral-prompt",
+      "key": "4",
+      "id": "html-prompts-sidecar",
+      "sw": "2.5",
+      "marker": "arrowhead-dashed",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 165,
+        "y": 182.5
+      },
+      "tipScreen": {
+        "x": 405.76312255859375,
+        "y": 466.468994140625
+      },
+      "clipCss": {
+        "x": 345,
+        "y": 406,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "head-05-neutral-prompt-to-jev-api.png",
+      "kind": "head",
+      "from": "neutral-prompt",
+      "to": "jev-api",
+      "key": "5",
+      "id": "prompt-scores-jev",
+      "sw": "2.5",
+      "marker": "arrowhead-dashed",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 158,
+        "y": 286.5
+      },
+      "tipScreen": {
+        "x": 391.47662353515625,
+        "y": 678.7252807617188
+      },
+      "clipCss": {
+        "x": 331,
+        "y": 618,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "head-06-e-checks-to-jev-api.png",
+      "kind": "head",
+      "from": "e-checks",
+      "to": "jev-api",
+      "key": "6",
+      "id": "e-compares-jev",
+      "sw": "2.5",
+      "marker": "arrowhead-dashed",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 172,
+        "y": 286.5
+      },
+      "tipScreen": {
+        "x": 420.0495910644531,
+        "y": 678.7252807617188
+      },
+      "clipCss": {
+        "x": 360,
+        "y": 618,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "head-07-geometry-assert-to-shadow-log.png",
+      "kind": "head",
+      "from": "geometry-assert",
+      "to": "shadow-log",
+      "key": "7",
+      "id": "geometry-logs-shadow",
+      "sw": "1.5",
+      "marker": "arrowhead",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 455,
+        "y": 286.5
+      },
+      "tipScreen": {
+        "x": 997.6316528320312,
+        "y": 678.7252807617188
+      },
+      "clipCss": {
+        "x": 937,
+        "y": 618,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "head-08-jev-api-to-shadow-log.png",
+      "kind": "head",
+      "from": "jev-api",
+      "to": "shadow-log",
+      "key": "8",
+      "id": "jev-logs-shadow",
+      "sw": "2.5",
+      "marker": "arrowhead-dashed",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 328.5,
+        "y": 318
+      },
+      "tipScreen": {
+        "x": 739.4545288085938,
+        "y": 743.0144653320312
+      },
+      "clipCss": {
+        "x": 679,
+        "y": 683,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "head-09-shadow-log-to-future-gate.png",
+      "kind": "head",
+      "from": "shadow-log",
+      "to": "future-gate",
+      "key": "9",
+      "id": "shadow-defers-gate",
+      "sw": "2.5",
+      "marker": "arrowhead-dashed",
+      "beyond": 1,
+      "tipSvg": {
+        "x": 618.5,
+        "y": 318
+      },
+      "tipScreen": {
+        "x": 1331.3231201171875,
+        "y": 743.0144653320312
+      },
+      "clipCss": {
+        "x": 1271,
+        "y": 683,
+        "width": 120,
+        "height": 120
+      }
+    },
+    {
+      "file": "elbow-geometry-logs-shadow.png",
+      "kind": "elbow",
+      "elbow": {
+        "svg": {
+          "x": 455,
+          "y": 259
+        },
+        "screen": {
+          "x": 997.6316528320312,
+          "y": 622.599853515625
+        }
+      },
+      "clipCss": {
+        "x": 937,
+        "y": 562,
+        "width": 120,
+        "height": 120
+      }
+    }
+  ]
+}

@@ -4,27 +4,26 @@ export function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, (c) => ESCAPE_MAP[c]);
 }
 
-// Marker sizing: one shape (10x7, tipX 10, refX 9) per DESIGN E18. The SIZE
-// scales with the wire via markerUnits="strokeWidth" (default): rendered
-// head = 10*sw long, 7*sw wide, tip (10-9)*sw beyond the line end. Thin grey
-// (1.5) renders 15x10.5 with a 1.5px tip beyond; blue (1.8) 18x12.6 + 1.8px;
-// purple dashed (2.5) 25x17.5 + 2.5px. Heads match widths by construction
-// (E15/E16 "Head matches the line"); no per-variant geometry to drift.
+// Marker sizing: one shape (10x7, tipX 10, refX 9) per DESIGN E18, FIXED SIZE
+// via markerUnits="userSpaceOnUse": rendered head = 10 long x 7 wide on every
+// wire (grey 1.5, blue 1.8, purple 2.5 all identical); tip (10-9)*1 = 1px
+// beyond the line end on every variant. Heads sit on wires (no float, no
+// mis-size, purple same as grey/blue) and match at hover (no stroke change).
 // Dashed heads carry no glow: markers are plain filled polygons (no filter),
 // so no halo separates the head from its wire.
 export function renderDefinitions() {
   return `        <!-- Definitions -->
         <defs>
-          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse">
             <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
           </marker>
-          <marker id="arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <marker id="arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse">
             <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
           </marker>
-          <marker id="arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <marker id="arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse">
             <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
           </marker>
-          <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" markerUnits="userSpaceOnUse">
             <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
           </marker>
           <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
