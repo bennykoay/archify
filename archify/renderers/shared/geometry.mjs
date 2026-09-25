@@ -1039,7 +1039,29 @@ export function anchor(rect, side) {
       return [rect.x + rect.width, rect.cy];
   }
 }
-
+export function pullBackTargetEnd(points, strokeWidth, { tipX = 10, refX = 9, floor = 6 } = {}) {
+  if (!Array.isArray(points) || points.length < 2) return points;
+  const sw = Number.isFinite(strokeWidth) ? strokeWidth : 1.5;
+  const pull = floor + (tipX - refX) * sw;
+  if (!(pull > 0)) return points;
+  // A10 dock gap: pull the PAINTED line end back along its final leg so the
+  // marker tip lands 6px outside the target card. Axis-aligned final legs
+  // only (orthogonal contract); endpoints never move sideways, so side
+  // normals hold. Pure: no mutation.
+  const end = points[points.length - 1];
+  const prev = points[points.length - 2];
+  if (!Array.isArray(end) || !Array.isArray(prev) || end.length !== 2 || prev.length !== 2) return points;
+  const dx = end[0] - prev[0];
+  const dy = end[1] - prev[1];
+  const len = Math.hypot(dx, dy);
+  if (!(len > pull)) return points;
+  const axis = (dx === 0 && dy !== 0) || (dy === 0 && dx !== 0);
+  if (!axis) return points;
+  const ux = dx / len;
+  const uy = dy / len;
+  const next = [end[0] - ux * pull, end[1] - uy * pull];
+  return [...points.slice(0, -1), next];
+}
 const PORT_OUTWARD_VECTOR = {
   left: [-1, 0],
   right: [1, 0],

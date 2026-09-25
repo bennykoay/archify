@@ -34,6 +34,7 @@ import {
   chosenSide,
   routeHonorsEndpointSides,
   normalizeRoutePoints,
+  pullBackTargetEnd,
   polylinePath,
   routePointsValue,
   roundedPath,
@@ -1047,7 +1048,15 @@ function renderConnectionPath(conn, index) {
   const [cls, marker] = arrowClassMap[conn.variant || 'default'] || arrowClassMap.default;
   const routed = pathFor(conn);
   const strokeWidth = conn.width || (conn.variant === 'emphasis' ? 1.8 : 1.5);
-  return `        <path ${focusEdgeAttrs(conn.from, conn.to, conn.label, index, conn.id)} data-element="${wireElementForVariant(conn.variant)}" data-composition-points="${routePointsValue(routed.points)}" d="${routed.d}" class="${cls}"${animateAttr(arch.meta, 'edge', index)} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
+  // A10 dock gap (paint-time only): pull the painted line end back along its
+  // final leg so the marker tip ((tipX-refX)*strokeWidth beyond line end)
+  // stops 6px outside the target card (ruler floor) instead of landing
+  // inside it. pathFor points stay on the card edge, so validation gates and
+  // labels (both read pathFor) are byte-identical to baseline; only the
+  // painted d + composition-points carry the docked end.
+  const docked = pullBackTargetEnd(routed.points, strokeWidth);
+  const d = roundedPath(docked, 8);
+  return `        <path ${focusEdgeAttrs(conn.from, conn.to, conn.label, index, conn.id)} data-element="${wireElementForVariant(conn.variant)}" data-composition-points="${routePointsValue(docked)}" d="${d}" class="${cls}"${animateAttr(arch.meta, 'edge', index)} stroke-width="${strokeWidth}" marker-end="url(#${marker})"/>`;
 }
 
 function renderConnectionLabel(conn, index) {
