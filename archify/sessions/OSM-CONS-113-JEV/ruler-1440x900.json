@@ -2,9 +2,9 @@
   "tool": "geometry-assert.mjs (SEE-005 Layer-1 ruler + SYS-003 Amendments A-D + SEE-008 A12 + SEE-009 A13/A3-feed + SEE-010 A14/A15 + SEE-016 A16/A17 + S2 E5/E7/E9/E10/E12/E13/E17)",
   "artifact": {
     "path": "D:\\Onesimus\\tools\\archify\\archify\\sessions\\OSM-CONS-113-JEV\\jev-archify-shadow.html",
-    "sha256": "cc0f1753c1d9c358f88be4be1ff1fde03fb969596db284fe1aad27e0d785f05c",
-    "sha8": "cc0f1753",
-    "bytes": 705915
+    "sha256": "af9e8cb99a2cf0daecef59983e37c6fd1a5b2bf436a7ddc17645d6512c886163",
+    "sha8": "af9e8cb9",
+    "bytes": 706019
   },
   "viewport": {
     "width": 1440,

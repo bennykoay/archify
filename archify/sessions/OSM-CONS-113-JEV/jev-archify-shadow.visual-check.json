@@ -6,8 +6,8 @@
   "visualReview": "pending",
   "artifact": {
     "path": "D:\\Onesimus\\tools\\archify\\archify\\sessions\\OSM-CONS-113-JEV\\jev-archify-shadow.html",
-    "sha256": "cc0f1753c1d9c358f88be4be1ff1fde03fb969596db284fe1aad27e0d785f05c",
-    "bytes": 705915
+    "sha256": "af9e8cb99a2cf0daecef59983e37c6fd1a5b2bf436a7ddc17645d6512c886163",
+    "bytes": 706019
   },
   "state": {
     "detail": "read",
@@ -645,7 +645,7 @@
         "population": 5
       }
     ],
-    "sha8": "cc0f1753",
+    "sha8": "af9e8cb9",
     "kind": "architecture",
     "error": "asserted ruler verdicts failing: A1, A4, A6, A8, A9, A12, A15, A16, A17"
   }
